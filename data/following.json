@@ -1,0 +1,196 @@
+{
+  "friends" : [ {
+    "userIds" : [ "16245966622604466968" ],
+    "profileIds" : [ "113103029372101789311" ],
+    "contactId" : "8050267205467552284",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECP-MjK2o-dPrtQEiC3ZjYXJkX3Bob3RvKihjYzIzZDVlNjFjODNlNTFiODIzMTExNTQ5MWI3MWVlZWM5ZjM4ZTc1MAEVj6ICZCJf1Gpbl0OKUaw20djaKg",
+    "location" : "Rennes",
+    "stream" : "user/16245966622604466968/state/com.google/broadcast",
+    "flags" : 544,
+    "types" : [ 1, 3, 6, 7 ],
+    "displayName" : "Sébastien Bilbeau",
+    "givenName" : "Sébastien",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18" ],
+    "occupation" : "Ingénieur d'études titulaire à la DSI de l'Université de Rennes 1",
+    "websites" : [ {
+      "title" : "Mon CV",
+      "url" : "http://www.tux-planet.fr/cv/"
+    }, {
+      "title" : "Tux-planet",
+      "url" : "http://www.tux-planet.fr"
+    }, {
+      "title" : "Facebook",
+      "url" : "http://www.facebook.com/sebastien.bilbeau"
+    }, {
+      "title" : "Twitter",
+      "url" : "http://twitter.com/tuxplanet"
+    }, {
+      "title" : "Planet Libre",
+      "url" : "http://www.planet-libre.org/"
+    } ]
+  }, {
+    "userIds" : [ "17032552362827093336", "00835223628056430854" ],
+    "profileIds" : [ "107187217517503734476", "114945875183120569418" ],
+    "contactId" : "0",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABDCMzFmfKKiIjfYyILdmNhcmRfcGhvdG8qKGVhZmVlZDI3NTI0NTUzNWFhNTQxOTY1YjJmODY2NTcwZDE2YTUwZDMwAY1jDCvTnQ2tboMIjuPLioFq_Hnn",
+    "stream" : "user/17032552362827093336/state/com.google/broadcast",
+    "flags" : 544,
+    "types" : [ 0, 1, 3, 6, 7 ],
+    "displayName" : "Arnaud Thimel",
+    "givenName" : "Arnaud",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "13", "5989597699254764899", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/107187217517503734476/buzz"
+    } ]
+  }, {
+    "userIds" : [ "15160354744257071456" ],
+    "profileIds" : [ "118247467695995070021" ],
+    "contactId" : "1519022721815719008",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECMXMzrGL5oGe_QEiC3ZjYXJkX3Bob3RvKig2YjYyMDAyNmMyMThkZTMwMmUwMzIwNGVhMWM5NTA2ODdkYTBhYTA0MAGIEy0S_OUYrLJ_rQRlUOv0-aD1uQ",
+    "stream" : "user/15160354744257071456/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0, 3, 4, 6, 7 ],
+    "displayName" : "Pierre-Yves Laude",
+    "givenName" : "Pierre-Yves",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/118247467695995070021/buzz"
+    } ]
+  }, {
+    "userIds" : [ "02573666210283656558" ],
+    "profileIds" : [ "117150097861057817768" ],
+    "contactId" : "456649618310181174",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECKjZpry75NiA7gEiC3ZjYXJkX3Bob3RvKig5Yzk5ZjMyNmUzM2JmZmU5ODBhYWYyODUyZjlkZmJlNjMwNjA1ZWM3MAHUU-cC4wO6CtDTfBec82n5Z4k2XA",
+    "stream" : "user/02573666210283656558/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 3, 4, 6, 7 ],
+    "displayName" : "Nicolas Jolivet",
+    "givenName" : "Nicolas",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "13", "2" ],
+    "websites" : [ {
+      "title" : "Google Reader",
+      "url" : "http://www.google.com/reader/shared/02573666210283656558"
+    }, {
+      "title" : "Picasa Web Albums - phonnn",
+      "url" : "http://picasaweb.google.com/phonnn"
+    } ]
+  }, {
+    "userIds" : [ "07444436709068619605" ],
+    "profileIds" : [ "107522204995265222556" ],
+    "contactId" : "1078177200409971866",
+    "stream" : "user/07444436709068619605/state/com.google/broadcast",
+    "flags" : 0,
+    "types" : [ 3, 4, 6, 7 ],
+    "displayName" : "Rodolphe Boulanger",
+    "givenName" : "Rodolphe",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "13", "2" ]
+  }, {
+    "userIds" : [ "03738033053819838565", "08600436569678973614" ],
+    "profileIds" : [ "113795764361780468965", "107201978911481988133" ],
+    "contactId" : "3776463781760346247",
+    "stream" : "user/03738033053819838565/state/com.google/broadcast",
+    "flags" : 0,
+    "types" : [ 3, 4, 6, 7 ],
+    "displayName" : "Charlotte Belloche",
+    "givenName" : "Charlotte",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "13", "2" ]
+  }, {
+    "userIds" : [ "00547801839744760214" ],
+    "profileIds" : [ "113696549211571975958" ],
+    "contactId" : "2500984045338245804",
+    "stream" : "user/00547801839744760214/state/com.google/broadcast",
+    "flags" : 0,
+    "types" : [ 3, 4 ],
+    "displayName" : "ben",
+    "givenName" : "ben",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "13" ]
+  }, {
+    "userIds" : [ "12110853366403711239" ],
+    "profileIds" : [ "117474864006595801837" ],
+    "contactId" : "2126757372963229198",
+    "stream" : "user/12110853366403711239/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 3, 4 ],
+    "displayName" : "Cédric Bataille",
+    "givenName" : "Cédric",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "2" ]
+  }, {
+    "userIds" : [ "11339103475946033935" ],
+    "profileIds" : [ "113218064053958159112" ],
+    "contactId" : "5391185959692597328",
+    "stream" : "user/11339103475946033935/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0, 3, 4, 6, 7 ],
+    "displayName" : "Cédric Pineau",
+    "givenName" : "Cédric",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/113218064053958159112/buzz"
+    } ]
+  }, {
+    "userIds" : [ "04550820455090887409" ],
+    "profileIds" : [ "111762520475039945177" ],
+    "contactId" : "1946344776364760996",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECNmjj5DTwbeeowEiC3ZjYXJkX3Bob3RvKig2YmQxYjVmNDQxNjZhYmU2ZGI4ZDc2Y2VmOTEwMGU0MzRlYjNhODcyMAEt4LXVP-ytCOZjeAZ0kFlPUyRLFQ",
+    "location" : "Nantes",
+    "stream" : "user/04550820455090887409/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0, 3, 4, 6, 7 ],
+    "displayName" : "Sébastien Voisine",
+    "givenName" : "Sébastien",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/111762520475039945177/buzz"
+    } ]
+  }, {
+    "userIds" : [ "01859988697443284327" ],
+    "profileIds" : [ "114522671249800095627" ],
+    "contactId" : "-1",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECIvP89DqkbnFyQEiC3ZjYXJkX3Bob3RvKihhNTM4ZDg1YmE4MDBlOGNiYjBlNDkxMzJjMzUxMWM4ZjkxNjY3MTRhMAGkY0Z8iV4cpjYZuD7QGeH-PsvXdQ",
+    "stream" : "user/01859988697443284327/state/com.google/broadcast",
+    "flags" : 33,
+    "displayName" : "Nicolas Carlier",
+    "givenName" : "Nicolas",
+    "n" : "",
+    "p" : "",
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/114522671249800095627/buzz"
+    }, {
+      "title" : "Picasa Web Albums",
+      "url" : "http://picasaweb.google.com/pouicbox"
+    }, {
+      "title" : "ncarlier",
+      "url" : "http://twitter.com/ncarlier"
+    }, {
+      "title" : "Nicolas Carlier",
+      "url" : "http://www.youtube.com/user/pouicbox"
+    } ],
+    "hasSharedItemsOnProfile" : false
+  } ],
+  "encodedSharersList" : "CJm-t-SUDhD878mFyQQQl6jUs7YH"
+}

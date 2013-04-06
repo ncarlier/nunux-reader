@@ -1,0 +1,139 @@
+{
+  "friends" : [ {
+    "userIds" : [ "17032552362827093336", "00835223628056430854" ],
+    "profileIds" : [ "107187217517503734476", "114945875183120569418" ],
+    "contactId" : "0",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABDCMzFmfKKiIjfYyILdmNhcmRfcGhvdG8qKGVhZmVlZDI3NTI0NTUzNWFhNTQxOTY1YjJmODY2NTcwZDE2YTUwZDMwAY1jDCvTnQ2tboMIjuPLioFq_Hnn",
+    "stream" : "user/17032552362827093336/state/com.google/broadcast",
+    "flags" : 544,
+    "types" : [ 0, 1, 3, 6, 7 ],
+    "displayName" : "Arnaud Thimel",
+    "givenName" : "Arnaud",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "13", "5989597699254764899", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/107187217517503734476/buzz"
+    } ]
+  }, {
+    "userIds" : [ "15160354744257071456" ],
+    "profileIds" : [ "118247467695995070021" ],
+    "contactId" : "1519022721815719008",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECMXMzrGL5oGe_QEiC3ZjYXJkX3Bob3RvKig2YjYyMDAyNmMyMThkZTMwMmUwMzIwNGVhMWM5NTA2ODdkYTBhYTA0MAGIEy0S_OUYrLJ_rQRlUOv0-aD1uQ",
+    "stream" : "user/15160354744257071456/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0, 3, 4, 6, 7 ],
+    "displayName" : "Pierre-Yves Laude",
+    "givenName" : "Pierre-Yves",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/118247467695995070021/buzz"
+    } ]
+  }, {
+    "userIds" : [ "11339103475946033935" ],
+    "profileIds" : [ "113218064053958159112" ],
+    "contactId" : "5391185959692597328",
+    "stream" : "user/11339103475946033935/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0, 3, 4, 6, 7 ],
+    "displayName" : "Cédric Pineau",
+    "givenName" : "Cédric",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/113218064053958159112/buzz"
+    } ]
+  }, {
+    "userIds" : [ "04550820455090887409" ],
+    "profileIds" : [ "111762520475039945177" ],
+    "contactId" : "1946344776364760996",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECNmjj5DTwbeeowEiC3ZjYXJkX3Bob3RvKig2YmQxYjVmNDQxNjZhYmU2ZGI4ZDc2Y2VmOTEwMGU0MzRlYjNhODcyMAEt4LXVP-ytCOZjeAZ0kFlPUyRLFQ",
+    "location" : "Nantes",
+    "stream" : "user/04550820455090887409/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0, 3, 4, 6, 7 ],
+    "displayName" : "Sébastien Voisine",
+    "givenName" : "Sébastien",
+    "n" : "",
+    "p" : "",
+    "groupId" : [ "18", "421191021166270895", "2" ],
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/111762520475039945177/buzz"
+    } ]
+  }, {
+    "userIds" : [ "11488107161369008452" ],
+    "profileIds" : [ "101545104114258640626" ],
+    "contactId" : "-1",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABDCPL9hfuWgNS4FSILdmNhcmRfcGhvdG8qKDZhOWFjZDM0NzZmNjhkZTQ2YTNjMzU3OWI2YjYzNDNjMzQwYWMzNjkwARiHOdEe5rV3ogUBUGB-w8Y4V2Cg",
+    "stream" : "user/11488107161369008452/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0 ],
+    "displayName" : "Hervé Maniraguha",
+    "givenName" : "Hervé",
+    "n" : "",
+    "p" : "",
+    "occupation" : "Student / Student Coach / \"Entrepreneur en devenir\"",
+    "websites" : [ {
+      "title" : "Viadeo",
+      "url" : "http://www.viadeo.com/profile/0021qsdqiigg2jrs/fr/?readOnly=true&ga_from=Fu:/profilv2/;Fb%3AN-topmenu%3BFe%3AL2%2Bdrop_see%3B"
+    }, {
+      "title" : "Asso-manzi",
+      "url" : "http://www.asso-manzi.fr/"
+    }, {
+      "title" : "LinkedIn",
+      "url" : "http://www.linkedin.com/pub/herve-maniraguha/21/975/8a3"
+    } ]
+  }, {
+    "userIds" : [ "12634867808727047876" ],
+    "profileIds" : [ "102425590134817620397" ],
+    "contactId" : "-1",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABDCK2D_KOFrNvUISILdmNhcmRfcGhvdG8qKDM0OWIzNTRkZWVmMDE5NTk3ZTQ3ZDA2NjFjNmY4YzFmMjlmZTMzZTIwAUxQ2y6uYBQ8auak0_ML4Wq8W_q7",
+    "stream" : "user/12634867808727047876/state/com.google/broadcast",
+    "flags" : 32,
+    "types" : [ 0 ],
+    "displayName" : "Walid ABARKANE",
+    "givenName" : "Walid",
+    "n" : "",
+    "p" : "",
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/102425590134817620397/buzz"
+    }, {
+      "title" : "Ma liste de partage sur Google Reader",
+      "url" : "http://www.google.com/reader/shared/abarkanewalid"
+    } ]
+  }, {
+    "userIds" : [ "01859988697443284327" ],
+    "profileIds" : [ "114522671249800095627" ],
+    "contactId" : "-1",
+    "photoUrl" : "/s2/photos/public/AIbEiAIAAABECIvP89DqkbnFyQEiC3ZjYXJkX3Bob3RvKihhNTM4ZDg1YmE4MDBlOGNiYjBlNDkxMzJjMzUxMWM4ZjkxNjY3MTRhMAGkY0Z8iV4cpjYZuD7QGeH-PsvXdQ",
+    "stream" : "user/01859988697443284327/state/com.google/broadcast",
+    "flags" : 33,
+    "displayName" : "Nicolas Carlier",
+    "givenName" : "Nicolas",
+    "n" : "",
+    "p" : "",
+    "websites" : [ {
+      "title" : "Buzz",
+      "url" : "https://profiles.google.com/114522671249800095627/buzz"
+    }, {
+      "title" : "Picasa Web Albums",
+      "url" : "http://picasaweb.google.com/pouicbox"
+    }, {
+      "title" : "ncarlier",
+      "url" : "http://twitter.com/ncarlier"
+    }, {
+      "title" : "Nicolas Carlier",
+      "url" : "http://www.youtube.com/user/pouicbox"
+    } ],
+    "hasSharedItemsOnProfile" : false
+  } ],
+  "encodedSharersList" : "CJm-t-SUDhCTmJ65_ws"
+}

@@ -1,0 +1,323 @@
+{
+  "id" : "user/01859988697443284327/source/com.google/post",
+  "title" : "\"post\" via nico dans Google Reader",
+  "author" : "nico",
+  "updated" : 1320272209,
+  "direction" : "ltr",
+  "items" : [ {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1320272209009",
+    "timestampUsec" : "1320272209009231",
+    "id" : "tag:google.com,2005:reader/item/a3e1a497a8fcfa47",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "Original Hover Effects with CSS3 | Codrops",
+    "published" : 1320272209,
+    "updated" : 1320272209,
+    "alternate" : [ {
+      "href" : "http://tympanus.net/codrops/2011/11/02/original-hover-effects-with-css3/",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://tympanus.net/codrops/2011/11/02/original-hover-effects-with-css3/",
+      "title" : "tympanus.net"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "<p>The power of CSS3 is enormous and in this tutorial we will see how to exploit it in a very creative way. We are going to create some thumbnail hover effects with CSS3 transitions. On hover over a thumbnail, we will reveal some description of the thumbnail, using a different style in each example.</p>"
+    },
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "tympanus.net",
+      "htmlUrl" : "http://tympanus.net/codrops/2011/11/02/original-hover-effects-with-css3/"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1320014376361",
+    "timestampUsec" : "1320014376361623",
+    "id" : "tag:google.com,2005:reader/item/e579e9973b75a1f1",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "Useful Coding Tools and JavaScript Libraries For Web Developers - Smashing Magazine",
+    "published" : 1320014376,
+    "updated" : 1320014376,
+    "alternate" : [ {
+      "href" : "http://www.smashingmagazine.com/2011/10/28/useful-coding-workflow-tools-for-web-designers-developers/",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://www.smashingmagazine.com/2011/10/28/useful-coding-workflow-tools-for-web-designers-developers/",
+      "title" : "www.smashingmagazine.com"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "<p>There are so many excellent tools out there which deserve attention of the community, yet unfortunately remain obscure way too often.</p>"
+    },
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "www.smashingmagazine.com",
+      "htmlUrl" : "http://www.smashingmagazine.com/2011/10/28/useful-coding-workflow-tools-for-web-designers-developers/"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1319874544372",
+    "timestampUsec" : "1319874544372379",
+    "id" : "tag:google.com,2005:reader/item/9d96a3308c318e45",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "NoSQL, livre blanc | FreeTools",
+    "published" : 1319874544,
+    "updated" : 1319874544,
+    "alternate" : [ {
+      "href" : "http://free-tools.fr/livre/nosql-livre-blanc-4011",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://free-tools.fr/livre/nosql-livre-blanc-4011",
+      "title" : "free-tools.fr"
+    } ],
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "free-tools.fr",
+      "htmlUrl" : "http://free-tools.fr/livre/nosql-livre-blanc-4011"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1318766869861",
+    "timestampUsec" : "1318766869861248",
+    "id" : "tag:google.com,2005:reader/item/cbe6ff15bceaec1b",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "How to Create Collapsible Tree Menu with Pure CSS | Web Resources | WebAppers",
+    "published" : 1318766869,
+    "updated" : 1318766869,
+    "alternate" : [ {
+      "href" : "http://www.webappers.com/2011/10/14/how-to-create-collapsible-tree-menu-with-pure-css/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Webappers+(WebAppers)",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://www.webappers.com/2011/10/14/how-to-create-collapsible-tree-menu-with-pure-css/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Webappers+(WebAppers)",
+      "title" : "www.webappers.com"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "<p>How to Create <u>Collapsible</u> Tree Menu with Pure CSS - Open Source Resources for Web Developers</p>"
+    },
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "www.webappers.com",
+      "htmlUrl" : "http://www.webappers.com/2011/10/14/how-to-create-collapsible-tree-menu-with-pure-css/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+Webappers+(WebAppers)"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1318278861416",
+    "timestampUsec" : "1318278861416884",
+    "id" : "tag:google.com,2005:reader/item/d05cb7d2d7835a7a",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "Interactive Vim tutorial",
+    "published" : 1318278861,
+    "updated" : 1318278861,
+    "alternate" : [ {
+      "href" : "http://www.openvim.com/tutorial.html",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://www.openvim.com/tutorial.html",
+      "title" : "www.openvim.com"
+    } ],
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "www.openvim.com",
+      "htmlUrl" : "http://www.openvim.com/tutorial.html"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1317159820670",
+    "timestampUsec" : "1317159820670994",
+    "id" : "tag:google.com,2005:reader/item/aa84fbab6ac5c7d2",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred", "user/01859988697443284327/state/com.google/tracking-emailed" ],
+    "title" : "Quake 2 Source Code Review",
+    "published" : 1317159820,
+    "updated" : 1317159820,
+    "alternate" : [ {
+      "href" : "http://fabiensanglard.net/quake2/index.php",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://fabiensanglard.net/quake2/index.php",
+      "title" : "fabiensanglard.net"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "<p>Quake 2 Source Code Review</p>"
+    },
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "fabiensanglard.net",
+      "htmlUrl" : "http://fabiensanglard.net/quake2/index.php"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1316938489910",
+    "timestampUsec" : "1316938489910368",
+    "id" : "tag:google.com,2005:reader/item/70ec98e92887d188",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "Le point sur Linux et les SSD - Libre et ouvert",
+    "published" : 1316938489,
+    "updated" : 1316938489,
+    "alternate" : [ {
+      "href" : "http://libre-ouvert.toile-libre.org/index.php?article72/ssd-crucial-m4-64-go-linux-trim-ext4-noatime",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://libre-ouvert.toile-libre.org/index.php?article72/ssd-crucial-m4-64-go-linux-trim-ext4-noatime",
+      "title" : "libre-ouvert.toile-libre.org"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "<p>« Libre et ouvert » est un blogue sur les logiciels libres et les libertés numériques. On y parle entre autres de Firefox, GNU/Linux et des standards ouverts du Web (balises video et track de HTML5...).</p>"
+    },
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "libre-ouvert.toile-libre.org",
+      "htmlUrl" : "http://libre-ouvert.toile-libre.org/index.php?article72/ssd-crucial-m4-64-go-linux-trim-ext4-noatime"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1310467011469",
+    "timestampUsec" : "1310467011469895",
+    "id" : "tag:google.com,2005:reader/item/b0d86269a4f38287",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred", "user/01859988697443284327/state/com.google/tracking-item-link-used" ],
+    "title" : "danlucraft/git.js - GitHub",
+    "published" : 1310467011,
+    "updated" : 1310467011,
+    "alternate" : [ {
+      "href" : "https://github.com/danlucraft/git.js#readme",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "https://github.com/danlucraft/git.js#readme",
+      "title" : "github.com"
+    } ],
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "github.com",
+      "htmlUrl" : "https://github.com/danlucraft/git.js#readme"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1308214622996",
+    "timestampUsec" : "1308214622996344",
+    "id" : "tag:google.com,2005:reader/item/b0cc2fe374d6a491",
+    "categories" : [ "user/01859988697443284327/source/com.google/post", "user/01859988697443284327/state/com.google/read" ],
+    "published" : 1308214622,
+    "updated" : 1308214622,
+    "alternate" : [ {
+      "href" : "http://www.google.com/reader/item/tag:google.com,2005:reader/item/b0cc2fe374d6a491",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "https://www.google.com/reader/shared/01859988697443284327",
+      "streamId" : "user/01859988697443284327/state/com.google/broadcast"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "Glyphosate 360"
+    },
+    "author" : "nico",
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/post",
+      "htmlUrl" : "https://www.google.com/reader/shared/01859988697443284327"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1307740684058",
+    "timestampUsec" : "1307740684058989",
+    "id" : "tag:google.com,2005:reader/item/479e03993c113353",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read" ],
+    "title" : "Sublime Text - Download",
+    "published" : 1307740684,
+    "updated" : 1307740684,
+    "alternate" : [ {
+      "href" : "http://www.sublimetext.com/2",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://www.sublimetext.com/2",
+      "title" : "www.sublimetext.com"
+    } ],
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "www.sublimetext.com",
+      "htmlUrl" : "http://www.sublimetext.com/2"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1307701860007",
+    "timestampUsec" : "1307701860007100",
+    "id" : "tag:google.com,2005:reader/item/1249bb8754a8ac45",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read" ],
+    "title" : "The secrets of Node&#39;s success - O&#39;Reilly Radar",
+    "published" : 1307701860,
+    "updated" : 1307701860,
+    "alternate" : [ {
+      "href" : "http://radar.oreilly.com/2011/06/node-javascript-success.html",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://radar.oreilly.com/2011/06/node-javascript-success.html",
+      "title" : "radar.oreilly.com"
+    } ],
+    "content" : {
+      "direction" : "ltr",
+      "content" : "<p>What is it about Node.js that makes it interesting to developers? The key factors are performance, timing, and focusing on a real problem that wasn't easily solved with other server-side dynamic languages.</p>"
+    },
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "radar.oreilly.com",
+      "htmlUrl" : "http://radar.oreilly.com/2011/06/node-javascript-success.html"
+    }
+  }, {
+    "isReadStateLocked" : true,
+    "crawlTimeMsec" : "1307701711214",
+    "timestampUsec" : "1307701711214889",
+    "id" : "tag:google.com,2005:reader/item/ac2ddd4d84b618c3",
+    "categories" : [ "user/01859988697443284327/source/com.google/link", "user/01859988697443284327/state/com.google/read", "user/01859988697443284327/state/com.google/starred" ],
+    "title" : "naholyr » Blog Archive » Bonnes pratiques pour gérer son code asynchrone en Javascript",
+    "published" : 1307701711,
+    "updated" : 1307701711,
+    "alternate" : [ {
+      "href" : "http://naholyr.fr/2011/06/bonnes-pratiques-asynchrone-javascript-nodejs/",
+      "type" : "text/html"
+    } ],
+    "related" : [ {
+      "href" : "http://naholyr.fr/2011/06/bonnes-pratiques-asynchrone-javascript-nodejs/",
+      "title" : "naholyr.fr"
+    } ],
+    "comments" : [ ],
+    "annotations" : [ ],
+    "origin" : {
+      "streamId" : "user/01859988697443284327/source/com.google/link",
+      "title" : "naholyr.fr",
+      "htmlUrl" : "http://naholyr.fr/2011/06/bonnes-pratiques-asynchrone-javascript-nodejs/"
+    }
+  } ]
+}
