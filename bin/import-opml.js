@@ -9,6 +9,7 @@ var program = require('commander'),
     fs = require('fs'),
     redis = require('redis'),
     client = redis.createClient(),
+    crypto = require('crypto'),
     async = require('async');
 
 program
@@ -17,7 +18,7 @@ program
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-console.log('Import %s ...', program.file);
+console.log('Import OPML file: %s ...', program.file);
 
 parser.on('meta', function (meta){
   console.log('This OPML is entitled: "%s"', meta.title);
@@ -29,12 +30,15 @@ parser.on('feed', function(feed){
   async.waterfall(
     [
       function(callback) {
-        // INCR global:nextFeedId
-        client.incr('global:nextFeedId', callback);
+        var hash = crypto.createHash('md5').update(feed.xmlurl).digest("hex");
+        var key = 'feed:' + hash;
+        client.exists(key, function(err, exists) {
+          if (exists) return callback('ALREADY_EXISTS');
+          callback(null, key);
+        });
       },
-      function(reply, callback) {
+      function(key, callback) {
         // HMSET feed:1000 title "" xmlUrl "" ...
-        var key = 'feed:' + reply;
         client.hmset(key,
                      'title', feed.title,
                      'text', feed.text,

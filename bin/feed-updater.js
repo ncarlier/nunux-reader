@@ -21,7 +21,7 @@ program
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-console.log('Updater starting...');
+console.log('Feed Updater starting...');
 
 client.on('error', function (err) {
   console.log('Error ' + err);
