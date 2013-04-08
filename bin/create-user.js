@@ -5,15 +5,13 @@
  */
 var program = require('commander'),
     redis = require('redis'),
+    async = require('async'),
     client = redis.createClient();
 
 program
   .version('0.0.1')
-  .option('-e, --email [email]', 'User email', 'email')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
-
-console.log('Create user %s ...', program.email);
 
 var user = {
   email: program.email,
@@ -25,11 +23,25 @@ client.on('error', function (err) {
 });
 
 client.on('connect', function() {
-  client.hmset('user:' + user.email, user, function(err, reply) {
+  var createUser = function(email, callback) {
+    console.log('Create user %s ...', email);
+    var user = {
+      email: email,
+      registrationDate: new Date().getTime().toString()
+    }
+    client.hmset('user:' + user.email, user, function(err, reply) {
+      if (err) {
+        callback(err);
+      } else {
+        console.log('User %s created: %s', user.email, reply);
+        callback(null);
+      }
+    });
+  }
+
+  async.each(program.args, createUser, function(err) {
     if (err) {
       console.log(err);
-    } else {
-      console.log('User %s created: %s', user.email), reply;
     }
     client.quit();
   });
