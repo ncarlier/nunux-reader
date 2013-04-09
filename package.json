@@ -11,7 +11,7 @@
     "less-middleware": "*",
     "redis": "0.8.1",
     "commander": "*",
-    "opmlparser": "0.4.1",
+    "opmlparser": "0.5.0",
     "feedparser": "0.14.0",
     "request": "2.9.x",
     "async": "0.2.5",
