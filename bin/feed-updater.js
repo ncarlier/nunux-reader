@@ -123,9 +123,15 @@ function saveArticle(feed, article) {
         // todo? EXPIRE entry:1000 60*60*24*30
       },
       function(key, callback) {
+        // Add article to feed...
         // LPUSH feed:1000:entries entry:1000
-        client.lpush(feed.key + ':articles', key, callback);
+        client.lpush(feed.key + ':articles', key, function(err, reply) {
+          callback(err, key);
+        });
         // todo? LTRIM feed:1000:entries 0 999
+      },
+      function(key, callback) {
+        client.rpush('articles:integration', key, callback);
       },
       function() {
         console.log('Article "%s" added to feed %s.', article.title, feed.key);

@@ -36,23 +36,26 @@ app.on('nextarticle', function() {
       function(callback) {
         // Get article key to integrate...
         // BRPOP articles:integration 0
-        client.brpop('articles:integration', 0, callback);
+        client.blpop('articles:integration', 0, callback);
       },
-      function(articleKey, callback) {
+      function(replies, callback) {
         // Get article from db
         // GET article:x
+        var articleKey = replies[1];
         client.get(articleKey, function(err, reply) {
           if (err) return callback(err);
           var article = JSON.parse(reply);
           article.key = articleKey;
           callback(null, article);
         });
-      }
+      },
       function(article, callback) {
+        console.log('Integrating article %s (%s)...', article.key, article.pubdate);
         var updateUserPlaylist = function(item, clbk) {
           var userKey = item;
-          var score = article.date;
-          client.zadd(userKey + ':playlist', score, article.key, clbk);
+          var date = new Date(article.pubdate);
+          var score = date.getTime() * 1e-3;
+          client.zadd(userKey + ':playlist', score.toString(), article.key, clbk);
         }
         // Get feed subscribers...
         // SMEMBERS feed:1000:subscribers
@@ -64,7 +67,6 @@ app.on('nextarticle', function() {
         });
       },
       function() {
-        console.log('Article integrated.');
         app.emit('nextarticle');
       }
     ],
