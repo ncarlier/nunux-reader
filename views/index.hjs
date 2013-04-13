@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{{ title }}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1>{{ title }}</h1>
-    <p>Welcome to {{ title }}</p>
-  </body>
+	<head>
+		<title>{{ title }}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!--link href="stylesheets/bootstrap.min.css" rel="stylesheet" media="screen"-->
+		<link href='stylesheets/style.css' rel="stylesheet" media="screen">
+	</head>
+	<body>
+		<div class="container">
+			<h1>{{ title }}</h1>
+			<section id="articles"></section>
+		</div>
+		<div id="article-tmpl" style='display:none;'>
+			<article>
+				<header><span>Date</span><h1><a target="_blank">Title</a></h1></header>
+				<p>Body</p>
+				<footer></footer>
+			</article>
+		</div>
+
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script src="javascripts/jquery.appear.js"></script>
+		<script src="javascripts/moment.min.js"></script>
+		<script src="javascripts/app.js"></script>
+	</body>
 </html>
