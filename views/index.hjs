@@ -7,10 +7,14 @@
   <link href='stylesheets/style.css' rel="stylesheet" media="screen">
 </head>
 <body>
-  <div class="container">
+  <header>
     <h1>{{ title }}</h1>
+  </header>
+  <div class="container">
+    <aside>Menu</aside>
     <section id="articles"></section>
   </div>
+
   <div id="article-tmpl" style='display:none;'>
     <article>
       <header><span>Date</span><h1><a target="_blank">Title</a></h1></header>
