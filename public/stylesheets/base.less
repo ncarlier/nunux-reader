@@ -1,0 +1,122 @@
+
+html {
+	margin: 0;
+	padding: 0;
+}
+
+
+body {
+  color: #000;
+  background: #fff;
+  font-size: 90%;
+  font-family: arial,sans-serif;
+  > header {
+    position: fixed;
+    padding: 5px;
+    right: 0;
+    left: 0;
+    top: 0;
+    z-index: 1030;
+    margin-bottom: 0;
+    background: -webkit-gradient(radial,100 36,0,100 -40,120,from(#fafafa),to(#f1f1f1)),#f1f1f1;
+    border-bottom: 1px solid #666;
+    border-color: #e5e5e5;
+    h1 {
+      color: #dd4b39;
+      margin: 0;
+      font-size: 24px;
+      font-variant: small-caps;
+    }
+  }
+  > .container {
+    position: absolute;
+    padding: 0;
+    top: 45px;
+    right: 3px;
+    bottom: 0;
+    left: 0;
+    > aside {
+      padding: 5px;
+      width: 250px;
+      position: absolute;
+      margin: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      top: 0;
+      overflow-y: auto;
+      ul {
+        padding: 0;
+        li {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: #333;
+          font-size: 13px;
+          a {
+            text-decoration: none;
+            font-size: 14px;
+            color: #000;
+            &.menu {
+              font-weight: bold;
+              line-height: 30px;
+            }
+            &.active {
+              color: #dd4b39;
+            }
+          }
+        }
+      }
+    }
+    > section {
+      padding: 0 40px 0 10px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 260px;
+      overflow: scroll;
+      overflow-x: hidden;
+    }
+  }
+}
+
+a {
+  color: #15c;
+}
+
+article {
+  border: 1px solid #ddd;
+  border-left-color: #4d90f0;
+  box-shadow: 0 0 4px #e3e5eb;
+  padding: 10px;
+  margin: 20px 0;
+  &.visible {
+    border-left-color: #4d90f0;
+  }
+  header {
+    time {
+      float: right;
+    }
+    span {
+      color: #666;
+      display: block;
+    }
+    h1 {
+      font-weight: bold;
+      font-size: 140%;
+      margin: 5px 0;
+      max-width: 650px;
+      line-height: 16px;
+      height: 16px;
+      display: inline;
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+  > p {
+    max-width: 650px;
+    text-align: justify;
+  }
+}

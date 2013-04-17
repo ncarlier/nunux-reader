@@ -1,7 +1,13 @@
 {
-  "name": "application-name",
+  "name": "NUNUX reader",
   "version": "0.0.1",
+  "description": "NUNUX RSS reader project",
   "private": true,
+  "homepage": "https://bitbucket.org/ncarlier/reader",
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:ncarlier/reader.git"
+  },
   "scripts": {
     "start": "node app"
   },

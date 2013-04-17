@@ -1,0 +1,163 @@
+html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  color: #000;
+  background: #fff;
+  font-size: 90%;
+  font-family: arial, sans-serif;
+}
+body > header {
+  position: fixed;
+  padding: 5px;
+  right: 0;
+  left: 0;
+  top: 0;
+  z-index: 1030;
+  margin-bottom: 0;
+  background: -webkit-gradient(radial, 100 36, 0, 100 -40, 120, from(#fafafa), to(#f1f1f1)), #f1f1f1;
+  border-bottom: 1px solid #666;
+  border-color: #e5e5e5;
+}
+body > header h1 {
+  color: #dd4b39;
+  margin: 0;
+  font-size: 24px;
+  font-variant: small-caps;
+}
+body > .container {
+  position: absolute;
+  padding: 0;
+  top: 45px;
+  right: 3px;
+  bottom: 0;
+  left: 0;
+}
+body > .container > aside {
+  padding: 5px;
+  width: 250px;
+  position: absolute;
+  margin: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  overflow-y: auto;
+}
+body > .container > aside ul {
+  padding: 0;
+}
+body > .container > aside ul li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #333;
+  font-size: 13px;
+}
+body > .container > aside ul li a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #000;
+}
+body > .container > aside ul li a.menu {
+  font-weight: bold;
+  line-height: 30px;
+}
+body > .container > aside ul li a.active {
+  color: #dd4b39;
+}
+body > .container > section {
+  padding: 0 40px 0 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 260px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+a {
+  color: #15c;
+}
+article {
+  border: 1px solid #ddd;
+  border-left-color: #4d90f0;
+  box-shadow: 0 0 4px #e3e5eb;
+  padding: 10px;
+  margin: 20px 0;
+}
+article.visible {
+  border-left-color: #4d90f0;
+}
+article header time {
+  float: right;
+}
+article header span {
+  color: #666;
+  display: block;
+}
+article header h1 {
+  font-weight: bold;
+  font-size: 140%;
+  margin: 5px 0;
+  max-width: 650px;
+  line-height: 16px;
+  height: 16px;
+  display: inline;
+}
+article header h1 a {
+  text-decoration: none;
+}
+article > p {
+  max-width: 650px;
+  text-align: justify;
+}
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: text-top;
+  background-image: url("../images/sprites.png");
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+.icon-dropdown-open {
+  background-position: -23px -120px;
+}
+.icon-dropdown-close {
+  background-position: 0 -120px;
+}
+.icon-feed {
+  background-position: 0 -77px;
+  width: 21px;
+  height: 21px;
+  opacity: .4;
+}
+::-webkit-scrollbar {
+  height: 16px;
+  overflow: visible;
+  width: 16px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 1px 1px 1px 6px;
+  min-height: 28px;
+  padding: 100px 0 0;
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.07);
+}
+::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+::-webkit-scrollbar-track {
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 0 0 0 4px;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
