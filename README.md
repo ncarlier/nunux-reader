@@ -20,19 +20,35 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
         cd ~/local/var/lib
         git clone git@bitbucket.org:ncarlier/reader.git
         cd reader
-        make
+        npm install
 
 ### Jobs
 
-*TODO*
+* **create-user.js**: Create new user. Usage:
+
+        ./bin/create-user.js nicolas@nunux.org
+
+* **import-opml.js**: Import OPML file and add feed to user subscriptions. Usage:
+
+        ./bin/import-opml.js -u nicolas@nunux.org ./data/subscriptions.xml
+
+
+* **feed-updater.js**: Update feeds content. It's a daemon. Use CTRL+C to stop. Usage:
+
+        ./bin/feed-updater.js
+
+* **timeline-updater.js**: Update users timelines. It's a daemon. Use CTRL+C to stop. Usage:
+
+        ./bin/timeline-updater.js
+
 
 ### Run Web Site
 
         #!/bin/sh
         # Optional ENV (default: development)
         export NODE_ENV=production
-        # Optional PORT (default: 8081)
-        export APP_PORT=8081
+        # Optional PORT (default: 3000)
+        export APP_PORT=3000
         # Run
         node app.js 2>&1 >> app.log
 
@@ -63,7 +79,7 @@ Feeds are append to a LIST (with RPUSH command). A LIST is used instead a SET be
 ### Article
 An article is store into a STRING.
 
-KEY : **feed:&lt;HASH&gt;:&lt;HASH&gt;**
+KEY : **feed:<HASH>:<HASH>**
 
 First HASH is the feed one. Second is compute with the article url.
 
@@ -72,7 +88,7 @@ The content is stored as is. Aka is the JSON feed entry.
 ### List of feed's articles
 The list is stored into a LIST (at the begining)
 
-KEY: **feed:&lt;HASH&gt;:articles**
+KEY: **feed:<HASH>:articles**
 
 *NOT YET USED*
 
@@ -86,7 +102,7 @@ It's used as a queue to update users "playlist" by a job.
 ### User
 An user is store into HASHES.
 
-KEY : **user:&lt;EMAIL&gt;**
+KEY : **user:<EMAIL>**
 
 Fields are follows:
 
@@ -96,21 +112,21 @@ Fields are follows:
 ### User subscriptions
 The list is stored into a SET.
 
-KEY: **user:&lt;EMAIL&gt;:subscriptions**
+KEY: **user:<EMAIL>:subscriptions**
 
 *NOT YET USED*
 
 ### User playlist
 The list is stored into a SORTED SET.
 
-KEY: **user:&lt;EMAIL&gt;:playlist**
+KEY: **user:<EMAIL>:playlist**
 
 The sort score is the article date.
 
 ### Feed subscribers
 The list is stored into a SET.
 
-KEY: **feed:&lt;HASH&gt;:subscribers**
+KEY: **feed:<HASH>:subscribers**
 
 
 
