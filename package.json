@@ -1,7 +1,7 @@
 {
-  "name": "NUNUX reader",
+  "name": "nunux-reader",
   "version": "0.0.1",
-  "description": "NUNUX RSS reader project",
+  "description": "NUNUX RSS Reader",
   "private": true,
   "homepage": "https://bitbucket.org/ncarlier/reader",
   "repository": {
@@ -21,6 +21,8 @@
     "feedparser": "0.14.0",
     "request": "2.9.x",
     "async": "0.2.5",
-    "date-utils": "*"
+    "date-utils": "*",
+    "passport": "0.1.x",
+    "passport-google": "0.3.0"
   }
 }

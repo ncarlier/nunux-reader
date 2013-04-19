@@ -5,13 +5,14 @@ module.exports = function(app){
   /**
    * GET user subscriptions.
    */
-  app.get('/subscription', function(req, res, next) {
+  app.get('/subscription', app.ensureAuthenticated, function(req, res, next) {
+    var uid = req.user.uid;
+
     var getFeed = function(key, callback) {
       db.hgetall(key, callback);
     }
 
-    var key = 'user:nicolas@nunux.org:subscriptions';
-    db.smembers(key, function(err, replies) {
+    db.smembers(User.getSubscriptionsKey(uid), function(err, replies) {
       if (err) return next(err);
       async.map(replies, getFeed, function(err, results){
         if (err) return next(err);

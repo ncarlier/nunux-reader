@@ -1,21 +1,22 @@
 var db = require('../lib/db')
+  , User = require('../lib/user')
   , async = require('async');
 
 module.exports = function(app){
   /**
    * GET article listing.
    */
-  app.get('/article', function(req, res, next) {
-    // console.log('query: %j', req.query);
+  app.get('/article', app.ensureAuthenticated, function(req, res, next) {
+    var uid = req.user.uid;
+
     var getArticle = function(key, callback) {
       db.get(key, function(err, article) {
         if (err) return callback(err);
         callback(null, JSON.parse(article));
       });
     }
-    var key = 'user:nicolas@nunux.org:playlist';
-    //ZRANGEBYSCORE myzset -inf +inf
-    db.zrangebyscore(key, '-inf', '+inf', 'LIMIT', req.query.offset, '10', function(err, replies) {
+
+    db.zrangebyscore(User.getTimelineKey(uid), '-inf', '+inf', 'LIMIT', req.query.offset, '10', function(err, replies) {
       if (err) return next(err);
       async.map(replies, getArticle, function(err, results){
         if (err) return next(err);
@@ -27,12 +28,22 @@ module.exports = function(app){
   /**
    * GET total articles.
    */
-  app.get('/article/total', function(req, res, next) {
-    var key = 'user:nicolas@nunux.org:playlist';
-    db.zcount(key, '-inf', '+inf', function(err, reply) {
+  app.get('/article/total', app.ensureAuthenticated, function(req, res, next) {
+    var uid = req.user.uid;
+    db.zcount(User.getTimelineKey(uid), '-inf', '+inf', function(err, reply) {
       if (err) return next(err);
       res.json({total: reply});
     });
   });
 
+  /**
+   * PUT article read status.
+   */
+  app.delete('/article/:id', app.ensureAuthenticated, function(req, res, next) {
+    var uid = req.user.uid;
+    db.zrem(User.getTimelineKey(uid), req.params.id, function(err, reply) {
+      if (err) return next(err);
+      res.json({removed: reply});
+    });
+  });
 };

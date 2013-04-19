@@ -9,6 +9,7 @@
 <body>
   <header>
     <h1>{{ name }}</h1>
+    <span>{{ uid }}</span>
   </header>
   <div class="container">
     <aside>
