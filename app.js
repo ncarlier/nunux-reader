@@ -19,7 +19,11 @@ app.configure(function(){
   app.set('view engine', 'hjs');
   app.use(express.favicon());
   app.use(express.logger('dev'));
+  app.use(express.cookieParser());
   app.use(express.bodyParser());
+  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
@@ -30,13 +34,25 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+passport.serializeUser(function(user, done) {
+  done(null, user.uid);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.find(id, done);
+});
 
 passport.use(new GoogleStrategy({
     returnURL: app.get('realm') + ':' + app.get('port') + '/auth/google/return',
-    realm: app.get('realm')
+    realm: app.get('realm') + ':' + app.get('port') + '/'
   },
   function(identifier, profile, done) {
-    User.findOrCreate({uid: identifier}, done); 
+    var user = {
+      uid: profile.emails[0].value,
+      username: profile.displayName,
+      identifier: identifier
+    }
+    User.findOrCreate(user, done); 
   })
 );
 
@@ -57,5 +73,5 @@ require('./routes/article')(app);
 require('./routes/subscription')(app);
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  console.log('Express server listening on port ' + app.get('port'));
 });

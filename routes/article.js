@@ -16,7 +16,7 @@ module.exports = function(app){
       });
     }
 
-    db.zrangebyscore(User.getTimelineKey(uid), '-inf', '+inf', 'LIMIT', req.query.offset, '10', function(err, replies) {
+    db.zrangebyscore(User.getTimelineKey(uid), '-inf', '+inf', 'LIMIT', req.query.offset, req.query.size, function(err, replies) {
       if (err) return next(err);
       async.map(replies, getArticle, function(err, results){
         if (err) return next(err);
