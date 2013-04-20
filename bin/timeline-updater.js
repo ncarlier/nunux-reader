@@ -55,7 +55,7 @@ app.on('nextarticle', function() {
           var userKey = item;
           var date = new Date(article.pubdate);
           var score = date.getTime() * 1e-3;
-          client.zadd(userKey + ':playlist', score.toString(), article.key, clbk);
+          client.zadd(userKey + ':timeline', score.toString(), article.key, clbk);
         }
         // Get feed subscribers...
         // SMEMBERS feed:1000:subscribers

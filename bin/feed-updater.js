@@ -74,7 +74,7 @@ app.on('nextfeed', function() {
         // read feed...
         console.log('Got feed: %j', feed);
         var req = {
-          'proxy': 'http://proxy-internet.localnet:3128',
+          /*'proxy': 'http://proxy-internet.localnet:3128',*/
           'uri': feed.xmlurl/*,
           'headers': {
             'If-Modified-Since' : lastModified,
