@@ -15,8 +15,10 @@ $(function() {
     .done(function(articles) {
       $.each(articles, function(i, article) {
         var $article = $articleTmpl.clone();
+        $article.attr('id', article.id);
         $('header a', $article).text(article.title).attr('href', article.link);
-        $('header time', $article).text(moment(article.date).format("dddd, MMMM Do YYYY, h:mm:ss"));
+        if (article.date) $('header time', $article).text(moment(article.date).format('dddd, MMMM Do YYYY, h:mm:ss'));
+        else $('header time', $article).text('(not set)');
         $('header span', $article).text('From ' + article.meta.title + ' by ' + article.author);
         $('p', $article).html(article.description);
         $article.appendTo($articles);
@@ -66,7 +68,19 @@ $(function() {
       var height = $(this).height();
 
       var visible = !(top + height < 0 || top > areaHeight);
-      $(this).toggleClass('visible', visible);
+      if (visible && !$(this).hasClass('seen')) {
+        $(this).addClass('seen');
+        var $this = $(this);
+        $.ajax({
+          url: '/article/' + $(this).attr('id'),
+          type: 'DELETE',
+          dataType: 'json',
+          success: function(res) {
+            $this.addClass('confirm');
+            $btnAll.text('All items (' + res.total + ')');
+          }
+        });
+      }
     });
   });
 });

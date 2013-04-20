@@ -17,7 +17,7 @@ module.exports = function(app){
     if (req.files.opml) {
       User.import(req.user.uid, req.files.opml.path, function(err) {
         if (err) return next(err);
-        res.json({result: 'ok'});
+        res.redirect('/');
       });
     } else if (req.params.url) {
       res.json({result: 'TODO'});

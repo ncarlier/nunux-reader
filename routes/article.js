@@ -12,7 +12,9 @@ module.exports = function(app){
     var getArticle = function(key, callback) {
       db.get(key, function(err, article) {
         if (err) return callback(err);
-        callback(null, JSON.parse(article));
+        article = JSON.parse(article);
+        article.id = key;
+        callback(null, article);
       });
     }
 
@@ -43,7 +45,10 @@ module.exports = function(app){
     var uid = req.user.uid;
     db.zrem(User.getTimelineKey(uid), req.params.id, function(err, reply) {
       if (err) return next(err);
-      res.json({removed: reply});
+      db.zcount(User.getTimelineKey(uid), '-inf', '+inf', function(err, reply) {
+        if (err) return next(err);
+        res.json({total: reply});
+      });
     });
   });
 };

@@ -13,6 +13,10 @@
   </header>
   <div class="container">
     <aside>
+      <form action="/subscription" method="post" enctype="multipart/form-data">
+        <input type="file" name="opml" accept="text/xml" />
+        <input type="submit" value="Import" />
+      </form>
       <ul>
         <li><a href="#all" class="menu active" id="btn-all">All items</a></li>
         <li><a href="#saved" class="menu" id="btn-saved">Saved items</a></li>
