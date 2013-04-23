@@ -10,6 +10,25 @@ $(function() {
     offset: 0,
     size: 10
   }
+
+  var keepUnreadHandler = function() {
+    var id = $(this).attr('id').split('/')[0];
+    if ($(this).is(':checked')) {
+      var $this = $(this);
+      $.ajax({
+        url: '/article/' + id,
+        type: 'PUT',
+        dataType: 'json',
+        success: function(res) {
+          $this.addClass('keep');
+          $btnAll.text('All items (' + res.total + ')');
+        }
+      });
+    } else {
+      $(this).removeClass('keep seen confirm');
+    }
+  }
+
   var getArticles = function() {
     $.getJSON('article', params)
     .done(function(articles) {
@@ -21,6 +40,8 @@ $(function() {
         else $('header time', $article).text('(not set)');
         $('header span', $article).text('From ' + article.meta.title + ' by ' + article.author);
         $('p', $article).html(article.description);
+        $('footer input', $article).attr('id', article.id + '/keep').change(keepUnreadHandler);
+        $('footer label', $article).attr('for', article.id + '/keep');
         $article.appendTo($articles);
       });
     });
@@ -68,7 +89,7 @@ $(function() {
       var height = $(this).height();
 
       var visible = !(top + height < 0 || top > areaHeight);
-      if (visible && !$(this).hasClass('seen')) {
+      if (visible && !$(this).hasClass('seen') && !$(this).hasClass('keep')) {
         $(this).addClass('seen');
         var $this = $(this);
         $.ajax({
