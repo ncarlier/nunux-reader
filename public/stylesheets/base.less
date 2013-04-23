@@ -12,31 +12,44 @@ body {
   font-family: arial,sans-serif;
   > header {
     position: fixed;
-    padding: 5px;
     right: 0;
     left: 0;
     top: 0;
     z-index: 1030;
     margin-bottom: 0;
-    background: -webkit-gradient(radial,100 36,0,100 -40,120,from(#fafafa),to(#f1f1f1)),#f1f1f1;
-    border-bottom: 1px solid #666;
-    border-color: #e5e5e5;
+    border: solid #eee;
+    border-width: 0 0 1px 0;
     h1 {
-      color: #dd4b39;
+      background: -webkit-gradient(radial,100 36,0,100 -40,120,from(#fafafa),to(#f1f1f1)),#f1f1f1;
+      border-bottom: 1px solid #eee;
+      border-color: #e5e5e5;
+      padding: 5px;
+      padding-left: 16px;
       margin: 0;
       font-size: 24px;
-      font-variant: small-caps;
+      span {
+        font-size: 12px;
+        position: absolute;
+        right: 10px;
+        top: 10px
+      }
     }
-    span {
-      position: absolute;
-      right: 10px;
-      top: 10px
+    nav {
+      padding-left: 16px;
+      height: 31px;
+      line-height: 31px;
+      h2 {
+        font-weight: normal;
+        font-size: 20px;
+        margin: 0;
+        color: #dd4b39;
+      }
     }
   }
   > .container {
     position: absolute;
     padding: 0;
-    top: 45px;
+    top: 70px;
     right: 3px;
     bottom: 0;
     left: 0;
@@ -52,6 +65,8 @@ body {
       overflow-y: auto;
       ul {
         padding: 0;
+        margin: 0;
+        margin-left: 10px;
         li {
           white-space: nowrap;
           overflow: hidden;
@@ -94,18 +109,21 @@ article {
   border: 1px solid #ddd;
   border-left-color: #4d90f0;
   box-shadow: 0 0 4px #e3e5eb;
-  padding: 10px;
   margin: 20px 0;
   &.visible {
     border-left-color: #4d90f0;
   }
   header {
+    padding: 10px;
     time {
       float: right;
+      color: #666;
+      font-size: 90%;
     }
     span {
       color: #666;
       display: block;
+      font-size: 90%;
     }
     h1 {
       font-weight: bold;
@@ -121,7 +139,21 @@ article {
     }
   }
   > p {
+    padding: 10px;
     max-width: 650px;
     text-align: justify;
+  }
+  footer {
+    font-size: 90%;
+    padding: 5px;
+    background-color: #fafafa;
+    color: #666;
+    border-top: 1px solid #ebebeb;
+    input {
+      cursor: pointer;
+    }
+    label {
+      cursor: pointer;
+    }
   }
 }

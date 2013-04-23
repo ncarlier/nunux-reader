@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>{{ name }}</title>
+  <title>NUNUX Reader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{{ description }}" />
   <link href='stylesheets/style.css' rel="stylesheet" media="screen">
 </head>
 <body>
   <header>
-    <h1>{{ name }}</h1>
-    <span>{{ uid }}</span>
+    <h1>NUNUX<span>{{ uid }}</span></h1>
+    <nav>
+      <h2>Reader</h2>
+    </nav>
   </header>
   <div class="container">
     <aside>
@@ -38,7 +40,9 @@
         <span>From</span>
       </header>
       <p>Body</p>
-      <footer></footer>
+      <footer>
+        <input type="checkbox" /><label>Keep unread</label>
+      </footer>
     </article>
   </div>
 
