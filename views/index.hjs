@@ -39,7 +39,7 @@
         <h1><a target="_blank">Title</a></h1>
         <span>From</span>
       </header>
-      <p>Body</p>
+      <div>Body</div>
       <footer>
         <input type="checkbox" class="keep" /><label class="keep">Keep unread</label>
         <input type="checkbox" class="save" /><label class="save">Save this</label>

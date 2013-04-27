@@ -7,7 +7,7 @@ module.exports = function(app){
    * GET article listing.
    */
   app.get('/article', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimeline(req.user.uid, req.query.offset, req.query.size, function(err, articles) {
+    User.getTimeline(req.user.uid, req.query.start, req.query.size, function(err, articles) {
       if (err) return next(err);
       res.json(articles);
     });

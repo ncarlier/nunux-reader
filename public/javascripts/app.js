@@ -7,8 +7,11 @@ $(function() {
     , $btnSaved = $('#btn-saved')
     , $btnAll = $('#btn-all');
 
+  var endReached = false
+    , loading = false;
+
   var params = {
-    offset: 0,
+    start: null,
     size: 10
   }
 
@@ -44,26 +47,40 @@ $(function() {
   }
 
   var getArticles = function() {
+    if (endReached || loading) return null;
+    loading = true;
+
     $.getJSON('article', params)
-    .done(function(articles) {
-      $.each(articles, function(i, article) {
+    .done(function(res) {
+      $.each(res.articles, function(i, article) {
         var $article = $articleTmpl.clone();
         $article.attr('id', article.id);
         $('header a', $article).text(article.title).attr('href', article.link);
         if (article.date) $('header time', $article).text(moment(article.date).format('dddd, MMMM Do YYYY, h:mm:ss'));
         else $('header time', $article).text('(not set)');
         $('header span', $article).text('From ' + article.meta.title + ' by ' + article.author);
-        $('p', $article).html(article.description);
+        $('div', $article).html(article.description);
         $('footer input.keep', $article).attr('id', article.id + '/keep').change(keepUnreadHandler);
         $('footer input.save', $article).attr('id', article.id + '/save').change(saveThisHandler);
         $('footer label.keep', $article).attr('for', article.id + '/keep');
         $('footer label.save', $article).attr('for', article.id + '/save');
         $article.appendTo($articles);
       });
-    });
-    $.getJSON('article/total')
-    .done(function(res) {
-      $btnAll.text('All items (' + res.total + ')');
+      if (res.next) {
+        params.start = res.next;
+      } else {
+        endReached = true;
+      }
+      $.getJSON('article/total')
+      .done(function(resp) {
+        $btnAll.text('All items (' + resp.total + ')');
+        loading = false;
+      });
+
+      // Clean DOM
+      /*if ($articles.children().size() >= 100) {
+        $('#articles article:lt(10)').remove();
+      }*/
     });
   }
 
@@ -103,7 +120,6 @@ $(function() {
 
   $articles.scroll(function() {
     if ($articles.scrollTop() + $articles.height() > $articles[0].scrollHeight - 100) {
-      params.offset += params.size;
       getArticles();
     }
     var areaHeight = $(this).height();
@@ -116,6 +132,7 @@ $(function() {
       if (visible && !$(this).hasClass('seen') && !$(this).hasClass('keep')) {
         $(this).addClass('seen');
         var $this = $(this);
+        // TODO group ajax calls in a buffered one
         $.ajax({
           url: '/article/' + $(this).attr('id'),
           type: 'DELETE',
