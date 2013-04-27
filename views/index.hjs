@@ -41,7 +41,8 @@
       </header>
       <p>Body</p>
       <footer>
-        <input type="checkbox" /><label>Keep unread</label>
+        <input type="checkbox" class="keep" /><label class="keep">Keep unread</label>
+        <input type="checkbox" class="save" /><label class="save">Save this</label>
       </footer>
     </article>
   </div>

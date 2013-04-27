@@ -4,6 +4,7 @@ $(function() {
     , $articleTmpl = $('#article-tmpl').find(">:first-child")
     , $feedTmpl = $('#feed-tmpl').find(">:first-child")
     , $btnSubscriptions = $('#btn-subs')
+    , $btnSaved = $('#btn-saved')
     , $btnAll = $('#btn-all');
 
   var params = {
@@ -29,6 +30,19 @@ $(function() {
     }
   }
 
+  var saveThisHandler = function() {
+    var id = $(this).attr('id').split('/')[0];
+    var type = $(this).is(':checked') ? 'PUT' : 'DELETE';
+    $.ajax({
+      url: '/archive/' + id,
+      type: type,
+      dataType: 'json',
+      success: function(res) {
+        $btnSaved.text('Saved items (' + res.total + ')');
+      }
+    });
+  }
+
   var getArticles = function() {
     $.getJSON('article', params)
     .done(function(articles) {
@@ -40,14 +54,23 @@ $(function() {
         else $('header time', $article).text('(not set)');
         $('header span', $article).text('From ' + article.meta.title + ' by ' + article.author);
         $('p', $article).html(article.description);
-        $('footer input', $article).attr('id', article.id + '/keep').change(keepUnreadHandler);
-        $('footer label', $article).attr('for', article.id + '/keep');
+        $('footer input.keep', $article).attr('id', article.id + '/keep').change(keepUnreadHandler);
+        $('footer input.save', $article).attr('id', article.id + '/save').change(saveThisHandler);
+        $('footer label.keep', $article).attr('for', article.id + '/keep');
+        $('footer label.save', $article).attr('for', article.id + '/save');
         $article.appendTo($articles);
       });
     });
     $.getJSON('article/total')
     .done(function(res) {
       $btnAll.text('All items (' + res.total + ')');
+    });
+  }
+
+  var getArchivesSize = function() {
+    $.getJSON('archive/total')
+    .done(function(res) {
+      $btnSaved.text('Saved items (' + res.total + ')');
     });
   }
 
@@ -75,6 +98,7 @@ $(function() {
   });
 
   getArticles();
+  getArchivesSize();
   getSubscriptions();
 
   $articles.scroll(function() {

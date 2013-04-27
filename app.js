@@ -70,6 +70,7 @@ app.ensureAuthenticated = function(req, res, next) {
 // Register routes...
 require('./routes/index')(app);
 require('./routes/article')(app);
+require('./routes/archive')(app);
 require('./routes/subscription')(app);
 
 http.createServer(app).listen(app.get('port'), function(){
