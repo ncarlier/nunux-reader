@@ -5,16 +5,15 @@
  */
 require('date-utils');
 var program = require('commander'),
+    db = require('../lib/db'),
+    Feed = require('../lib/feed'),
+    Article = require('../lib/article'),
     FeedParser = require('feedparser'),
-    fs = require('fs'),
     request = require('request'),
-    redis = require('redis'),
     async = require('async'),
-    crypto = require('crypto'),
     EventEmitter = require('events').EventEmitter;
 
 var app = new EventEmitter();
-var client = redis.createClient();
 
 program
   .version('0.0.1')
@@ -23,10 +22,11 @@ program
 
 console.log('Feed Updater starting...');
 
-client.on('error', function (err) {
-  console.log('Error ' + err);
+process.on('uncaughtException', function(err) {
+  console.log(err);
 });
-client.on('connect', function() {
+
+db.on('connect', function() {
   app.emit('nextfeed');
 });
 
@@ -34,53 +34,55 @@ app.on('nextfeed', function() {
   async.waterfall(
     [
       function(callback) {
-        // RPOPLPUSH feeds feeds
-        client.rpoplpush('feeds', 'feeds', callback);
+        // Get last feed (and put in back into begining)
+        db.rpoplpush('feeds', 'feeds', callback);
       },
-      function(feedKey, callback) {
-        // HGETALL feed:1000
-        client.hgetall(feedKey, function(err, feed) {
-          if (err) return callback(err);
-          feed.key = feedKey;
-          var now = new Date();
-          if (!feed.lastUpdate) {
-            // No update date... ok update!
+      function(fid, callback) {
+        // Get feed from db...
+        Feed.get(fid, callback);
+      },
+      function(feed, callback) {
+        var now = new Date();
+        if (!feed.lastUpdate) {
+          // No update date... ok update!
+          callback(null, feed);
+        } else {
+          // Check time since last update...
+          var expirationDate = new Date(parseInt(feed.lastUpdate, 10));
+          expirationDate.addMinutes(5);
+          if (now.isAfter(expirationDate)) {
             callback(null, feed);
           } else {
-            // Check time since last update...
-            var expirationDate = new Date(parseInt(feed.lastUpdate, 10));
-            expirationDate.addMinutes(5);
-            if (now.isAfter(expirationDate)) {
+            var timeout = now.getSecondsBetween(expirationDate);
+            console.log('Waiting for %d s...', timeout);
+            setTimeout(function(){
               callback(null, feed);
-            } else {
-              var timeout = now.getSecondsBetween(expirationDate);
-              console.log('Waiting for %d s...', timeout);
-              setTimeout(function(){
-                callback(null, feed);
-              }, Math.abs(timeout) * 1000);
-            }
+            }, Math.abs(timeout) * 1000);
           }
-        });
+        }
       },
       function(feed, callback) {
         // update date...
-        client.hmset(feed.key,
-                     'lastUpdate', new Date().getTime(),
-                     function(err, reply) {
-                       callback(err, feed);
-                     });
+        db.hmset(feed.id,
+                 'lastUpdate', new Date().getTime(),
+                 function(err, reply) {
+                   callback(err, feed);
+                 });
       },
       function(feed, callback) {
-        // read feed...
-        console.log('Got feed: %j', feed);
+        // Request feed...
+        console.log('Requesting feed: %s ...', feed.xmlurl);
         var req = {
-          /*'proxy': 'http://proxy-internet.localnet:3128',*/
           'uri': feed.xmlurl/*,
+          // TODO deal with HTTP 304 response code
           'headers': {
             'If-Modified-Since' : lastModified,
             'If-None-Match' : etag
           }*/
         };
+        if (process.env.HTTP_PROXY) {
+          req.proxy = process.env.HTTP_PROXY;
+        }
         request(req)
           .pipe(new FeedParser())
           .on('error', callback)
@@ -88,13 +90,19 @@ app.on('nextfeed', function() {
             console.log('Feed info: %s - %s - %s', meta.title, meta.link, meta.xmlurl);
           })
           .on('article', function (article) {
-            // console.log('Article: %s - %s (%s)', article.date, article.title, article.link);
-            saveArticle(feed, article);
+            Article.create(article, feed, function(err, a) {
+              if (err) {
+                if (err != 'ALREADY_EXISTS') {
+                  console.log('Error while creating article: %s', err);
+                }
+              } else {
+                console.log('Article %s created: %s', a.id, a.title);
+              }
+            });
           })
           .on('end', callback);
       },
       function() {
-        console.log('Feed parsed.');
         app.emit('nextfeed');
       }
     ],
@@ -105,41 +113,3 @@ app.on('nextfeed', function() {
   );
 });
 
-function saveArticle(feed, article) {
-  async.waterfall(
-    [
-      function(callback) {
-        var guid = crypto.createHash('md5').update(article.guid).digest("hex");
-        var key = feed.key + ':' + guid;
-        client.exists(key, function(err, exists) {
-          if (exists) return callback('ALREADY_EXISTS');
-          callback(null, key);
-        });
-      },
-      function(key, callback) {
-        // Save article...
-        client.set(key, JSON.stringify(article), function(err, reply) {
-          callback(err, key);
-        });
-        // todo? EXPIRE entry:1000 60*60*24*30
-      },
-      function(key, callback) {
-        // Add article to feed...
-        // LPUSH feed:1000:entries entry:1000
-        client.lpush(feed.key + ':articles', key, function(err, reply) {
-          callback(err, key);
-        });
-        // todo? LTRIM feed:1000:entries 0 999
-      },
-      function(key, callback) {
-        client.rpush('articles:integration', key, callback);
-      },
-      function() {
-        console.log('Article "%s" added to feed %s.', article.title, feed.key);
-      }
-    ],
-    function(err) {
-      console.log('Error: %s', err);
-    }
-  );
-}
