@@ -14,7 +14,7 @@ var app = module.exports = express();
 
 app.configure(function(){
   app.set('port', process.env.APP_PORT || 3000);
-  app.set('realm', process.env.APP_REALM || 'http://localhost');
+  app.set('realm', process.env.APP_REALM || 'http://localhost:' + app.get('port'));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'hjs');
   app.use(express.favicon());
@@ -43,8 +43,8 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new GoogleStrategy({
-    returnURL: app.get('realm') + ':' + app.get('port') + '/auth/google/return',
-    realm: app.get('realm') + ':' + app.get('port') + '/'
+    returnURL: app.get('realm') + '/auth/google/return',
+    realm: app.get('realm') + '/'
   },
   function(identifier, profile, done) {
     var user = {
