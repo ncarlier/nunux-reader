@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{{ description }}" />
   <link href='stylesheets/style.css' rel="stylesheet" media="screen">
+  <script data-main="javascripts/main" src="javascripts/components/requirejs/require.js"></script>
 </head>
 <body>
   <header>
@@ -13,54 +14,7 @@
       <h2>Reader</h2>
     </nav>
   </header>
-  <div class="container">
-    <aside>
-      <form action="/subscription" method="post" enctype="multipart/form-data">
-        <input type="file" name="opml" accept="text/xml" />
-        <input type="submit" value="Import" />
-      </form>
-      <ul>
-        <li><a href="#all" class="menu active" id="btn-all">All items</a></li>
-        <li><a href="#saved" class="menu" id="btn-saved">Saved items</a></li>
-        <li>
-          <a href='#' class="menu" id="btn-subs"><i class="icon-dropdown-open"></i>Subscriptions</a>
-          <ul id="subscriptions">
-          </ul>
-        </li>
-      </ul>
-    </aside>
-    <section id="articles"></section>
+  <div class="container" id="container">
   </div>
-
-  <div id="article-tmpl" style='display:none;'>
-    <article>
-      <header>
-        <time>Date</time>
-        <h1><a target="_blank">Title</a></h1>
-        <span>From</span>
-      </header>
-      <div>Body</div>
-      <footer>
-        <input type="checkbox" class="keep" /><label class="keep">Keep unread</label>
-        <input type="checkbox" class="save" /><label class="save">Save this</label>
-      </footer>
-    </article>
-  </div>
-
-  <ul id="feed-tmpl" style='display:none;'>
-    <li>
-      <i class="icon-feed"></i>
-      <a target="_blank">Feed</a>
-    </li>
-  </ul>
-
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script type="text/javascript">
-if(typeof jQuery == 'undefined') {
-  document.write("<script src='/javascripts/jquery.min.js' type='text/javascript'><\/script>");
-}
-  </script>
-  <script src="javascripts/moment.min.js"></script>
-  <script src="javascripts/app.js"></script>
 </body>
 </html>

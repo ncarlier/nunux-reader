@@ -1,0 +1,18 @@
+{
+  "name": "reader",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+    "jquery": "~2.0.0",
+    "backbone-amd": "~1.0.0",
+    "moment": "~2.0.0",
+    "requirejs": "~2.1.5",
+    "underscore-amd": "~1.4.4",
+    "requirejs-text": "~2.0.6"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}

@@ -1,0 +1,13 @@
+<article id="<%= id %>">
+  <header>
+    <time><%= date %></time>
+    <h1><a target="_blank" href="<%= link %>"><%= title %></a></h1>
+    <span>From <%= meta.title %> by <%= author %></span>
+  </header>
+  <div><%= description %></div>
+  <footer>
+    <input type="checkbox" id="<%= id %>/keep" class="keep"/><label for="<%= id %>/keep">Keep unread</label>
+    <input type="checkbox" id="<%= id %>/save" class="save"/><label for="<%= id %>/save">Save this</label>
+  </footer>
+</article>
+

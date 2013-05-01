@@ -1,3 +1,4 @@
 node_modules
 .DS_Store
 public/stylesheets/style.css
+public/javascripts/components
