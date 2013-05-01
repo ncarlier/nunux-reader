@@ -15,6 +15,8 @@ var program = require('commander'),
 
 var app = new EventEmitter();
 
+var TIMER = 10;
+
 program
   .version('0.0.1')
   .option('-d, --debug', 'Debug flag')
@@ -38,6 +40,7 @@ app.on('nextfeed', function() {
         db.rpoplpush('feeds', 'feeds', callback);
       },
       function(fid, callback) {
+        if (fid == null) return callback('NO_FEED');
         // Get feed from db...
         Feed.get(fid, callback);
       },
@@ -49,15 +52,19 @@ app.on('nextfeed', function() {
         } else {
           // Check time since last update...
           var expirationDate = new Date(parseInt(feed.lastUpdate, 10));
-          expirationDate.addMinutes(5);
+          expirationDate.addMinutes(TIMER);
           if (now.isAfter(expirationDate)) {
             callback(null, feed);
           } else {
             var timeout = now.getSecondsBetween(expirationDate);
-            console.log('Waiting for %d s...', timeout);
-            setTimeout(function(){
+            if (timeout <= 10) {
               callback(null, feed);
-            }, Math.abs(timeout) * 1000);
+            } else { 
+              console.log('Waiting for %ds ...', timeout);
+              setTimeout(function(){
+                callback(null, feed);
+              }, Math.abs(timeout) * 1000);
+            }
           }
         }
       },
@@ -83,32 +90,41 @@ app.on('nextfeed', function() {
         if (process.env.HTTP_PROXY) {
           req.proxy = process.env.HTTP_PROXY;
         }
-        request(req)
-          .pipe(new FeedParser())
-          .on('error', callback)
-          .on('meta', function (meta) {
-            console.log('Feed info: %s - %s - %s', meta.title, meta.link, meta.xmlurl);
-          })
-          .on('article', function (article) {
-            Article.create(article, feed, function(err, a) {
-              if (err) {
-                if (err != 'ALREADY_EXISTS') {
-                  console.log('Error while creating article: %s', err);
-                }
-              } else {
-                console.log('Article %s created: %s', a.id, a.title);
+
+        FeedParser.parseStream(request(req))
+        .on('meta', function (meta) {
+          console.log('Feed info: %s - %s - %s', meta.title, meta.link, meta.xmlurl);
+        })
+        .on('article', function (article) {
+          Article.create(article, feed, function(err, a) {
+            if (err) {
+              if (err != 'ALREADY_EXISTS') {
+                console.log('Error while creating article: %s', err);
               }
-            });
-          })
-          .on('end', callback);
+            } else {
+              console.log('Article %s created: %s', a.id, a.title);
+            }
+          });
+        })
+        .on('error', callback)
+        .on('complete', function(meta, articles) {
+           callback(null);
+        });
       },
       function() {
         app.emit('nextfeed');
       }
     ],
     function(err) {
-      console.log('Error: %s', err);
-      app.emit('nextfeed');
+      if (err == 'NO_FEED') {
+        console.log('No feed to parse. Waiting for 120s ...');
+        setTimeout(function(){
+          app.emit('nextfeed');
+        }, 120000);
+      } else {
+        console.log('Error: %s', err);
+        app.emit('nextfeed');
+      }
     }
   );
 });
