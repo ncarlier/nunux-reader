@@ -56,7 +56,7 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
 ### Feed model
 A feed is stored into HASHES.
 
-KEY: **feed:&lt;HASH&gt;**
+KEY: **feed:<HASH>**
 
 The HASH is compute with the feed xml url.
 
