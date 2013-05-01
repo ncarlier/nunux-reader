@@ -33,14 +33,14 @@ app.on('nextarticle', function() {
         Article.get(aid, callback);
       },
       function(article, callback) {
-        console.log('Integrating article %s (%s)...', article.key, article.pubdate);
+        console.log('Integrating article %s (%s)...', article.id, article.pubdate);
         var updateUserTimeline = function(uid, clbk) {
           var date = new Date(article.pubdate);
           var score = date.getTime() * 1e-3;
           db.zadd(uid + ':timeline', score.toString(), article.id, clbk);
         }
         // Get feed subscribers...
-        var parts = article.key.split(':');
+        var parts = article.id.split(':');
         var fid = parts[0] + ':' + parts[1];
         Feed.getSubscribers(fid, function(err, uids) {
           if (err) return callback(err);
