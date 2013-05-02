@@ -3,8 +3,9 @@ define([
        'underscore',
        'backbone',
        'moment',
+       'channel',
        'text!templates/article.html'
-], function($, _, Backbone, moment, articleTpl){
+], function($, _, Backbone, moment, channel, articleTpl){
   var keepUnreadHandler = function() {
     var id = $(this).attr('id').split('/')[0];
     if ($(this).is(':checked')) {
@@ -81,7 +82,7 @@ define([
       this.options.loading = true;
       $.getJSON('article/total')
       .done(function(resp) {
-        // TODO $btnAll.text('All items (' + resp.total + ')');
+        channel.trigger('app.event.timelinesize', resp);
         this.options.loading = false;
       }.bind(this));
     },
@@ -110,7 +111,7 @@ define([
             dataType: 'json',
             success: function(res) {
               $(this).addClass('confirm');
-              // TODO $btnAll.text('All items (' + res.total + ')');
+              channel.trigger('app.event.timelinesize', res);
             }.bind(this)
           });
         }

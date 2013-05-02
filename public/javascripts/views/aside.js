@@ -2,15 +2,22 @@ define([
        'jquery',
        'underscore',
        'backbone',
+       'channel',
        'text!templates/aside.html',
        'text!templates/subscription.html'
-], function($, _, Backbone, asideTpl, subscriptionTpl){
+], function($, _, Backbone, channel, asideTpl, subscriptionTpl){
   return Backbone.View.extend({
 
     tagName: 'aside',
 
     events: {
       //'click .btn-subs': 'toggleSubsciptions'
+    },
+
+    initialize: function () {
+      channel.on('app.event.timelinesize', function (data) {
+        $('.menu.all', this.$el).text('All items (' + data.total + ')');
+      }.bind(this));
     },
 
     render: function() {

@@ -5,28 +5,53 @@ define([
     routes: {
       'all':     'showGlobalTimeline',
       'archive': 'showArchiveTimeline',
+      'import':  'showImport',
       '':        'showGlobalTimeline'
     },
 
     showGlobalTimeline: function() {
-      require(['views/aside', 'views/timeline'], function(AsideView, TimelineView) {
-        if (!this.asideView) {
-          this.asideView = new AsideView();
-          this.asideView.render();
-          $('#container').append(this.asideView.$el);
-        }
-        if (!this.timelineView) {
-          this.timelineView = new TimelineView();
-          this.timelineView.render();
-          $('#container').append(this.timelineView.$el);
+      this._hideViews('import');
+      this._showViews('aside', 'timeline');
+    },
+
+    showArchiveTimeline: function() {
+      this._hideViews('import');
+      this._showViews('aside', 'timeline');
+    },
+
+    showImport: function() {
+      this._hideViews('timeline');
+      this._showViews('aside', 'import');
+    },
+
+    _showViews: function() {
+      for (var i in arguments) {
+        this._showView(arguments[i]);
+      }
+    },
+
+    _hideViews: function() {
+      for (var i in arguments) {
+        this._hideView(arguments[i]);
+      }
+    },
+
+    _showView: function(view) {
+      require(['views/' + view], function(View) {
+        var viewName = view + 'View';
+        if (!this[viewName]) {
+          this[viewName] = new View();
+          this[viewName].render();
+          $('#container').append(this[viewName].$el);
         }
       }.bind(this));
     },
 
-    showArchiveTimeline: function() {
-      if (this.asideView) {
-        this.asideView.remove();
-        this.asideView = null;
+    _hideView: function(view) {
+      var viewName = view + 'View';
+      if (this[viewName]) {
+        this[viewName].remove();
+        this[viewName] = null;
       }
     },
 
