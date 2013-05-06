@@ -15,8 +15,6 @@ var program = require('commander'),
 
 var app = new EventEmitter();
 
-var TIMER = 10;
-
 program
   .version('0.0.1')
   .option('-d, --debug', 'Debug flag')
@@ -28,7 +26,19 @@ db.on('connect', function() {
   app.emit('nextfeed');
 });
 
-var defaultMaxAge = 300; // 5 minutes
+var defaultMaxAge = 300    // 5 minutes
+  , maxExpirationHours = 2 // 2 hours
+  , samples = {};
+
+var jobIsTooCrazy = function(fid) {
+  var isCrazy = false;
+  if (samples[fid]) {
+    var d = samples[fid];
+    isCrazy = Math.abs(d.getSecondsBetween(new Date())) < defaultMaxAge;
+  }
+  samples[fid] = new Date();
+  return isCrazy;
+}
 
 var isParsableDate = function(date) {
   var timestamp = Date.parse(date);
@@ -36,33 +46,48 @@ var isParsableDate = function(date) {
 }
 
 var extractExpiresFromHeader = function(headers) {
-  if (headers['expires']) return headers['expires'];
-  var lastModified = headers['last-modified'];
-  if (isParsableDate(lastModified)) {
-    lastModified = new Date(lastModified);
+  var now = new Date()
+    , expires = headers['expires'];
+
+  if (expires && isParsableDate(expires)) {
+    // Extract expires from header.
+    expires = new Date(expires);
   } else {
-    console.log('Warning: Last-Modified date unparsable (use default): %s.', lastModified);
-    console.log('Warning: HEADER: %j', headers);
-    lastModified = new Date();
+    console.log('Warning: No expires directive (compute it): %s.', expires);
+    // Compute expires from cache infos of the header...
+    var lastModified = headers['last-modified'];
+    if (isParsableDate(lastModified)) {
+      lastModified = new Date(lastModified);
+    } else {
+      console.log('Warning: Last-Modified date unparsable (use default): %s.', lastModified);
+      console.log('Warning: HEADER: %j', headers);
+      lastModified = now;
+    }
+    var maxAge = defaultMaxAge;
+    var cacheControl = headers['cache-control'];
+    if (!cacheControl) {
+      console.log('Warning: No cache-control directive (use default).');
+    } else {
+      // Extract max age from cache control directive...
+      var rx = /^.*max-age=(\d+).*$/;
+      var vals = rx.exec(cacheControl);
+      if (!vals) {
+        console.log('Warning: No max-age in cache-control directive (use default).');
+      } else {
+        maxAge = parseInt(vals[1], 10);
+      }
+    }
+    expires = lastModified.addSeconds(maxAge);
   }
-  var cacheControl = headers['cache-control'];
-  if (!cacheControl) {
-    // return default expiration date
-    console.log('Warning: No cache-control directive (use default).');
-    lastModified.addSeconds(defaultMaxAge);
-    return lastModified.toString();
+  // Check validity
+  var then = now;
+  then.addHours(maxExpirationHours);
+  if (!expires.between(now, then)) {
+      console.log('Warning: Expiration date out of bound (use default): %s', expires.toGMTString());
+      expires = then;
+      expires = now.addSeconds(defaultMaxAge);
   }
-  var rx = /^.*max-age=(\d+).*$/;
-  var vals = rx.exec(cacheControl);
-  if (!vals) {
-    // return default expiration date
-    console.log('Warning: No max-age in cache-control directive (use default).');
-    lastModified.addSeconds(defaultMaxAge);
-    return lastModified.toString();
-  }
-  var maxAge = parseInt(vals[1], 10);
-  lastModified.addSeconds(maxAge);
-  return lastModified.toString();
+  return expires.toGMTString();
 }
 
 app.on('nextfeed', function() {
@@ -74,6 +99,7 @@ app.on('nextfeed', function() {
       },
       function(fid, callback) {
         if (fid == null) return callback('NO_FEED');
+        if (jobIsTooCrazy(fid)) return callback('TOO_CRAZY');
         // Get feed from db...
         Feed.get(fid, callback);
       },
@@ -87,9 +113,9 @@ app.on('nextfeed', function() {
           if (isParsableDate(feed.expires)) {
             var now = new Date();
             var expirationDate = new Date(feed.expires);
-            if (now.isAfter(expirationDate)) {
+            if (now.isBefore(expirationDate)) {
               err = 'Feed ' + feed.id +
-                ': Validity not expired (' + expirationDate.toString() +
+                ': Validity not expired (' + expirationDate.toGMTString() +
                 '). No need to update. Next.';
             }
           } else {
@@ -173,6 +199,11 @@ app.on('nextfeed', function() {
         setTimeout(function(){
           app.emit('nextfeed');
         }, 120000);
+      } else if (err == 'TOO_CRAZY') {
+        console.log('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
+        setTimeout(function(){
+          app.emit('nextfeed');
+        }, defaultMaxAge * 1000);
       } else {
         console.log(err);
         app.emit('nextfeed');
