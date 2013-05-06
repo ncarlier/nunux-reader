@@ -18,6 +18,9 @@ define([
       channel.on('app.event.timelinesize', function (data) {
         $('.menu.all', this.$el).text('All items (' + data.total + ')');
       }.bind(this));
+      channel.on('app.event.archivesize', function (data) {
+        $('.menu.archive', this.$el).text('Saved items (' + data.total + ')');
+      }.bind(this));
     },
 
     render: function() {

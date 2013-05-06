@@ -9,18 +9,17 @@ define([
   var keepUnreadHandler = function() {
     var id = $(this).attr('id').split('/')[0];
     if ($(this).is(':checked')) {
-      var $this = $(this);
       $.ajax({
         url: '/article/' + id,
         type: 'PUT',
         dataType: 'json',
         success: function(res) {
-          $this.addClass('keep');
-          // TODO $btnAll.text('All items (' + res.total + ')');
-        }
+          $(this).parents('article').addClass('keep');
+          channel.trigger('app.event.timelinesize', res);
+        }.bind(this)
       });
     } else {
-      $(this).removeClass('keep seen confirm');
+      $(this).parents('article').removeClass('keep seen confirm');
     }
   }
 
@@ -32,7 +31,7 @@ define([
       type: type,
       dataType: 'json',
       success: function(res) {
-        // TODO $btnSaved.text('Saved items (' + res.total + ')');
+        channel.trigger('app.event.archivesize', res);
       }
     });
   }
@@ -51,13 +50,13 @@ define([
     render: function() {
       this.$articles = this.$el;
       this.$articles.scroll(this.handleScrollEvent.bind(this));
+      this.$articles.delegate('footer input.keep', 'change', keepUnreadHandler);
+      this.$articles.delegate('footer input.save', 'change', saveThisHandler);
       this.fetchTimeline();
     },
 
     addArticle: function(article) {
       var $article = _.template(articleTpl, article);
-      $('footer input.keep', $article).change(keepUnreadHandler);
-      $('footer input.save', $article).change(saveThisHandler);
       this.$articles.append($article);
     },
 
