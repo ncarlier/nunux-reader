@@ -3,25 +3,31 @@ define([
 ], function(Backbone){
   return Backbone.Router.extend({
     routes: {
-      'all':     'showGlobalTimeline',
-      'archive': 'showArchiveTimeline',
-      'import':  'showImport',
-      '':        'showGlobalTimeline'
+      'all':       'showGlobalTimeline',
+      'archive':   'showArchiveTimeline',
+      'import':    'showImport',
+      'subscribe': 'showSubscribe',
+      '':          'showGlobalTimeline'
     },
 
     showGlobalTimeline: function() {
-      this._hideViews('import');
+      this._hideViews('import', 'subscribe');
       this._showViews('aside', 'timeline');
     },
 
     showArchiveTimeline: function() {
-      this._hideViews('import');
+      this._hideViews('import', 'subscribe');
       this._showViews('aside', 'timeline');
     },
 
     showImport: function() {
-      this._hideViews('timeline');
+      this._hideViews('timeline', 'subscribe');
       this._showViews('aside', 'import');
+    },
+
+    showSubscribe: function() {
+      this._hideViews('timeline', 'import');
+      this._showViews('aside', 'subscribe');
     },
 
     _showViews: function() {

@@ -20,7 +20,10 @@ module.exports = function(app){
         res.redirect('/');
       });
     } else if (req.params.url) {
-      res.json({result: 'TODO'});
+      User.subscribe(req.user.uid, req.params.url, function(err, feed) {
+        if (err) return next(err);
+        res.redirect('/#feed/' + feed.id);
+      });
     } else {
       res.send(400);
     }
