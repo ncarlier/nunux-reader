@@ -1,126 +1,56 @@
-
-html {
-	margin: 0;
-	padding: 0;
-}
-
-
-body {
-  color: #000;
-  background: #fff;
-  font-size: 90%;
-  font-family: arial,sans-serif;
-  > header {
-    position: fixed;
+@media (min-width: 768px) {
+  .sidebar-fixed-top {
+    position: absolute;
+    margin: 0;
     right: 0;
-    left: 0;
-    top: 0;
-    z-index: 1030;
-    margin-bottom: 0;
-    border: solid #eee;
-    border-width: 0 0 1px 0;
-    h1 {
-      background: -webkit-gradient(radial,100 36,0,100 -40,120,from(#fafafa),to(#f1f1f1)),#f1f1f1;
-      border-bottom: 1px solid #eee;
-      border-color: #e5e5e5;
-      padding: 5px;
-      padding-left: 16px;
-      margin: 0;
-      font-size: 24px;
-      span {
-        font-size: 12px;
-        position: absolute;
-        right: 10px;
-        top: 10px
-      }
-    }
-    nav {
-      padding-left: 16px;
-      height: 31px;
-      line-height: 31px;
-      h2 {
-        font-weight: normal;
-        font-size: 20px;
-        margin: 0;
-        color: #dd4b39;
-      }
-    }
+    left: 10px;
   }
-  > .container {
+  .body-fixed-top {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 73%;
+  }
+  .slide {
+    position: absolute;
+    overflow: scroll;
+    overflow-x: hidden;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding-top: 10px;
+  }
+  .row-fluid {
+    overflow: hidden;
+  }
+  .container-fluid, .row-fluid {
     position: absolute;
     padding: 0;
-    top: 70px;
+    top: 0;
     right: 3px;
     bottom: 0;
     left: 0;
-    > aside {
-      padding: 5px;
-      width: 250px;
-      position: absolute;
-      margin: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      top: 0;
-      overflow-y: auto;
-      .button {
-        margin-top: 10px;
-        margin-left: 10px;
-      }
-      ul {
-        padding: 0;
-        margin: 0;
-        margin-left: 10px;
-        li {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: #333;
-          font-size: 13px;
-          a {
-            text-decoration: none;
-            font-size: 14px;
-            color: #000;
-            &.menu {
-              font-weight: bold;
-              line-height: 30px;
-            }
-            &.active {
-              color: #dd4b39;
-            }
-          }
-        }
-      }
-    }
-    > section {
-      padding: 0 40px 0 10px;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 260px;
-      overflow: scroll;
-      overflow-x: hidden;
-    }
+  }
+  #container {
+    top: 45px;
+  }
+  .nano {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
 }
 
-a {
-  color: #15c;
-  &.button {
-    width: 100px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 16px;
-    font-variant: small-caps;
-    padding: 5px 0 5px 0;
-    background: #d34836;
-    color: #fff;
-    border-radius: 2px;
-    border: none;
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
+#sidebar {
+  ul {
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
@@ -128,7 +58,7 @@ article {
   border: 1px solid #ddd;
   border-left-color: #4d90f0;
   box-shadow: 0 0 4px #e3e5eb;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
   &.visible {
     border-left-color: #4d90f0;
   }
@@ -146,7 +76,7 @@ article {
     }
     h1 {
       font-weight: bold;
-      font-size: 140%;
+      font-size: 120%;
       margin: 5px 0;
       max-width: 650px;
       line-height: 16px;
@@ -167,16 +97,13 @@ article {
     }
   }
   footer {
-    font-size: 90%;
     padding: 5px;
     background-color: #fafafa;
     color: #666;
     border-top: 1px solid #ebebeb;
-    input {
-      cursor: pointer;
-    }
     label {
-      cursor: pointer;
+      display: inline-block;
+      margin: 0;
     }
   }
 }

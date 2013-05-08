@@ -1,4 +1,3 @@
-node_modules
-.DS_Store
+public/components/
+node_modules/
 public/stylesheets/style.css
-public/javascripts/components

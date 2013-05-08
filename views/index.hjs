@@ -1,20 +1,82 @@
 <!DOCTYPE html>
 <html>
   <head>
+
+  <meta charset="utf-8">
   <title>NUNUX Reader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{{ description }}" />
-  <link href='stylesheets/style.css' rel="stylesheet" media="screen">
-  <script data-main="javascripts/main" src="javascripts/components/requirejs/require.js"></script>
+  <meta name="author" content="">
+  <!-- Le styles -->
+  <link href="components/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
+  <style type="text/css">
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+.sidebar-nav {
+  padding: 9px 0;
+}
+
+@media (max-width: 980px) {
+  /* Enable use of floated navbar text */
+  .navbar-text.pull-right {
+    float: none;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+  </style>
+  <link href="components/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="stylesheets/style.css" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+      <script src="components/bootstrap/docs/assets/js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="icons/favicon.png">
+
+  <script data-main="javascripts/main" src="components/requirejs/require.js"></script>
 </head>
 <body>
-  <header>
-    <h1>NUNUX<span>{{ uid }}</span></h1>
-    <nav>
-      <h2>Reader</h2>
-    </nav>
-  </header>
-  <div class="container" id="container">
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="#">NUNUX Reader</a>
+      <div class="nav-collapse collapse">
+        <p class="navbar-text pull-right">
+        Logged in as <a href="#" class="navbar-link">{{uid}}</a>
+        </p>
+        <ul class="nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
   </div>
+</div>
+
+<div class="container-fluid" id="container">
+  <div class="row-fluid">
+
+    <div class="nano span3 sidebar-fixed-top" id="sidebar">
+    </div>
+
+    <div class="nano span9 body-fixed-top" id="main">
+    </div>
+
+  </div><!--/row-->
+</div><!--/.fluid-container-->
 </body>
 </html>

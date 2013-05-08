@@ -7,7 +7,7 @@ module.exports = function(app){
    * GET archives listing.
    */
   app.get('/archive', app.ensureAuthenticated, function(req, res, next) {
-    User.getArchives(req.user.uid, req.query.offset, req.query.size, function(err, articles) {
+    User.getTimeline(req.user.uid, req.query.offset, req.query.size, true, function(err, articles) {
       if (err) return next(err);
       res.json(articles);
     });
@@ -17,7 +17,7 @@ module.exports = function(app){
    * GET total archives.
    */
   app.get('/archive/total', app.ensureAuthenticated, function(req, res, next) {
-    User.getArchivesSize(req.user.uid, function(err, result) {
+    User.getTimelineSize(req.user.uid, true, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });

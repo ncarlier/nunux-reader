@@ -7,7 +7,7 @@ module.exports = function(app){
    * GET article listing.
    */
   app.get('/article', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimeline(req.user.uid, req.query.start, req.query.size, function(err, articles) {
+    User.getTimeline(req.user.uid, req.query.start, req.query.size, false, function(err, articles) {
       if (err) return next(err);
       res.json(articles);
     });
@@ -17,7 +17,7 @@ module.exports = function(app){
    * GET total articles.
    */
   app.get('/article/total', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimelineSize(req.user.uid, function(err, result) {
+    User.getTimelineSize(req.user.uid, false, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });

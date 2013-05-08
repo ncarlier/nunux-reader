@@ -37,25 +37,36 @@ define([
   }
 
   return Backbone.View.extend({
+
+    className: 'slide',
+
     options: {
       nextFid: null,
       loading: false,
-      fetchSize: 10
+      fetchSize: 10,
+      archive: false
     },
-
-    tagName: 'section',
-
-    className: 'article',
 
     render: function() {
       this.$articles = this.$el;
       this.$articles.scroll(this.handleScrollEvent.bind(this));
-      this.$articles.delegate('footer input.keep', 'change', keepUnreadHandler);
+      if (this.isTimeline()) {
+        this.$articles.delegate('footer input.keep', 'change', keepUnreadHandler);
+      }
       this.$articles.delegate('footer input.save', 'change', saveThisHandler);
       this.fetchTimeline();
     },
 
+    getUrl: function() {
+      return this.isTimeline() ? 'article' : 'archive';
+    },
+
+    isTimeline: function() {
+      return !this.options.archive;
+    },
+
     addArticle: function(article) {
+      article.isTimeline = this.isTimeline();
       var $article = _.template(articleTpl, article);
       this.$articles.append($article);
     },
@@ -64,7 +75,7 @@ define([
       if (this.options.nextFid === undefined || this.options.loading) return null;
       this.options.loading = true;
 
-      $.getJSON('article', {
+      $.getJSON(this.getUrl(), {
         next: this.options.nextFid,
         size: this.options.fetchSize})
       .done(function(res) {
@@ -79,9 +90,10 @@ define([
 
     fetchTimelineSize: function() {
       this.options.loading = true;
-      $.getJSON('article/total')
+      $.getJSON(this.getUrl() + '/total')
       .done(function(resp) {
-        channel.trigger('app.event.timelinesize', resp);
+        if (this.isTimeline()) channel.trigger('app.event.timelinesize', resp);
+        else channel.trigger('app.event.archivesize', resp);
         this.options.loading = false;
       }.bind(this));
     },
@@ -90,7 +102,7 @@ define([
       if (this.$articles.scrollTop() + this.$articles.height() > this.$articles[0].scrollHeight - 100) {
         this.fetchTimeline();
       }
-      this.updateSeenArticles();
+      if (this.isTimeline()) this.updateSeenArticles();
     },
 
     updateSeenArticles: function() {

@@ -6,8 +6,15 @@
   </header>
   <div><%= description %></div>
   <footer>
-    <input type="checkbox" id="<%= id %>/keep" class="keep"/><label for="<%= id %>/keep">Keep unread</label>
-    <input type="checkbox" id="<%= id %>/save" class="save"/><label for="<%= id %>/save">Save this</label>
+    <% if (isTimeline) { %>
+    <label class="checkbox">
+      <input type="checkbox" id="<%= id %>/keep" class="keep">Keep unread
+    </label>
+    &nbsp;
+    <% } %>
+    <label class="checkbox">
+      <input type="checkbox" id="<%= id %>/save" class="save" <% if (!isTimeline) { %>checked<% } %>>Save this
+    </label>
   </footer>
 </article>
 

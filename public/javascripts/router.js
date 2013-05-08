@@ -1,6 +1,7 @@
 define([
        'backbone',
-], function(Backbone){
+       'channel'
+], function(Backbone, channel){
   return Backbone.Router.extend({
     routes: {
       'all':       'showGlobalTimeline',
@@ -11,44 +12,36 @@ define([
     },
 
     showGlobalTimeline: function() {
-      this._hideViews('import', 'subscribe');
-      this._showViews('aside', 'timeline');
+      this._showView('sidebar', '#sidebar');
+      this._hideView('articles');
+      this._showView('articles', '#main');
+      channel.trigger('app.event.route', {route: 'all'});
     },
 
     showArchiveTimeline: function() {
-      this._hideViews('import', 'subscribe');
-      this._showViews('aside', 'timeline');
+      this._showView('sidebar', '#sidebar');
+      this._hideView('articles');
+      this._showView('articles', '#main', {archive: true});
+      channel.trigger('app.event.route', {route: 'archive'});
     },
 
     showImport: function() {
-      this._hideViews('timeline', 'subscribe');
-      this._showViews('aside', 'import');
+      this._showView('sidebar', '#sidebar');
+      this._showView('import', '#main');
     },
 
     showSubscribe: function() {
-      this._hideViews('timeline', 'import');
-      this._showViews('aside', 'subscribe');
+      this._showView('sidebar', '#sidebar');
+      this._showView('subscribe', '#main');
     },
 
-    _showViews: function() {
-      for (var i in arguments) {
-        this._showView(arguments[i]);
-      }
-    },
-
-    _hideViews: function() {
-      for (var i in arguments) {
-        this._hideView(arguments[i]);
-      }
-    },
-
-    _showView: function(view) {
+    _showView: function(view, el, options) {
       require(['views/' + view], function(View) {
         var viewName = view + 'View';
         if (!this[viewName]) {
-          this[viewName] = new View();
+          this[viewName] = new View(options);
           this[viewName].render();
-          $('#container').append(this[viewName].$el);
+          $(el).append(this[viewName].$el);
         }
       }.bind(this));
     },
