@@ -36,6 +36,12 @@ define([
     });
   }
 
+  var cleanArticleContent = function($article) {
+      $('a', $article).attr('target', '_blank');
+      //$('script', $article).not('script[src^="http://www.youtube"]').remove();
+      return $article;
+  }
+
   return Backbone.View.extend({
 
     className: 'slide',
@@ -67,7 +73,8 @@ define([
 
     addArticle: function(article) {
       article.isTimeline = this.isTimeline();
-      var $article = _.template(articleTpl, article);
+      var $article = $(_.template(articleTpl, article));
+      $article = cleanArticleContent($article);
       this.$articles.append($article);
     },
 

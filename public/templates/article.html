@@ -4,7 +4,22 @@
     <h1><a target="_blank" href="<%= link %>"><%= title %></a></h1>
     <span>From <%= meta.title %> by <%= author %></span>
   </header>
-  <div><%= description %></div>
+  <div>
+    <%= description %>
+    <% if (enclosures && enclosures.length > 0) { %>
+    <hr />
+    <%
+    var media = enclosures[0];
+    if (media.type && media.type.substring(0, 6) == "audio/") {
+    %>
+    <audio src="<%= media.url %>" preload="none" controls ></audio>
+    <a href="<%= media.url %>" target="_blank">(popup)</a>
+    <br/>
+    <%
+    }
+    }
+    %>
+  </div>
   <footer>
     <% if (isTimeline) { %>
     <label class="checkbox">
