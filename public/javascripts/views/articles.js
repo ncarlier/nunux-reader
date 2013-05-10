@@ -39,6 +39,7 @@ define([
   var cleanArticleContent = function($article) {
       $('a', $article).attr('target', '_blank');
       //$('script', $article).not('script[src^="http://www.youtube"]').remove();
+      $('script', $article).filter('script[src^="http://feeds.feedburner.com"]').remove();
       return $article;
   }
 
@@ -75,7 +76,11 @@ define([
       article.isTimeline = this.isTimeline();
       var $article = $(_.template(articleTpl, article));
       $article = cleanArticleContent($article);
-      this.$articles.append($article);
+     try {
+       this.$articles.append($article);
+     } catch (ex) {
+       alert('Bad content: ' + ex);
+     }
     },
 
     fetchTimeline: function() {
