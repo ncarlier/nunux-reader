@@ -36,10 +36,16 @@ define([
     });
   }
 
-  var cleanArticleContent = function($article) {
-      $('a', $article).attr('target', '_blank');
+  var cleanArticleContent = function($article, meta) {
       //$('script', $article).not('script[src^="http://www.youtube"]').remove();
       $('script', $article).filter('script[src^="http://feeds.feedburner.com"]').remove();
+      $('a', $article).attr('target', '_blank');
+      $('img', $article).each(function() {
+        var src = $(this).attr('src');
+        if(!src.match('^http')) {
+          $(this).attr('src', meta.link + '/' + src);
+        }
+      });
       return $article;
   }
 
@@ -75,7 +81,7 @@ define([
     addArticle: function(article) {
       article.isTimeline = this.isTimeline();
       var $article = $(_.template(articleTpl, article));
-      $article = cleanArticleContent($article);
+      $article = cleanArticleContent($article, article.meta);
      try {
        this.$articles.append($article);
      } catch (ex) {
