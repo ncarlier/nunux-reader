@@ -7,7 +7,7 @@ module.exports = function(app){
    * GET article listing.
    */
   app.get('/article', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimeline(req.user.uid, req.query.start, req.query.size, false, function(err, articles) {
+    User.getGlobalTimeline(req.user.uid, req.query.next, req.query.size, 'ASC', function(err, articles) {
       if (err) return next(err);
       res.json(articles);
     });
@@ -17,7 +17,7 @@ module.exports = function(app){
    * GET total articles.
    */
   app.get('/article/total', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimelineSize(req.user.uid, false, function(err, result) {
+    User.getGlobalTimelineSize(req.user.uid, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
@@ -27,7 +27,7 @@ module.exports = function(app){
    * Remove article from timeline.
    */
   app.delete('/article/:id', app.ensureAuthenticated, function(req, res, next) {
-    User.read(req.user.uid, req.params.id, function(err, result) {
+    User.removeFromGlobalTimeline(req.user.uid, req.params.id, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
@@ -37,7 +37,7 @@ module.exports = function(app){
    * Restore article to timeline.
    */
   app.put('/article/:id', app.ensureAuthenticated, function(req, res, next) {
-    User.unRead(req.user.uid, req.params.id, function(err, result) {
+    User.restoreToGlobalTimeline(req.user.uid, req.params.id, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });

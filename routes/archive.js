@@ -7,7 +7,7 @@ module.exports = function(app){
    * GET archives listing.
    */
   app.get('/archive', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimeline(req.user.uid, req.query.offset, req.query.size, true, function(err, articles) {
+    User.getArchiveTimeline(req.user.uid, req.query.next, req.query.size, 'DESC', function(err, articles) {
       if (err) return next(err);
       res.json(articles);
     });
@@ -17,7 +17,7 @@ module.exports = function(app){
    * GET total archives.
    */
   app.get('/archive/total', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimelineSize(req.user.uid, true, function(err, result) {
+    User.getArchiveTimelineSize(req.user.uid, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
@@ -27,7 +27,7 @@ module.exports = function(app){
    * Remove article from archives.
    */
   app.delete('/archive/:id', app.ensureAuthenticated, function(req, res, next) {
-    User.unArchive(req.user.uid, req.params.id, function(err, result) {
+    User.removeFromArchiveTimeline(req.user.uid, req.params.id, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
@@ -37,7 +37,7 @@ module.exports = function(app){
    * Add article to archives.
    */
   app.put('/archive/:id', app.ensureAuthenticated, function(req, res, next) {
-    User.archive(req.user.uid, req.params.id, function(err, result) {
+    User.storeToArchiveTimeline(req.user.uid, req.params.id, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
