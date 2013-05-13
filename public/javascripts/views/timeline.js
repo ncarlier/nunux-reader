@@ -72,7 +72,7 @@ define([
     },
 
     refresh: function(options) {
-      options |= {};
+      if (typeof options == 'undefined') options = {};
       this.options.nextFid = null;
       this.options.timeline = options.timeline || 'default';
       this.$articles.empty();
