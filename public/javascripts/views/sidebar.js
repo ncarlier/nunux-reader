@@ -15,14 +15,13 @@ define([
 
     initialize: function () {
       channel.on('app.event.timelinesize', function (data) {
-        $('.menu-all', this.$el).text('All items (' + data.total + ')');
+        var selector = '.menu-' + data.timeline + '-timeline .size'
+        $(selector, this.$el).text('(' + data.total + ')');
       }.bind(this));
-      channel.on('app.event.archivesize', function (data) {
-        $('.menu-archive', this.$el).text('Saved items (' + data.total + ')');
-      }.bind(this));
-      channel.on('app.event.route', function (data) {
+      channel.on('app.event.timelinechange', function (data) {
+        var selector = '.menu-' + data.timeline + '-timeline';
         $('li', this.$el).removeClass('active');
-        $('.menu-' + data.route, this.$el).parent().addClass('active');
+        $(selector, this.$el).parent().addClass('active');
       }.bind(this));
     },
 

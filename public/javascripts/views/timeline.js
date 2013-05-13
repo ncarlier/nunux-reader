@@ -15,6 +15,7 @@ define([
         dataType: 'json',
         success: function(res) {
           $(this).parents('article').addClass('keep');
+          res.timeline = 'default'; // FIXME Not generic
           channel.trigger('app.event.timelinesize', res);
         }.bind(this)
       });
@@ -31,7 +32,8 @@ define([
       type: type,
       dataType: 'json',
       success: function(res) {
-        channel.trigger('app.event.archivesize', res);
+        res.timeline = 'archive';
+        channel.trigger('app.event.timelinesize', res);
       }
     });
   }
@@ -54,46 +56,54 @@ define([
     className: 'slide',
 
     options: {
-      nextFid: null,
-      loading: false,
+      nextFid:   null,
+      loading:   false,
       fetchSize: 10,
-      archive: false
+      timeline:  'default'
     },
 
     render: function() {
       this.$articles = this.$el;
       this.$articles.scroll(this.handleScrollEvent.bind(this));
-      if (this.isTimeline()) {
-        this.$articles.delegate('footer input.keep', 'change', keepUnreadHandler);
-      }
+      this.$articles.delegate('footer input.keep', 'change', keepUnreadHandler);
       this.$articles.delegate('footer input.save', 'change', saveThisHandler);
       this.fetchTimeline();
+      channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
-    getUrl: function() {
-      return this.isTimeline() ? 'article' : 'archive';
+    refresh: function(options) {
+      options |= {};
+      this.options.nextFid = null;
+      this.options.timeline = options.timeline || 'default';
+      this.$articles.empty();
+      this.fetchTimeline();
+      channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
-    isTimeline: function() {
-      return !this.options.archive;
+    getTimelineUrl: function() {
+      return this.options.timeline === 'default' ? 'article' : this.options.timeline;
+    },
+
+    isReadable: function() {
+      return this.options.timeline !== 'archive';
     },
 
     addArticle: function(article) {
-      article.isTimeline = this.isTimeline();
+      article.isReadable = this.isReadable();
       var $article = $(_.template(articleTpl, article));
       $article = cleanArticleContent($article, article.meta);
-     try {
-       this.$articles.append($article);
-     } catch (ex) {
-       alert('Bad content: ' + ex);
-     }
+      try {
+        this.$articles.append($article);
+      } catch (ex) {
+        alert('Bad content: ' + ex);
+      }
     },
 
     fetchTimeline: function() {
       if (this.options.nextFid === undefined || this.options.loading) return null;
       this.options.loading = true;
 
-      $.getJSON(this.getUrl(), {
+      $.getJSON(this.getTimelineUrl(), {
         next: this.options.nextFid,
         size: this.options.fetchSize})
       .done(function(res) {
@@ -108,10 +118,10 @@ define([
 
     fetchTimelineSize: function() {
       this.options.loading = true;
-      $.getJSON(this.getUrl() + '/total')
+      $.getJSON(this.getTimelineUrl() + '/total')
       .done(function(resp) {
-        if (this.isTimeline()) channel.trigger('app.event.timelinesize', resp);
-        else channel.trigger('app.event.archivesize', resp);
+        resp.timeline = this.options.timeline;
+        channel.trigger('app.event.timelinesize', resp);
         this.options.loading = false;
       }.bind(this));
     },
@@ -120,11 +130,12 @@ define([
       if (this.$articles.scrollTop() + this.$articles.height() > this.$articles[0].scrollHeight - 100) {
         this.fetchTimeline();
       }
-      if (this.isTimeline()) this.updateSeenArticles();
+      if (this.isReadable()) this.updateSeenArticles();
     },
 
     updateSeenArticles: function() {
       var areaHeight = this.$el.height();
+      var timeline = this.options.timeline;
 
       $('article', this.$el).each(function() {
         var top = $(this).position().top;
@@ -140,6 +151,7 @@ define([
             dataType: 'json',
             success: function(res) {
               $(this).addClass('confirm');
+              resp.timeline = timeline;
               channel.trigger('app.event.timelinesize', res);
             }.bind(this)
           });

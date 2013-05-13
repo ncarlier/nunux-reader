@@ -21,14 +21,14 @@
     %>
   </div>
   <footer>
-    <% if (isTimeline) { %>
+    <% if (isReadable) { %>
     <label class="checkbox">
       <input type="checkbox" id="<%= id %>/keep" class="keep">Keep unread
     </label>
     &nbsp;
     <% } %>
     <label class="checkbox">
-      <input type="checkbox" id="<%= id %>/save" class="save" <% if (!isTimeline) { %>checked<% } %>>Save this
+      <input type="checkbox" id="<%= id %>/save" class="save" <% if (!isReadable) { %>checked<% } %>>Save this
     </label>
   </footer>
 </article>

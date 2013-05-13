@@ -1,57 +1,55 @@
 define([
-       'backbone',
-       'channel'
-], function(Backbone, channel){
+       'backbone'
+], function(Backbone){
   return Backbone.Router.extend({
     routes: {
       'all':       'showGlobalTimeline',
       'archive':   'showArchiveTimeline',
       'import':    'showImport',
       'subscribe': 'showSubscribe',
+      'about':     'showAbout',
       '':          'showGlobalTimeline'
     },
 
+    views: {},
+
     showGlobalTimeline: function() {
-      this._showView('sidebar', '#sidebar');
-      this._hideView('articles');
-      this._showView('articles', '#main');
-      channel.trigger('app.event.route', {route: 'all'});
+      this.registerView('sidebar', '#sidebar');
+      this.registerView('timeline', '#main');
     },
 
     showArchiveTimeline: function() {
-      this._showView('sidebar', '#sidebar');
-      this._hideView('articles');
-      this._showView('articles', '#main', {archive: true});
-      channel.trigger('app.event.route', {route: 'archive'});
+      this.registerView('sidebar', '#sidebar');
+      this.registerView('timeline', '#main', {timeline: 'archive'});
     },
 
     showImport: function() {
-      this._showView('sidebar', '#sidebar');
-      this._showView('import', '#main');
+      this.registerView('sidebar', '#sidebar');
+      this.registerView('import', '#main');
     },
 
     showSubscribe: function() {
-      this._showView('sidebar', '#sidebar');
-      this._showView('subscribe', '#main');
+      this.registerView('sidebar', '#sidebar');
+      this.registerView('subscribe', '#main');
     },
 
-    _showView: function(view, el, options) {
+    showAbout: function() {
+      this.registerView('sidebar', '#sidebar');
+      this.registerView('about', '#main');
+    },
+
+    registerView: function(view, el, options) {
       require(['views/' + view], function(View) {
-        var viewName = view + 'View';
-        if (!this[viewName]) {
-          this[viewName] = new View(options);
-          this[viewName].render();
-          $(el).append(this[viewName].$el);
+        if (this.views[el] && this.views[el] instanceof View) {
+          if (typeof this.views[el].refresh == 'function') 
+            this.views[el].refresh(options);
+        } else {
+          if (this.views[el]) this.views[el].remove();
+          this.views[el] = new View(options);
+          this.views[el].render();
+          $(el).html(this.views[el].$el);
         }
       }.bind(this));
-    },
-
-    _hideView: function(view) {
-      var viewName = view + 'View';
-      if (this[viewName]) {
-        this[viewName].remove();
-        this[viewName] = null;
-      }
     },
 
     initialize: function(){
