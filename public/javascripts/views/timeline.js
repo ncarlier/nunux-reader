@@ -119,9 +119,9 @@ define([
     fetchTimelineSize: function() {
       this.options.loading = true;
       $.getJSON(this.getTimelineUrl() + '/total')
-      .done(function(resp) {
-        resp.timeline = this.options.timeline;
-        channel.trigger('app.event.timelinesize', resp);
+      .done(function(res) {
+        res.timeline = this.options.timeline;
+        channel.trigger('app.event.timelinesize', res);
         this.options.loading = false;
       }.bind(this));
     },
@@ -151,7 +151,7 @@ define([
             dataType: 'json',
             success: function(res) {
               $(this).addClass('confirm');
-              resp.timeline = timeline;
+              res.timeline = timeline;
               channel.trigger('app.event.timelinesize', res);
             }.bind(this)
           });
