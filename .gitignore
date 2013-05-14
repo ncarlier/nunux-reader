@@ -1,3 +1,5 @@
 public/components/
 node_modules/
 public/stylesheets/style.css
+public-build/
+public/lib/

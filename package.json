@@ -9,7 +9,8 @@
     "url": "git@bitbucket.org:ncarlier/reader.git"
   },
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "postinstall": "grunt install"
   },
   "dependencies": {
     "express": "3.1.0",
@@ -24,5 +25,13 @@
     "date-utils": "*",
     "passport": "0.1.x",
     "passport-google": "0.3.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-bower-task": "~0.2.3",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-less": "~0.5.1",
+    "grunt-contrib-copy": "~0.4.1"
   }
 }

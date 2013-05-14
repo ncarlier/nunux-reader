@@ -9,11 +9,13 @@
     "requirejs": "~2.1.5",
     "underscore-amd": "~1.4.4",
     "requirejs-text": "~2.0.6",
-    "bootstrap": "~2.3.1"
+    "bootstrap.css": "~2.1.1"
   },
   "ignore": [
     "**/.*",
-    "node_modules",
-    "components"
-  ]
+    "node_modules"
+  ],
+  "devDependencies": {
+    "html5shiv": "~3.6.2"
+  }
 }

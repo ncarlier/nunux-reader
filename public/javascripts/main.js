@@ -1,10 +1,10 @@
 require.config({
   paths: {
-    jquery:     '../components/jquery/jquery',
-    underscore: '../components/underscore-amd/underscore',
-    backbone:   '../components/backbone-amd/backbone',
-    text:       '../components/requirejs-text/text',
-    moment:     '../components/moment/moment',
+    jquery:     '../lib/jquery/jquery',
+    underscore: '../lib/underscore-amd/underscore',
+    backbone:   '../lib/backbone-amd/backbone',
+    text:       '../lib/requirejs-text/text',
+    moment:     '../lib/moment/moment',
     templates:  '../templates'
   }
 });

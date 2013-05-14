@@ -15,6 +15,7 @@ module.exports = function(app){
       html: function(){
         if (req.user) {
           context.uid = req.user.uid;
+          context.js = app.get('js');
           res.render('index', context);
         } else {
           res.render('login', context);
