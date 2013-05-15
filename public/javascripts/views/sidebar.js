@@ -39,6 +39,7 @@ define([
           var $feed = _.template(sidebarSubsTpl, feed);
           this.$nav.append($feed);
         }.bind(this));
+        $('.subscriptions .size', this.$el).text('(' + feeds.length + ')');
       }.bind(this));
     }
   });
