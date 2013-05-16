@@ -143,12 +143,21 @@ app.on('nextfeed', function() {
         }
 
         request(req, function(err, res, body) {
-          if (err) return callback(err);
-          if (res.statusCode == 200) {
+          if (err) {
+            console.log('Feed %s: Error on request. Skiping.', feed.id);
+            Feed.update(feed, {
+              status: 'error: ' + err
+            }, function(e, f) {
+              if (e) return callback(e);
+              callback(err);
+            });
+            return callback(err);
+          } else if (res.statusCode == 200) {
             // Update feed status and cache infos.
             // console.log('200: Headers: %j', res.headers);
             console.log('Feed %s: Updating...', feed.id);
             Feed.update(feed, {
+              status: 'updated',
               lastModified: res.headers['last-modified'],
               expires: extractExpiresFromHeader(res.headers),
               etag: res.headers['etag']
@@ -160,13 +169,20 @@ app.on('nextfeed', function() {
             // console.log('304: Headers: %j', res.headers);
             console.log('Feed %s: Not modified. Skiping.', feed.id);
             Feed.update(feed, {
+              status: 'not modified',
               expires: extractExpiresFromHeader(res.headers),
               etag: res.headers['etag']
             }, function(e, f) {
               callback(e, f, null);
             });
           } else {
-            callback('statusCode: ' + res.statusCode);
+            console.log('Feed %s: Bad HTTP response. Skiping.', feed.id);
+            Feed.update(feed, {
+              status: 'error: Bad status code: ' + res.statusCode
+            }, function(e, f) {
+              if (e) return callback(e);
+              callback('statusCode: ' + res.statusCode);
+            });
           }
         });
       },
