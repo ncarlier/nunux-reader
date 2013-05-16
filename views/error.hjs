@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>{{ name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ description }}" />
+</head>
+<body>
+  <h1>Error</h1>
+  <p>{{err}}</p>
+</body>
+</html>

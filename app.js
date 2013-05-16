@@ -31,13 +31,29 @@ app.configure(function(){
 app.configure('development', function() {
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use(express.errorHandler());
+  app.use(errorHandler);
 });
 
 app.configure('production', function() {
   app.use(express.static(path.join(__dirname, 'public-build')));
-  app.use(express.errorHandler());
+  app.use(errorHandler);
 });
+
+function errorHandler(err, req, res, next) {
+  if ('test' != app.get('env')) console.error(err.stack || err);
+  res.status(err.status || 500);
+  res.format({
+    html: function(){
+      res.render('error', {error: err});
+    },
+    text: function(){
+      res.type('txt').send('error: ' + err + '\n');
+    },
+    json: function(){
+      res.json({error: err});
+    }
+  });
+}
 
 passport.serializeUser(function(user, done) {
   done(null, user.uid);
