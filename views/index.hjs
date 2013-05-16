@@ -43,7 +43,6 @@ body {
   <link rel="shortcut icon" href="icons/favicon.png">
 
   <script data-main="javascripts/main" src="lib/requirejs/require.js"></script>
-  <!--script src="javascripts/main.js"></script-->
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -60,7 +59,8 @@ body {
         Logged in as <a href="#" class="navbar-link">{{uid}}</a>
         </p>
         <ul class="nav">
-          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">Home</a></li>
+          <li><a href="#manage">Manage</a></li>
           <li><a href="#about">About</a></li>
         </ul>
       </div><!--/.nav-collapse -->

@@ -1,0 +1,49 @@
+<a name="manage"></a>
+<div class="alert" style="display:none;"></div>
+<div class="row-fluid">
+  <div class="span6">
+    <form action="/subscription" method="post" enctype="multipart/form-data">
+      <fieldset>
+        <legend>Subscribe</legend>
+        <label>Enter a feed url</label>
+        <input type="text" name="url" placeholder="Type RSS URL here" />
+        <span class="help-block">e.g., http://rss.cnn.com/rss/edition.rss</span>
+        <button type="submit" class="btn">Subscribe</button>
+      </fieldset>
+    </form> 
+  </div>
+  <div class="span6">
+    <form action="/subscription" method="post" enctype="multipart/form-data">
+      <fieldset>
+        <legend>Import subscriptions</legend>
+        <label>Subscriptions file</label>
+        <input type="file" name="opml" accept="text/xml" />
+        <span class="help-block">Import an OPML file.</span>
+        <button type="submit" class="btn">Import</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <h2>Subscriptions</h2>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Feed</th>
+          <th>Status</th>
+          <th>Update date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="feed-list">
+        <tr class="no-subs">
+          <td colspan="4">
+            <strong>No subscription.</strong> Maybe is the time to add some.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -3,34 +3,23 @@ define([
 ], function(Backbone){
   return Backbone.Router.extend({
     routes: {
-      'all':       'showGlobalTimeline',
-      'archive':   'showArchiveTimeline',
-      'import':    'showImport',
-      'subscribe': 'showSubscribe',
-      'about':     'showAbout',
-      '':          'showGlobalTimeline'
+      'timeline/:timeline': 'showTimeline',
+      'manage':             'showManage',
+      'about':              'showAbout',
+      '':                   'showTimeline'
     },
 
     views: {},
 
-    showGlobalTimeline: function() {
+    showTimeline: function(timeline) {
+      var t = (typeof timeline == 'undefined') ? 'global' : timeline;
       this.registerView('sidebar', '#sidebar');
-      this.registerView('timeline', '#main');
+      this.registerView('timeline', '#main', {timeline: t});
     },
 
-    showArchiveTimeline: function() {
+    showManage: function() {
       this.registerView('sidebar', '#sidebar');
-      this.registerView('timeline', '#main', {timeline: 'archive'});
-    },
-
-    showImport: function() {
-      this.registerView('sidebar', '#sidebar');
-      this.registerView('import', '#main');
-    },
-
-    showSubscribe: function() {
-      this.registerView('sidebar', '#sidebar');
-      this.registerView('subscribe', '#main');
+      this.registerView('manage', '#main');
     },
 
     showAbout: function() {
@@ -44,12 +33,17 @@ define([
           if (typeof this.views[el].refresh == 'function') 
             this.views[el].refresh(options);
         } else {
+          this.unRegisterView(el);
           if (this.views[el]) this.views[el].remove();
           this.views[el] = new View(options);
           this.views[el].render();
           $(el).html(this.views[el].$el);
         }
       }.bind(this));
+    },
+
+    unRegisterView: function(el) {
+      if (this.views[el]) this.views[el].remove();
     },
 
     initialize: function(){

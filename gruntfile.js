@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           mainConfigFile: 'public/javascripts/main.js',
           name: 'main',
           out: 'public-build/javascripts/main.js',
-          include: ['views/about', 'views/import', 'views/sidebar', 'views/subscribe', 'views/timeline']
+          include: ['views/about', 'views/manage', 'views/sidebar', 'views/timeline']
         }
       }
     },

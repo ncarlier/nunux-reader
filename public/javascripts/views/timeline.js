@@ -15,7 +15,7 @@ define([
         dataType: 'json',
         success: function(res) {
           $(this).parents('article').addClass('keep');
-          res.timeline = 'default'; // FIXME Not generic
+          res.timeline = 'global'; // FIXME Not generic
           channel.trigger('app.event.timelinesize', res);
         }.bind(this)
       });
@@ -59,7 +59,7 @@ define([
       nextFid:   null,
       loading:   false,
       fetchSize: 10,
-      timeline:  'default'
+      timeline:  'global'
     },
 
     render: function() {
@@ -74,14 +74,14 @@ define([
     refresh: function(options) {
       if (typeof options == 'undefined') options = {};
       this.options.nextFid = null;
-      this.options.timeline = options.timeline || 'default';
+      this.options.timeline = options.timeline || 'global';
       this.$articles.empty();
       this.fetchTimeline();
       channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
     getTimelineUrl: function() {
-      return this.options.timeline === 'default' ? 'article' : this.options.timeline;
+      return this.options.timeline === 'global' ? 'article' : this.options.timeline;
     },
 
     isReadable: function() {
