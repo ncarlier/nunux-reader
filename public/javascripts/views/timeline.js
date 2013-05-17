@@ -7,15 +7,17 @@ define([
        'text!templates/article.html'
 ], function($, _, Backbone, moment, channel, articleTpl){
   var keepUnreadHandler = function() {
-    var id = $(this).attr('id').split('/')[0];
+    var aid = $(this).attr('id').split('/')[0];
+    var parts = aid.split(':');
+    var timeline = aid[0] + ':' + aid[1];
     if ($(this).is(':checked')) {
       $.ajax({
-        url: '/article/' + id,
+        url: 'timeline/' + timeline + '/' + aid,
         type: 'PUT',
         dataType: 'json',
         success: function(res) {
           $(this).parents('article').addClass('keep');
-          res.timeline = 'global'; // FIXME Not generic
+          res.timeline = timeline;
           channel.trigger('app.event.timelinesize', res);
         }.bind(this)
       });
@@ -28,7 +30,7 @@ define([
     var id = $(this).attr('id').split('/')[0];
     var type = $(this).is(':checked') ? 'PUT' : 'DELETE';
     $.ajax({
-      url: '/archive/' + id,
+      url: 'timeline/archive/' + id,
       type: type,
       dataType: 'json',
       success: function(res) {
@@ -59,6 +61,7 @@ define([
       nextFid:   null,
       loading:   false,
       fetchSize: 10,
+      order:     'ASC',
       timeline:  'global'
     },
 
@@ -81,7 +84,7 @@ define([
     },
 
     getTimelineUrl: function() {
-      return this.options.timeline === 'global' ? 'article' : this.options.timeline;
+      return 'timeline/' + this.options.timeline;
     },
 
     isReadable: function() {
@@ -105,7 +108,8 @@ define([
 
       $.getJSON(this.getTimelineUrl(), {
         next: this.options.nextFid,
-        size: this.options.fetchSize})
+        size: this.options.fetchSize,
+        order: this.options.order})
       .done(function(res) {
         $.each(res.articles, function(i, article) {
           article.date = (article.date) ? moment(article.date).format('dddd, MMMM Do YYYY, h:mm:ss') : '(not set)'
@@ -118,7 +122,7 @@ define([
 
     fetchTimelineSize: function() {
       this.options.loading = true;
-      $.getJSON(this.getTimelineUrl() + '/total')
+      $.getJSON(this.getTimelineUrl() + '/size')
       .done(function(res) {
         res.timeline = this.options.timeline;
         channel.trigger('app.event.timelinesize', res);
@@ -136,6 +140,7 @@ define([
     updateSeenArticles: function() {
       var areaHeight = this.$el.height();
       var timeline = this.options.timeline;
+      var timelineUrl = this.getTimelineUrl();
 
       $('article', this.$el).each(function() {
         var top = $(this).position().top;
@@ -146,7 +151,7 @@ define([
           $(this).addClass('seen');
           // TODO group ajax calls in a buffered one
           $.ajax({
-            url: '/article/' + $(this).attr('id'),
+            url: timelineUrl + '/' + $(this).attr('id'),
             type: 'DELETE',
             dataType: 'json',
             success: function(res) {

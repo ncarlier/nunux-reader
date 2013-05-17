@@ -4,6 +4,7 @@ var program = require('commander'),
     db = require('../lib/db'),
     Article = require('../lib/article'),
     Feed = require('../lib/feed'),
+    User = require('../lib/user'),
     async = require('async'),
     EventEmitter = require('events').EventEmitter;
 
@@ -34,17 +35,15 @@ app.on('nextarticle', function() {
       },
       function(article, callback) {
         console.log('Integrating article %s (%s)...', article.id, article.pubdate);
-        var updateUserTimeline = function(uid, clbk) {
-          var date = new Date(article.pubdate);
-          var score = date.getTime() * 1e-3;
-          db.zadd(uid + ':timeline', score.toString(), article.id, clbk);
+        var updateUserTimelines = function(uid, next) {
+          User.addArticleToTimeline(uid, 'global', article, next);
         }
         // Get feed subscribers...
         var parts = article.id.split(':');
         var fid = parts[0] + ':' + parts[1];
         Feed.getSubscribers(fid, function(err, uids) {
           if (err) return callback(err);
-          async.each(uids, updateUserTimeline, callback);
+          async.each(uids, updateUserTimelines, callback);
         });
       },
       function() {

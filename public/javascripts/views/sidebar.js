@@ -4,8 +4,8 @@ define([
        'backbone',
        'channel',
        'text!templates/sidebar.html',
-       'text!templates/sidebar-subs.html'
-], function($, _, Backbone, channel, sidebarTpl, sidebarSubsTpl){
+       'text!templates/sidebar-feed.html'
+], function($, _, Backbone, channel, sidebarTpl, sidebarFeedTpl){
   return Backbone.View.extend({
     className: 'slide',
 
@@ -16,10 +16,12 @@ define([
     initialize: function () {
       channel.on('app.event.timelinesize', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline .size'
+        selector = selector.replace(':', '\\:');
         $(selector, this.$el).text('(' + data.total + ')');
       }.bind(this));
       channel.on('app.event.timelinechange', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline';
+        selector = selector.replace(':', '\\:');
         $('li', this.$el).removeClass('active');
         $(selector, this.$el).parent().addClass('active');
       }.bind(this));
@@ -36,7 +38,7 @@ define([
       $.getJSON('subscription')
       .done(function(feeds) {
         $.each(feeds, function(i, feed) {
-          var $feed = _.template(sidebarSubsTpl, feed);
+          var $feed = _.template(sidebarFeedTpl, feed);
           this.$nav.append($feed);
         }.bind(this));
         $('.subscriptions .size', this.$el).text('(' + feeds.length + ')');
