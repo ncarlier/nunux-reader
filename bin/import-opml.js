@@ -9,7 +9,7 @@ var program = require('commander')
 
 program
   .version('0.0.1')
-  .option('-u, --user [user]', 'User subscription OPML file', 'user')
+  .option('-u, --user [user]', 'User subscription OPML file')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
