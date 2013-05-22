@@ -10,7 +10,7 @@ var program = require('commander'),
 
 program
   .version('0.0.1')
-  .option('-y, --days [days]', 'Nb of days to keep', 30)
+  .option('-y, --days [days]', 'Nb of days to keep', process.env.APP_DAYS_TO_KEEP || 30)
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
