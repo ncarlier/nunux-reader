@@ -118,7 +118,14 @@ define([
     },
 
     handleScrollEvent: function(event) {
-      if (this.$articles.children('.not-seen').length <= 1) {
+      var goFetch = false;
+      var $target = $(event.target);
+      if (event.target == document) {
+        goFetch = $target.scrollTop() + $(window).height() + 100 >= $target.height();
+      } else {
+        goFetch = $target.scrollTop() + $target.innerHeight() + 100 >= $target[0].scrollHeight;
+      }
+      if (goFetch) {
         this.fetchTimeline();
       }
       if (this.isReadable()) this.updateSeenArticles(event);
