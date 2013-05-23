@@ -20,26 +20,6 @@ define([
       return $article;
   }
 
-  var elementInViewport = function(el) {
-    var top = el.offsetTop;
-    var left = el.offsetLeft;
-    var width = el.offsetWidth;
-    var height = el.offsetHeight;
-
-    while(el.offsetParent) {
-      el = el.offsetParent;
-      top += el.offsetTop;
-      left += el.offsetLeft;
-    }
-
-    return (
-      top < (window.pageYOffset + window.innerHeight) &&
-      left < (window.pageXOffset + window.innerWidth) &&
-      (top + height) > window.pageYOffset &&
-      (left + width) > window.pageXOffset
-    );
-  }
-
   return Backbone.View.extend({
 
     className: 'timeline',
@@ -135,17 +115,13 @@ define([
     },
 
     updateSeenArticles: function(event) {
-      var areaHeight = this.$el.height();
+      var areaTop = this.$articles.offset().top;
       var timeline = this.options.timeline;
       var timelineUrl = this.getTimelineUrl();
-      var isVisible = (event.target == document) ? elementInViewport : function(el) {
-        var top = $(el).position().top;
-        var height = $(el).height();
-        return !(top + height < 0 || top > areaHeight);
-      };
 
       $('article.not-seen', this.$el).each(function() {
-        if (isVisible(this)) {
+        var t = (event.target == document) ? $(document).scrollTop() : areaTop;
+        if ($(this).offset().top < t) {
           $(this).removeClass('not-seen').addClass('seen');
           // TODO group ajax calls in a buffered one
           $.ajax({

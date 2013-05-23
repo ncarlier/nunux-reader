@@ -69,12 +69,15 @@
 }
 
 article {
-  border: 2px solid #ddd;
+  border: 1px solid #ddd;
   border-left-color: #4d90f0;
   box-shadow: 0 0 4px #e3e5eb;
   margin: 0 0 20px 0;
-  &.visible {
-    border-left-color: #4d90f0;
+  &.seen {
+    border-left: 2px solid #bbb;
+  }
+  &.not-seen {
+    border-left: 2px solid #4d90f0;
   }
   header {
     padding: 10px;
