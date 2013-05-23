@@ -75,6 +75,7 @@ define([
         (this.options.timeline === 'archive') ? 'Saved items' : 'Feed items';
       $('h1', this.$menu).text(title);
       $('button.sort-items', this.$menu).text(this.options.order === 'ASC' ? 'Sort by newest' : 'Sort by oldest');
+      $('button.mark-items', this.$menu).toggle(this.options.timeline != 'archive');
       channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
