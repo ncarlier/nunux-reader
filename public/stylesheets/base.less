@@ -50,6 +50,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      .bold {
+        font-weight: bold;
+      }
     }
   }
 }
@@ -76,7 +79,7 @@ article {
   &.seen {
     border-left: 2px solid #bbb;
   }
-  &.not-seen {
+  &.not-seen, &.kept-not-seen {
     border-left: 2px solid #4d90f0;
   }
   header {

@@ -17,7 +17,7 @@ define([
       channel.on('app.event.timelinesize', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline .size'
         selector = selector.replace(':', '\\:');
-        $(selector, this.$el).text('(' + data.total + ')');
+        $(selector, this.$el).text('(' + data.total + ')').parent().toggleClass('bold', data.total > 0);
       }.bind(this));
       channel.on('app.event.timelinechange', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline';

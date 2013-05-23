@@ -14,6 +14,17 @@ module.exports = function(app){
   });
 
   /**
+   * GET user's timelines status.
+   */
+  app.get('/timeline/size', app.ensureAuthenticated, function(req, res, next) {
+    User.getAllTimelinesSize(req.user.uid,
+                     function(err, result) {
+      if (err) return next(err);
+      res.json(result);
+    });
+  });
+
+  /**
    * GET user's timeline.
    */
   app.get('/timeline/:timeline', app.ensureAuthenticated, function(req, res, next) {

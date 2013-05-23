@@ -51,6 +51,7 @@ define([
       this.options.nextFid = null;
       this.$articles.empty();
       this.fetchTimeline();
+      this.fetchAllTimelinesSize();
       var title = (this.options.timeline === 'global') ? 'All items' :
         (this.options.timeline === 'archive') ? 'Saved items' : 'Feed items';
       $('h1', this.$menu).text(title);
@@ -104,6 +105,15 @@ define([
         res.timeline = this.options.timeline;
         channel.trigger('app.event.timelinesize', res);
         this.options.loading = false;
+      }.bind(this));
+    },
+
+    fetchAllTimelinesSize: function() {
+      $.getJSON('timeline/size')
+      .done(function(res) {
+        _.each(res, function(item) {
+          channel.trigger('app.event.timelinesize', item);
+        });
       }.bind(this));
     },
 
