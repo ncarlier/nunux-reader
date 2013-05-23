@@ -9,9 +9,9 @@ define([
 ], function($, _, Backbone, moment, channel, tpl, articleTpl){
   var cleanArticleContent = function($article, meta) {
       //$('script', $article).not('script[src^="http://www.youtube"]').remove();
-      $('script', $article).filter('script[src^="http://feeds.feedburner.com"]').remove();
-      $('a', $article).attr('target', '_blank');
-      $('img', $article).each(function() {
+      $('.content script', $article).filter('script[src^="http://feeds.feedburner.com"]').remove();
+      $('.content a', $article).attr('target', '_blank');
+      $('.content img', $article).each(function() {
         var src = $(this).attr('src');
         if(!src.match('^http')) {
           $(this).attr('src', meta.link + '/' + src);
@@ -109,6 +109,7 @@ define([
       .done(function(res) {
         $.each(res.articles, function(i, article) {
           article.date = (article.date) ? moment(article.date).format('dddd, MMMM Do YYYY, h:mm:ss') : '(not set)'
+          article.fid = 'feed:' + article.id.split(':')[1];
           this.addArticle(article);
         }.bind(this));
         this.options.nextFid = res.next;

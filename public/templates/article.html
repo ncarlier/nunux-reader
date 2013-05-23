@@ -2,9 +2,12 @@
   <header>
     <time><%= date %></time>
     <h1><a target="_blank" href="<%= link %>"><%= title %></a></h1>
-    <span>From <%= meta.title %> by <%= author %></span>
+    <span>
+      From <a href="#timeline/<%= fid %>"><%= meta.title %></a>
+      <% if (author) { %>by <%= author %><% } %>
+    </span>
   </header>
-  <div>
+  <div class="content">
     <%= description %>
     <% if (enclosures && enclosures.length > 0) { %>
     <hr />
