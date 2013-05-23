@@ -4,8 +4,9 @@ define([
        'backbone',
        'moment',
        'channel',
+       'text!templates/timeline.html',
        'text!templates/article.html'
-], function($, _, Backbone, moment, channel, articleTpl){
+], function($, _, Backbone, moment, channel, tpl, articleTpl){
   var cleanArticleContent = function($article, meta) {
       //$('script', $article).not('script[src^="http://www.youtube"]').remove();
       $('script', $article).filter('script[src^="http://feeds.feedburner.com"]').remove();
@@ -41,7 +42,7 @@ define([
 
   return Backbone.View.extend({
 
-    className: 'slide',
+    className: 'timeline',
 
     options: {
       nextFid:   null,
@@ -52,21 +53,28 @@ define([
     },
 
     render: function() {
-      this.$articles = this.$el;
+      this.$el.html(_.template(tpl, {}));
+      this.$articles = $('.content', this.$el);
+      this.$menu = $('.menu', this.$el);
       this.$articles.scroll(this.handleScrollEvent.bind(this));
       $(document).scroll(this.handleScrollEvent.bind(this));
       this.$articles.delegate('footer input.keep', 'change', this.keepUnreadHandler.bind(this));
       this.$articles.delegate('footer input.save', 'change', this.saveThisHandler.bind(this));
-      this.fetchTimeline();
-      channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
+      $('button.sort-items', this.$menu).click(this.sortItemsHandler.bind(this));
+      $('button.mark-items', this.$menu).click(this.markAllItemsHandler.bind(this));
+      this.refresh();
     },
 
     refresh: function(options) {
       if (typeof options == 'undefined') options = {};
+      this.options = _.extend(this.options, options);
       this.options.nextFid = null;
-      this.options.timeline = options.timeline || 'global';
       this.$articles.empty();
       this.fetchTimeline();
+      var title = (this.options.timeline === 'global') ? 'All items' :
+        (this.options.timeline === 'archive') ? 'Saved items' : 'Feed items';
+      $('h1', this.$menu).text(title);
+      $('button.sort-items', this.$menu).text(this.options.order === 'ASC' ? 'Sort by newest' : 'Sort by oldest');
       channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
@@ -119,7 +127,6 @@ define([
 
     handleScrollEvent: function(event) {
       if (this.$articles.children('.not-seen').length <= 1) {
-        //if (this.$articles.scrollTop() + this.$articles.height() > this.$articles[0].scrollHeight - 100) {
         this.fetchTimeline();
       }
       if (this.isReadable()) this.updateSeenArticles(event);
@@ -183,6 +190,32 @@ define([
           channel.trigger('app.event.timelinesize', res);
         }
       });
+    },
+    sortItemsHandler: function(event) {
+      var options = {
+        order: (this.options.order === 'ASC') ? 'DESC' : 'ASC'
+      }
+      this.refresh(options);
+
+      return false;
+    },
+    showItemsHandler: function(event) {
+      alert('Show all items not yet implemented');
+      return false;
+    },
+    markAllItemsHandler: function(event) {
+      if (confirm('Do you really want to mark all items as read ?')) {
+        // todo
+        $.ajax({
+          url: this.getTimelineUrl(),
+          type: 'DELETE',
+          dataType: 'json',
+          success: function(res) {
+            this.refresh();
+          }.bind(this)
+        });
+      }
+      return false;
     }
   });
 });

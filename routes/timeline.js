@@ -34,7 +34,19 @@ module.exports = function(app){
   app.delete('/timeline/:timeline/:aid', app.ensureAuthenticated, function(req, res, next) {
     User.removeArticleFromTimeline(req.user.uid,
                             req.params.timeline,
-                            req.params.aid, 
+                            req.params.aid,
+                            function(err, result) {
+      if (err) return next(err);
+      res.json(result);
+    });
+  });
+
+  /**
+   * DELETE all article from user's timeline.
+   */
+  app.delete('/timeline/:timeline', app.ensureAuthenticated, function(req, res, next) {
+    User.removeAllArticlesFromTimeline(req.user.uid,
+                            req.params.timeline,
                             function(err, result) {
       if (err) return next(err);
       res.json(result);
