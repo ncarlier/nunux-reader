@@ -1,4 +1,4 @@
-<article id="<%= id %>" class="not-seen">
+<article id="<%= id %>" class="<% if (isReadable) { %>not-seen<% } %>">
   <header>
     <time><%= date %></time>
     <h1><a target="_blank" href="<%= link %>"><%= title %></a></h1>
@@ -31,7 +31,7 @@
     &nbsp;
     <% } %>
     <label class="checkbox">
-      <input type="checkbox" id="<%= id %>/save" class="save" <% if (!isReadable) { %>checked<% } %>>Save this
+      <input type="checkbox" id="<%= id %>/save" class="save" <% if (isSaved) { %>checked<% } %>>Save this
     </label>
   </footer>
 </article>

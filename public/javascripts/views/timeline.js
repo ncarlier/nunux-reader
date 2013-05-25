@@ -29,7 +29,8 @@ define([
       loading:   false,
       fetchSize: 10,
       order:     'ASC',
-      timeline:  'global'
+      timeline:  'global',
+      showAll:   'false'
     },
 
     render: function() {
@@ -42,6 +43,7 @@ define([
       this.$articles.delegate('footer input.save', 'change', this.saveThisHandler.bind(this));
       $('button.sort-items', this.$menu).click(this.sortItemsHandler.bind(this));
       $('button.mark-items', this.$menu).click(this.markAllItemsHandler.bind(this));
+      $('button.show-items', this.$menu).click(this.showItemsHandler.bind(this));
       this.refresh();
     },
 
@@ -49,6 +51,10 @@ define([
       if (typeof options == 'undefined') options = {};
       this.options = _.extend(this.options, options);
       this.options.nextFid = null;
+      this.options.showAllFlag = (this.options.timeline != 'archive' &&
+                                  this.options.timeline != 'global');
+      this.options.showAll = (this.options.showAllFlag &&
+                              this.options.showAll);
       this.$articles.empty();
       this.fetchTimeline();
       this.fetchAllTimelinesSize();
@@ -56,7 +62,13 @@ define([
         (this.options.timeline === 'archive') ? 'Saved items' : 'Feed items';
       $('h1', this.$menu).text(title);
       $('button.sort-items', this.$menu).text(this.options.order === 'ASC' ? 'Sort by newest' : 'Sort by oldest');
-      $('button.mark-items', this.$menu).toggle(this.options.timeline != 'archive');
+      $('button.mark-items', this.$menu).toggle(
+        this.options.timeline != 'archive' &&
+        !this.options.showAll
+      );
+      $('button.show-items', this.$menu).
+        text(this.options.showAll ? 'Show new items' : 'Show all items').
+        toggle(this.options.showAllFlag);
       channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
@@ -65,11 +77,13 @@ define([
     },
 
     isReadable: function() {
-      return this.options.timeline !== 'archive';
+      return this.options.timeline !== 'archive' &&
+        !this.options.showAll;
     },
 
     addArticle: function(article) {
       article.isReadable = this.isReadable();
+      article.isSaved = this.options.timeline == 'archive';
       var $article = $(_.template(articleTpl, article));
       $article = cleanArticleContent($article, article.meta);
       try {
@@ -86,7 +100,8 @@ define([
       $.getJSON(this.getTimelineUrl(), {
         next: this.options.nextFid,
         size: this.options.fetchSize,
-        order: this.options.order})
+        order: this.options.order,
+        type: this.options.showAll ? 'all' : null})
       .done(function(res) {
         $.each(res.articles, function(i, article) {
           article.date = (article.date) ? moment(article.date).format('dddd, MMMM Do YYYY, h:mm:ss') : '(not set)'
@@ -186,6 +201,7 @@ define([
         }
       });
     },
+
     sortItemsHandler: function(event) {
       var options = {
         order: (this.options.order === 'ASC') ? 'DESC' : 'ASC'
@@ -194,10 +210,16 @@ define([
 
       return false;
     },
+
     showItemsHandler: function(event) {
-      alert('Show all items not yet implemented');
+      var options = {
+        showAll: !this.options.showAll
+      }
+      this.refresh(options);
+
       return false;
     },
+
     markAllItemsHandler: function(event) {
       if (confirm('Do you really want to mark all items as read ?')) {
         // todo

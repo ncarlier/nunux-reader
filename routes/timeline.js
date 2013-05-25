@@ -30,9 +30,7 @@ module.exports = function(app){
   app.get('/timeline/:timeline', app.ensureAuthenticated, function(req, res, next) {
     User.getTimeline(req.user.uid,
                      req.params.timeline,
-                     req.query.next,
-                     req.query.size,
-                     req.query.order,
+                     req.query,
                      function(err, articles) {
       if (err) return next(err);
       res.json(articles);
