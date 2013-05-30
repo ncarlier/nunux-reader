@@ -10,9 +10,8 @@ require.config({
     backbone:   '../lib/backbone-amd/backbone',
     text:       '../lib/requirejs-text/text',
     moment:     '../lib/moment/moment',
-    bootstrap:  '../lib/bootstrap.css/js/bootstrap',
     templates:  '../templates'
   }
 });
 
-require(['app', 'bootstrap']);
+require(['app']);

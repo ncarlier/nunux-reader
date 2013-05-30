@@ -11,7 +11,7 @@ define([
 
     tagName: 'section',
 
-    className: 'slide',
+    className: 'manage',
 
     template: _.template(tpl),
 

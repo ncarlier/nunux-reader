@@ -1,6 +1,7 @@
 define([
-       'backbone'
-], function(Backbone){
+       'backbone',
+       'views/sidebar'
+], function(Backbone, SidebarView){
   return Backbone.Router.extend({
     routes: {
       'timeline/:timeline': 'showTimeline',
@@ -13,18 +14,15 @@ define([
 
     showTimeline: function(timeline) {
       var t = (typeof timeline == 'undefined') ? 'global' : timeline;
-      this.registerView('sidebar', '#sidebar');
-      this.registerView('timeline', '#main', {timeline: t});
+      this.registerView('timeline', '#content-inner', {timeline: t});
     },
 
     showManage: function() {
-      this.registerView('sidebar', '#sidebar');
-      this.registerView('manage', '#main');
+      this.registerView('manage', '#content-inner');
     },
 
     showAbout: function() {
-      this.registerView('sidebar', '#sidebar');
-      this.registerView('about', '#main');
+      this.registerView('about', '#content-inner');
     },
 
     registerView: function(view, el, options) {
@@ -48,6 +46,10 @@ define([
 
     initialize: function(){
       Backbone.history.start();
+      // Build sidebar.
+      this.sidebar = new SidebarView();
+      this.sidebar.$el = $('#sidebar');
+      this.sidebar.render();
     }
   });
 });

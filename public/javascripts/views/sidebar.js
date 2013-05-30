@@ -7,11 +7,6 @@ define([
        'text!templates/sidebar-feed.html'
 ], function($, _, Backbone, channel, sidebarTpl, sidebarFeedTpl){
   return Backbone.View.extend({
-    className: 'slide',
-
-    events: {
-      //'click .btn-subs': 'toggleSubsciptions'
-    },
 
     initialize: function () {
       channel.on('app.event.timelinesize', function (data) {
@@ -22,26 +17,27 @@ define([
       channel.on('app.event.timelinechange', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline';
         selector = selector.replace(':', '\\:');
-        $('li', this.$el).removeClass('active');
-        $(selector, this.$el).parent().addClass('active');
+        $('li', this.$el).removeClass('current_page_item');
+        $(selector, this.$el).parent().addClass('current_page_item');
       }.bind(this));
     },
 
     render: function() {
       var $sidebar = _.template(sidebarTpl, {});
       this.$el.html($sidebar);
-      this.$nav = $('.nav', this.$el);
+      this.$subscriptions = $('.is-subscriptions', this.$el);
       this.fetchSubscriptions();
     },
 
     fetchSubscriptions: function() {
       $.getJSON('subscription')
       .done(function(feeds) {
+        var $feeds = $('ul', this.$subscriptions);
         $.each(feeds, function(i, feed) {
           var $feed = _.template(sidebarFeedTpl, feed);
-          this.$nav.append($feed);
+          $feeds.append($feed);
         }.bind(this));
-        $('.subscriptions .size', this.$el).text('(' + feeds.length + ')');
+        $('.size', this.$subscriptions).text('(' + feeds.length + ')');
       }.bind(this));
     }
   });

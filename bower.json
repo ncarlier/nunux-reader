@@ -8,8 +8,7 @@
     "moment": "~2.0.0",
     "requirejs": "~2.1.5",
     "underscore-amd": "~1.4.4",
-    "requirejs-text": "~2.0.6",
-    "bootstrap.css": "~2.1.1"
+    "requirejs-text": "~2.0.6"
   },
   "ignore": [
     "**/.*",
