@@ -1,0 +1,72 @@
+#/bin/sh
+NODE_EXEC=/usr/local/bin/node
+NODE_ENV="production"
+NODE_APP='bin/feed-timeline-updater.js'
+APP_DIR='/var/www/reader';
+APP_NAME="NUNUX Reader timelines updater daemon";
+APP_REALM="http://reader.nunux.org"
+APP_DAYS_TO_KEEP=60
+PID_FILE=/var/pid/reader-timeline-updater.pid
+LOG_FILE=/var/log/reader-timeline-updater.log
+
+###############
+
+# REDHAT chkconfig header
+
+# chkconfig: - 58 74
+# description: node-app is the script for starting a node app on boot.
+### BEGIN INIT INFO
+# Provides: node
+# Required-Start:    $network $remote_fs $local_fs 
+# Required-Stop:     $network $remote_fs $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: start and stop node
+# Description: Node process for app
+### END INIT INFO
+
+
+case "$1" in
+    start)
+        if [ -f $PID_FILE ]
+        then
+                echo "$PID_FILE exists, process is already running or crashed"
+        else
+                echo "Starting $APP_NAME..."
+        NODE_ENV=$NODE_ENV APP_REALM=$APP_REALM APP_DAYS_TO_KEEP=$APP_DAYS_TO_KEEP $NODE_EXEC $APP_DIR/$NODE_APP  1>$LOG_FILE 2>&1 &
+        echo $! > $PID_FILE;
+        fi
+        ;;
+    stop)
+        if [ ! -f $PID_FILE ]
+        then
+                echo "$PID_FILE does not exist, process is not running"
+        else
+                echo "Stopping $APP_DIR/$NODE_APP ..."
+        echo "Killing `cat $PID_FILE`"
+        kill `cat $PID_FILE`;
+        rm $PID_FILE;
+                echo "$APP_NAME stopped"
+        fi
+        ;;
+
+    restart)
+        if [ ! -f $PID_FILE ]
+        then
+            echo "$PID_FILE does not exist, process is not running"
+
+        else
+            echo "Restarting $APP_DIR/$NODE_APP ..."
+            echo "Killing `cat $PID_FILE`"
+            kill `cat $PID_FILE`;
+            rm $PID_FILE;
+            NODE_ENV=$NODE_ENV APP_REALM=$APP_REALM APP_DAYS_TO_KEEP=$APP_DAYS_TO_KEEP $NODE_EXEC $APP_DIR/$NODE_APP  1>$LOG_FILE 2>&1 &
+            echo $! > $PID_FILE;
+            echo "$APP_NAME restarted"
+        fi
+        ;;
+
+    *)
+        echo "Usage: /etc/init.d/reader-timeline-updater {start|stop|restart}"
+    ;;
+esac
