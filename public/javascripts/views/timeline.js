@@ -5,8 +5,9 @@ define([
        'moment',
        'channel',
        'text!templates/timeline.html',
-       'text!templates/article.html'
-], function($, _, Backbone, moment, channel, tpl, articleTpl){
+       'text!templates/article.html',
+       'text!templates/ending.html'
+], function($, _, Backbone, moment, channel, tpl, articleTpl, endingTpl){
   var cleanArticleContent = function($article, meta) {
       //$('script', $article).not('script[src^="http://www.youtube"]').remove();
       $('.content script', $article).filter('script[src^="http://feeds.feedburner.com"]').remove();
@@ -93,6 +94,11 @@ define([
       }
     },
 
+    addTimelineEnding: function() {
+      var $ending = $(_.template(endingTpl, {}));
+      this.$articles.append($ending);
+    },
+
     fetchTimeline: function() {
       if (this.options.nextFid === undefined || this.options.loading) return null;
       this.options.loading = true;
@@ -109,6 +115,9 @@ define([
           this.addArticle(article);
         }.bind(this));
         this.options.nextFid = res.next;
+        if (!this.options.nextFid) {
+          this.addTimelineEnding();
+        }
         this.fetchTimelineSize();
       }.bind(this));
     },
