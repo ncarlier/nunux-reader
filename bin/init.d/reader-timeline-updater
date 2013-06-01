@@ -1,20 +1,14 @@
 #/bin/sh
 NODE_EXEC=/usr/local/bin/node
 NODE_ENV="production"
-NODE_APP='bin/feed-timeline-updater.js'
+NODE_APP='bin/timeline-updater.js'
 APP_DIR='/var/www/reader';
 APP_NAME="NUNUX Reader timelines updater daemon";
 APP_REALM="http://reader.nunux.org"
 APP_DAYS_TO_KEEP=60
-PID_FILE=/var/pid/reader-timeline-updater.pid
+PID_FILE=/var/run/reader-timeline-updater.pid
 LOG_FILE=/var/log/reader-timeline-updater.log
 
-###############
-
-# REDHAT chkconfig header
-
-# chkconfig: - 58 74
-# description: node-app is the script for starting a node app on boot.
 ### BEGIN INIT INFO
 # Provides: node
 # Required-Start:    $network $remote_fs $local_fs 
