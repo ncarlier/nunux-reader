@@ -8,7 +8,13 @@
     "moment": "~2.0.0",
     "requirejs": "~2.1.5",
     "underscore-amd": "~1.4.4",
-    "requirejs-text": "~2.0.6"
+    "requirejs-text": "~2.0.6",
+    "bootstrap": "~2.3.2"
+  },
+  "exportsOverride": {
+    "bootstrap": {
+      "": "less/*.less"
+    }
   },
   "ignore": [
     "**/.*",

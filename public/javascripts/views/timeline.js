@@ -35,8 +35,8 @@ define([
 
     render: function() {
       this.$el.html(_.template(tpl, {}));
-      this.$articles = $('.content', this.$el);
-      this.$menu = $('.menu', this.$el);
+      this.$articles = $('> section', this.$el);
+      this.$menu = $('> header', this.$el);
       this.$articles.scroll(this.handleScrollEvent.bind(this));
       $(document).scroll(this.handleScrollEvent.bind(this));
       this.$articles.delegate('footer input.keep', 'change', this.keepUnreadHandler.bind(this));

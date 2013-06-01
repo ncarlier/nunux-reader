@@ -20,8 +20,8 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.cookieParser());
+  app.use(express.cookieSession({secret: 'NuNUXReAdR_'}));
   app.use(express.bodyParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(express.methodOverride());

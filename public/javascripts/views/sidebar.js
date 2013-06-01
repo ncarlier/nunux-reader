@@ -37,7 +37,7 @@ define([
           var $feed = _.template(sidebarFeedTpl, feed);
           $feeds.append($feed);
         }.bind(this));
-        $('.size', this.$subscriptions).text('(' + feeds.length + ')');
+        $('header .size', this.$subscriptions).text('(' + feeds.length + ')');
       }.bind(this));
     }
   });

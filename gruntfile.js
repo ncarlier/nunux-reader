@@ -6,7 +6,7 @@ module.exports = function(grunt) {
       install: {
         options: {
           targetDir: 'public/lib',
-          cleanBowerDir: true
+          cleanBowerDir: true,
         }
       }
     },
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           mainConfigFile: 'public/javascripts/main.js',
           name: 'main',
           out: 'public-build/javascripts/main.js',
-          include: ['views/about', 'views/manage', 'views/sidebar', 'views/timeline']
+          include: ['views/about', 'views/manage', 'views/timeline']
         }
       }
     },
@@ -36,7 +36,6 @@ module.exports = function(grunt) {
       main: {
         files: [
           {expand: true, cwd: 'public/', src: ['lib/html5shiv/dist/*'], dest: 'public-build/'},
-          {expand: true, cwd: 'public/', src: ['lib/bootstrap.css/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['icons/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['images/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['templates/**'], dest: 'public-build/'},
