@@ -14,16 +14,32 @@ var program = require('commander'),
     EventEmitter = require('events').EventEmitter;
 
 var app = new EventEmitter();
+var stop = false;
 
 program
   .version('0.0.1')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-console.log('Feed Updater starting...');
+console.log('Starting Feed Updater...');
+
+var signals = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
+for (var i in signals) {
+  process.on(signals[i], function() {
+    console.log('Stopping Feed Updater...');
+    stop = true;
+  });
+}
 
 db.on('connect', function() {
   app.emit('nextfeed');
+});
+
+app.on('stop', function() {
+  db.quit(function (err, res) {
+    console.log(err || 'Stopping Feed Updater: done.');
+    process.exit();
+  });
 });
 
 var defaultMaxAge = 300    // 5 minutes
@@ -91,6 +107,9 @@ var extractExpiresFromHeader = function(headers) {
 }
 
 app.on('nextfeed', function() {
+  if (stop) {
+    return app.emit('stop');
+  }
   async.waterfall(
     [
       function(callback) {

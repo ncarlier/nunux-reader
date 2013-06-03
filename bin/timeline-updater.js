@@ -9,26 +9,48 @@ var program = require('commander'),
     EventEmitter = require('events').EventEmitter;
 
 var app = new EventEmitter();
+var stop = false;
 
 program
   .version('0.0.1')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-console.log('Timeline Updater starting...');
+console.log('Starting Timeline Updater...');
+
+var signals = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
+for (var i in signals) {
+  process.on(signals[i], function() {
+    console.log('Stopping Timeline Updater...');
+    stop = true;
+  });
+}
 
 db.on('connect', function() {
   app.emit('nextarticle');
 });
 
+app.on('stop', function() {
+  db.quit(function (err, res) {
+    console.log(err || 'Stopping Timeline Updater: done.');
+    process.exit();
+  });
+});
+
 app.on('nextarticle', function() {
+  if (stop) {
+    return app.emit('stop');
+  }
   async.waterfall(
     [
       function(callback) {
         // Get article key to integrate...
-        db.blpop('articles:integration', 0, callback);
+        db.blpop('articles:integration', 5, callback);
       },
       function(replies, callback) {
+        if (replies == null) {
+          return app.emit('nextarticle');
+        }
         // Get article from db...
         var aid = replies[1];
         Article.get(aid, callback);
