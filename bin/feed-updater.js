@@ -42,7 +42,14 @@ app.on('stop', function() {
   });
 });
 
+if (process.env.HTTP_PROXY) {
+  request = request.defaults({proxy: process.env.HTTP_PROXY, timeout: 5000});
+} else {
+  request = request.defaults({timeout: 5000});
+}
+
 var defaultMaxAge = 300    // 5 minutes
+  , maxRequestPerFeed = 5
   , maxExpirationHours = 2 // 2 hours
   , samples = {};
 
@@ -123,7 +130,9 @@ app.on('nextfeed', function() {
         Feed.get(fid, callback);
       },
       function(feed, callback) {
-        if (!feed.expires) {
+        if (feed.errCount && parseInt(feed.errCount, 10) >= maxRequestPerFeed) {
+          callback('Warning: Feed ' + feed.id + ': Too buggy. Skipping.');
+        } else if (!feed.expires) {
           // No expiration date... ok update!
           callback(null, feed);
         } else {
@@ -151,9 +160,6 @@ app.on('nextfeed', function() {
           'headers': {}/*,
           'followRedirect': false*/
         };
-        if (process.env.HTTP_PROXY) {
-          req.proxy = process.env.HTTP_PROXY;
-        }
         if (feed.lastModified) {
          req.headers['If-Modified-Since'] = feed.lastModified;
         }
