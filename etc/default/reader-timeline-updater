@@ -1,0 +1,3 @@
+APP_MAIN=/var/www/reader/bin/timeline-updater.js
+NODE_ENV="production"
+APP_DAYS_TO_KEEP=60

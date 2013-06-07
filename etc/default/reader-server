@@ -1,0 +1,5 @@
+APP_MAIN=/var/www/reader/app.js
+NODE_ENV="production"
+APP_PORT=8080
+APP_REALM="http://reader.nunux.org"
+APP_DAYS_TO_KEEP=60
