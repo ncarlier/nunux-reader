@@ -8,6 +8,7 @@ var express = require('express')
   , path = require('path')
   , passport = require('passport')
   , GoogleStrategy = require('passport-google').Strategy
+  , BrowserIDStrategy = require('passport-browserid').Strategy
   , User = require('./lib/user');
 
 var app = module.exports = express();
@@ -77,11 +78,28 @@ passport.use(new GoogleStrategy({
   })
 );
 
+passport.use(new BrowserIDStrategy({
+    audience: app.get('realm')
+  },
+  function(email, done) {
+    var user = {
+      uid: email,
+      username: email
+    }
+    User.findOrCreate(user, done);
+  }
+));
+
 app.get('/auth/google', passport.authenticate('google'));
 app.get('/auth/google/return',
         passport.authenticate('google', {
           successRedirect: '/',
           failureRedirect: '/' }));
+
+app.post('/auth/browserid', 
+  passport.authenticate('browserid', {
+    successRedirect: '/',
+    failureRedirect: '/' }));
 
 app.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }

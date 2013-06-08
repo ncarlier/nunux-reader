@@ -4,10 +4,38 @@
   <title>{{ name }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{{ description }}" />
+  <style>
+a { display: block; }
+#google img {height: 43px; }
+  </style>
 </head>
 <body>
   <div style="text-align: center;">
-    <a href="/auth/google" title="Sign in with your Google account."><img src="images/sign-in-with-google.png" alt="Sign in with Google"/></a>
+    <a href="/auth/google" title="Sign in with your Google account." id="google">
+      <img src="images/sign-in-with-google.png" alt="Sign in with Google"/>
+    </a>
+    -- OR --
+    <a href="#" title="Sign in with your email." id="browserid">
+      <img src="images/sign-in-with-persona.png" alt="Sign in with Mozilla Persona"/>
+    </a>
   </div>
+  <form action="/auth/browserid" method="post" style="display:none;">
+    <input type="text" name="assertion"/>
+  </form>
+
+  <script src="lib/jquery/jquery.js"></script>
+  <script src="https://login.persona.org/include.js"></script>
+  <script>
+$("#browserid").click(function(){
+  navigator.id.get(function(assertion) {
+    if (assertion) {
+      $("input").val(assertion);
+      $("form").submit();
+    } else {
+      location.reload();
+    }
+  });
+});
+  </script>
 </body>
 </html>

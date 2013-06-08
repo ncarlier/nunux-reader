@@ -24,7 +24,8 @@
     "async": "0.2.5",
     "date-utils": "*",
     "passport": "0.1.x",
-    "passport-google": "0.3.0"
+    "passport-google": "0.3.0",
+    "passport-browserid": "0.1.4"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
