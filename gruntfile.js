@@ -39,7 +39,8 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'public/', src: ['icons/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['images/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['templates/**'], dest: 'public-build/'},
-          {expand: true, cwd: 'public/', src: ['lib/requirejs/require.js'], dest: 'public-build/'}
+          {expand: true, cwd: 'public/', src: ['lib/requirejs/require.js'], dest: 'public-build/'},
+          {expand: true, cwd: 'public/', src: ['lib/jquery/jquery.js'], dest: 'public-build/'}
         ]
       }
     }
