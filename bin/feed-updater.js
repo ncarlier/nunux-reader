@@ -69,8 +69,7 @@ var isParsableDate = function(date) {
 }
 
 var extractExpiresFromHeader = function(headers) {
-  var now = new Date()
-    , expires = headers['expires'];
+  var expires = headers['expires'];
 
   if (expires && isParsableDate(expires)) {
     // Extract expires from header.
@@ -84,7 +83,7 @@ var extractExpiresFromHeader = function(headers) {
     } else {
       console.log('Warning: Last-Modified date unparsable (use default): %s.', lastModified);
       console.log('Warning: HEADER: %j', headers);
-      lastModified = now;
+      lastModified = new Date();
     }
     var maxAge = defaultMaxAge;
     var cacheControl = headers['cache-control'];
@@ -103,14 +102,14 @@ var extractExpiresFromHeader = function(headers) {
     expires = lastModified.addSeconds(maxAge);
   }
   // Check validity
-  var then = now;
+  var then = new Date();
   then.addHours(maxExpirationHours);
-  if (!expires.between(now, then)) {
-      console.log('Warning: Expiration date out of bound (use default): %s', expires.toGMTString());
-      expires = then;
-      expires = now.addSeconds(defaultMaxAge);
+  if (!expires.between(new Date(), then)) {
+      console.log('Warning: Expiration date out of bound (use default): %s', expires.toISOString());
+      expires = new Date();
+      expires.addSeconds(defaultMaxAge);
   }
-  return expires.toGMTString();
+  return expires.toISOString();
 }
 
 app.on('nextfeed', function() {
@@ -143,7 +142,7 @@ app.on('nextfeed', function() {
             var expirationDate = new Date(feed.expires);
             if (now.isBefore(expirationDate)) {
               err = 'Feed ' + feed.id +
-                ': Validity not expired (' + expirationDate.toGMTString() +
+                ': Validity not expired (' + expirationDate.toISOString() +
                 '). No need to update. Next.';
             }
           } else {
