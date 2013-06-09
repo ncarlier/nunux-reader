@@ -18,7 +18,6 @@ app.configure(function(){
   app.set('realm', process.env.APP_REALM || 'http://localhost:' + app.get('port'));
   app.set('views', __dirname + '/views');
   app.set('view engine', 'hjs');
-  app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.cookieParser());
   app.use(express.cookieSession({secret: 'NuNUXReAdR_'}));
