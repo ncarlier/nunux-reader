@@ -62,14 +62,15 @@ define([
       var title = (this.options.timeline === 'global') ? 'All items' :
         (this.options.timeline === 'archive') ? 'Saved items' : 'Feed items';
       $('h1', this.$menu).text(title);
-      $('button.sort-items', this.$menu).text(this.options.order === 'ASC' ? 'Sort by newest' : 'Sort by oldest');
+      $('button.sort-items span', this.$menu).
+        text(this.options.order === 'ASC' ? 'Sort by newest' : 'Sort by oldest');
       $('button.mark-items', this.$menu).toggle(
         this.options.timeline != 'archive' &&
         !this.options.showAll
       );
-      $('button.show-items', this.$menu).
-        text(this.options.showAll ? 'Show new items' : 'Show all items').
-        toggle(this.options.showAllFlag);
+      $('button.show-items', this.$menu).toggle(this.options.showAllFlag);
+      $('button.show-items span', this.$menu).
+        text(this.options.showAll ? 'Show new items' : 'Show all items');
       channel.trigger('app.event.timelinechange', {timeline: this.options.timeline});
     },
 
