@@ -43,6 +43,23 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'public/', src: ['lib/jquery/jquery.js'], dest: 'public-build/'}
         ]
       }
+    },
+    manifest: {
+      generate: {
+        options: {
+          basePath: 'public-build/',
+          cache: ['javascripts/main.js', 'stylesheets/style.css'],
+          preferOnline: true,
+          verbose: false,
+          timestamp: true
+        },
+        src: [
+          'templates/*.html',
+          'lib/**/*.js',
+          'images/*.png'
+        ],
+        dest: 'public-build/manifest.appcache'
+      }
     }
   });
 
@@ -51,8 +68,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-manifest');
 
   // Register building task
-  grunt.registerTask('build', ['bower','less','requirejs','copy']);
+  grunt.registerTask('build', ['bower','less','requirejs','copy','manifest']);
   grunt.registerTask('install', ['clean','build']);
 }
