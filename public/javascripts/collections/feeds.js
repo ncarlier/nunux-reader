@@ -3,7 +3,7 @@ define(['backbone', 'models/feed'], function(Backbone, Feed){
     model: Feed,
     url:  '/subscription',
     comparator: function(item) {
-      return item.get('title');
+      return item.get('title').toLowerCase();
     }
   });
 });

@@ -21,8 +21,8 @@ define([
 
     initialize: function () {
       this.collection = new Feeds();
-      this.listenTo(this.collection, 'add', this.addOne);
-      this.collection.fetch();
+      this.listenTo(this.collection, 'sort', this.renderFeeds);
+      this.collection.fetch({sort: true});
     },
 
     render: function() {
@@ -30,10 +30,12 @@ define([
       return this;
     },
 
-    addOne: function(feed) {
-      var view = new FeedView({model: feed});
+    renderFeeds: function(feeds) {
       $('.no-subs', this.$el).hide();
-      $('.feed-list', this.$el).append(view.render().el);
+      feeds.each(function(feed) {
+        var view = new FeedView({model: feed});
+        $('.feed-list', this.$el).append(view.render().el);
+      }.bind(this));
     },
 
     submit: function(event) {
