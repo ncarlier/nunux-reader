@@ -50,6 +50,15 @@ define([
       this.sidebar = new SidebarView();
       this.sidebar.$el = $('#sidebar');
       this.sidebar.render();
+
+      $(document).on('webkitvisibilitychange', function() {
+        if (!document.webkitHidden) {
+          for (var v in this.views) {
+            if (typeof this.views[v].refresh == 'function') 
+              this.views[v].refresh();
+          }
+        }
+      }.bind(this));
     }
   });
 });
