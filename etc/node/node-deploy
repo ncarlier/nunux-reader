@@ -1,0 +1,56 @@
+#!/bin/bash
+read oldrev newrev refname
+
+echo "$(pwd), $GIT_DIR, $oldrev $newrev $refname"
+
+# Get project name from current directory (without .git)
+APP_NAME=$(basename "$PWD")
+APP_NAME=${APP_NAME%.git}
+
+echo "Deploying $APP_NAME ..."
+
+# Export environment variables for deployment operation.
+# These will be picked up in the sub process invoked by
+# git checkout later on.
+
+export GIT_DIR=/home/git/repositories/"$APP_NAME".git
+
+APP_DIR=/opt/"$APP_NAME"
+export GIT_WORK_TREE="$APP_DIR"/.versions/"$APP_NAME"@"$newrev"
+
+echo "Using Git repo $GIT_DIR"
+echo "Using Node app folder $GIT_WORK_TREE"
+
+# Check that we've valid repo location.
+if [ ! -d "$GIT_DIR" ]; then
+    echo "Error, Git repo not found"
+    exit 1
+fi
+
+# Node apps will live in /opt/app-name/.versions/app-name@rev
+# so create if it doesn't exist.
+if [ ! -d "$GIT_WORK_TREE" ]; then
+    echo "Warning, working folder not found ... creating"
+    mkdir -p "$GIT_WORK_TREE"
+fi
+
+# Sync the app location with the latest files in the
+# repo via git checkout. Also change ownership of all the
+# app files to the node user (we're currently root).
+echo "Checkouting app files to $GIT_WORK_TREE ..."
+unset GIT_INDEX_FILE
+git checkout -f
+chown -R node:node "$GIT_WORK_TREE"
+
+echo "Installing and packaging app ..."
+cd "$GIT_WORK_TREE"
+npm install
+cd -
+
+ln -s "$GIT_WORK_TREE" "$APP_DIR"/current
+
+echo "Restarting via Monit ..."
+sleep 1
+#monit restart "$APP_NAME"
+echo "Deployment complete!"
+exit 0

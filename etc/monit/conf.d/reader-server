@@ -1,4 +1,4 @@
-check process reader-server with pidfile /var/run/reader-server.pid
+check process reader with pidfile /var/run/reader-server.pid
     start program = "/etc/init.d/reader-server start" with timeout 60 seconds
     stop program  = "/etc/init.d/reader-server stop"
     if cpu > 60% for 2 cycles then alert
