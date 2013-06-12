@@ -1,4 +1,3 @@
 Defaults:git !requiretty
-Defaults:node !requiretty
 # Give git user password-less sudo rights to invoke deployment scripts
-git ALL = (node) NOPASSWD: /bin/bash /etc/node/node-deploy
+git ALL = (root) NOPASSWD: /bin/bash /etc/node/node-deploy
