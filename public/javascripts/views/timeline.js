@@ -14,7 +14,7 @@ define([
       $('.content a', $article).attr('target', '_blank');
       $('.content img', $article).each(function() {
         var src = $(this).attr('src');
-        if(!src.match('^http')) {
+        if(!src.match(/^\s*http/g)) {
           $(this).attr('src', meta.link + '/' + src);
         }
       });
