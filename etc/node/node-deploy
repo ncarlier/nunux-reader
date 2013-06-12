@@ -70,6 +70,6 @@ ln -s "$GIT_WORK_TREE" "$APP_DIR"/current
 
 echo "Restarting via Monit ..."
 sleep 1
-monit restart "$APP_NAME"
+monit restart $APP_NAME
 echo "Deployment complete!"
 exit 0
