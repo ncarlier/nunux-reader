@@ -4,4 +4,4 @@
 # is successfully pushed to this repo. In this case we're invoking the node-deploy
 # script as root.
 
-APP_NAME="reader" sudo sh /etc/node/node-deploy
+sudo bash /etc/node/node-deploy
