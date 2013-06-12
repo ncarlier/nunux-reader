@@ -31,8 +31,9 @@ fi
 # so create if it doesn't exist.
 if [ ! -d "$APP_DIR" ]; then
     echo "Warning, app folder not found ... creating"
-    mkdir -p "$APP_DIR"
-    chown -R node:node "$APP_DIR"
+    mkdir -p "$APP_DIR"/.versions
+    chown -R node.node "$APP_DIR"
+    chmod -R a+rX "$APP_DIR"
 fi
 
 # Create app version dir if it doesn't exist.
@@ -47,26 +48,28 @@ echo "Checkouting app files to $GIT_WORK_TREE ..."
 unset GIT_INDEX_FILE
 git checkout -f
 if [ $? != 0 ]; then
-    echo "Error, enable to checkout files"
+    echo "Error, unable to checkout files"
     exit 1
 fi
-chown -R node:node "$GIT_WORK_TREE"
 chmod -R a+rX "$GIT_WORK_TREE"
+chown -R node.node "$GIT_WORK_TREE"
 
-echo "Installing and packaging app ..."
+echo "Installing dependencies and packaging app ..."
 cd "$GIT_WORK_TREE"
 su -c 'npm install' node
 if [ $? != 0 ]; then
-    echo "Error, enable to install app"
+    echo "Error, unable to install dependencies and/or packaging app"
     exit 1
 fi
 
 cd -
 
+echo "Updating app target..."
+rm "$APP_DIR"/current
 ln -s "$GIT_WORK_TREE" "$APP_DIR"/current
 
 echo "Restarting via Monit ..."
 sleep 1
-#monit restart "$APP_NAME"
+monit restart "$APP_NAME"
 echo "Deployment complete!"
 exit 0
