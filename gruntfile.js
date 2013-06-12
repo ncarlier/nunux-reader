@@ -7,6 +7,7 @@ module.exports = function(grunt) {
         options: {
           targetDir: 'public/lib',
           cleanBowerDir: true,
+          verbose: true
         }
       }
     },
