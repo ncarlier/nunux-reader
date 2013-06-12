@@ -12,9 +12,13 @@
     "bootstrap": "~2.3.2"
   },
   "exportsOverride": {
-    "bootstrap": {
-      "": "less/*.less"
-    }
+    "backbone-amd":   {"": "backbone.js"},
+    "underscore-amd": {"": "underscore.js"},
+    "moment":         {"": "moment.js"},
+    "requirejs":      {"": "require.js"},
+    "requirejs-text": {"": "text.js"},
+    "bootstrap":      {"": "less/*.less"},
+    "html5shiv":      {"": "dist/html5shiv.js"}
   },
   "ignore": [
     "**/.*",

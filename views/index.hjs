@@ -12,7 +12,7 @@
 
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
-      <script src="lib/html5shiv/dist/html5shiv.js"></script>
+      <script src="lib/html5shiv/html5shiv.js"></script>
   <![endif]-->
 
   <!-- Fav and touch icons -->

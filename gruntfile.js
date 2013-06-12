@@ -1,13 +1,13 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    clean: ["components", "public-build", "public/lib"],
+    clean: ["public-build"],
     bower: {
       install: {
         options: {
           targetDir: 'public/lib',
-          cleanBowerDir: true,
-          verbose: true
+          cleanup: true,
+          verbose: false
         }
       }
     },
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          {expand: true, cwd: 'public/', src: ['lib/html5shiv/dist/*'], dest: 'public-build/'},
+          {expand: true, cwd: 'public/', src: ['lib/html5shiv/html5shiv.js'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['icons/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['images/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['templates/**'], dest: 'public-build/'},
@@ -72,6 +72,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-manifest');
 
   // Register building task
-  grunt.registerTask('build', ['bower','less','requirejs','copy','manifest']);
+  grunt.registerTask('build', ['less','requirejs','copy']);
   grunt.registerTask('install', ['clean','build']);
 }
