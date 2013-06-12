@@ -27,10 +27,16 @@ if [ ! -d "$GIT_DIR" ]; then
     exit 1
 fi
 
-# Node apps will live in /opt/app-name/.versions/app-name@rev
+# Node app will live in /opt/node/app-name
 # so create if it doesn't exist.
+if [ ! -d "$APP_DIR" ]; then
+    echo "Warning, app folder not found ... creating"
+    mkdir -p "$APP_DIR"
+    chown -R node:node "$APP_DIR"
+fi
+
+# Create app version dir if it doesn't exist.
 if [ ! -d "$GIT_WORK_TREE" ]; then
-    echo "Warning, working folder not found ... creating"
     mkdir -p "$GIT_WORK_TREE"
 fi
 
