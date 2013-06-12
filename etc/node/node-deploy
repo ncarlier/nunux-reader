@@ -15,7 +15,7 @@ echo "Deploying $APP_NAME ..."
 
 export GIT_DIR=/home/git/repositories/"$APP_NAME".git
 
-APP_DIR=/opt/"$APP_NAME"
+APP_DIR=/opt/node/"$APP_NAME"
 export GIT_WORK_TREE="$APP_DIR"/.versions/"$APP_NAME"@"$newrev"
 
 echo "Using Git repo $GIT_DIR"
