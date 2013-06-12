@@ -40,11 +40,21 @@ fi
 echo "Checkouting app files to $GIT_WORK_TREE ..."
 unset GIT_INDEX_FILE
 git checkout -f
+if [ $? != 0 ]; then
+    echo "Error, enable to checkout files"
+    exit 1
+fi
 chown -R node:node "$GIT_WORK_TREE"
+chmod -R a+rX "$GIT_WORK_TREE"
 
 echo "Installing and packaging app ..."
 cd "$GIT_WORK_TREE"
-npm install
+su -c 'npm install' node
+if [ $? != 0 ]; then
+    echo "Error, enable to install app"
+    exit 1
+fi
+
 cd -
 
 ln -s "$GIT_WORK_TREE" "$APP_DIR"/current
