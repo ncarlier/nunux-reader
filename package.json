@@ -9,8 +9,7 @@
     "url": "git@bitbucket.org:ncarlier/reader.git"
   },
   "scripts": {
-    "start": "node app",
-    "postinstall": "grunt install"
+    "start": "node app"
   },
   "dependencies": {
     "express": "3.1.0",
