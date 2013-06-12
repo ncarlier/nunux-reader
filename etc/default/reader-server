@@ -1,4 +1,4 @@
-APP_MAIN=/var/www/reader/app.js
+APP_MAIN=/opt/node/reader/current/app.js
 NODE_ENV="production"
 APP_PORT=8080
 APP_REALM="http://reader.nunux.org"
