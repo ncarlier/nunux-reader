@@ -16,7 +16,8 @@ program
 
 var after = new Date();
 
-after.addDays(-program.days);
+program.days = parseInt(program.days, 10);
+after.addDays(- program.days);
 
 console.log('Cleaning database...');
 console.log('Cleaning older entries than %s...', after.toString());
