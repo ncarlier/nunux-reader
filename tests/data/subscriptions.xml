@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>Test subscriptions</title>
+    </head>
+    <body>
+        <outline
+            text="All About Linux-powered Devices - Linux for Devices"
+            title="All About Linux-powered Devices - Linux for Devices"
+            type="rss" xmlUrl="http://www.linuxfordevices.com/rss.xml" htmlUrl="http://www.linuxfordevices.com"/>
+        <outline text="Korben" title="Korben" type="rss"
+            xmlUrl="http://feeds.feedburner.com/KorbensBlog-UpgradeYourMind" htmlUrl="http://korben.info"/>
+    </body>
+</opml>

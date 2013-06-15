@@ -1,6 +1,14 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+        },
+        src: ['tests/**/*.js']
+      }
+    },
     clean: ["public-build"],
     bower: {
       install: {
@@ -64,6 +72,7 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-contrib-less');
@@ -74,4 +83,5 @@ module.exports = function(grunt) {
   // Register building task
   grunt.registerTask('build', ['less','requirejs','copy']);
   grunt.registerTask('install', ['clean','build']);
+  grunt.registerTask('default', 'mochaTest');
 }
