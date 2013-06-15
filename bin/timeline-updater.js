@@ -13,8 +13,11 @@ var stop = false;
 
 program
   .version('0.0.1')
+  .option('-v, --verbose', 'Verbose flag')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
+
+logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
 console.log('Starting Timeline Updater...');
 

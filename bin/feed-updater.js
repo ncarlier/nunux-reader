@@ -6,6 +6,7 @@
 require('date-utils');
 var program = require('commander'),
     db = require('../lib/db'),
+    logger = require('../lib/logger'),
     Feed = require('../lib/feed'),
     Article = require('../lib/article'),
     FeedParser = require('feedparser'),
@@ -18,15 +19,18 @@ var stop = false;
 
 program
   .version('0.0.1')
+  .option('-v, --verbose', 'Verbose flag')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-console.log('Starting Feed Updater...');
+logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
+
+logger.info('Starting Feed Updater...');
 
 var signals = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
 for (var i in signals) {
   process.on(signals[i], function() {
-    console.log('Stopping Feed Updater...');
+    logger.info('Stopping Feed Updater...');
     stop = true;
   });
 }
@@ -37,7 +41,7 @@ db.on('connect', function() {
 
 app.on('stop', function() {
   db.quit(function (err, res) {
-    console.log(err || 'Stopping Feed Updater: done.');
+    logger.info(err || 'Stopping Feed Updater: done.');
     process.exit();
   });
 });
@@ -75,26 +79,26 @@ var extractExpiresFromHeader = function(headers) {
     // Extract expires from header.
     expires = new Date(expires);
   } else {
-    console.log('Warning: No expires directive (compute it): %s.', expires);
+    logger.debug('Warning: No expires directive (compute it): %s.', expires);
     // Compute expires from cache infos of the header...
     var lastModified = headers['last-modified'];
     if (isParsableDate(lastModified)) {
       lastModified = new Date(lastModified);
     } else {
-      console.log('Warning: Last-Modified date unparsable (use default): %s.', lastModified);
-      console.log('Warning: HEADER: %j', headers);
+      logger.debug('Warning: Last-Modified date unparsable (use default): %s.', lastModified);
+      logger.debug('Warning: HEADER: %j', headers);
       lastModified = new Date();
     }
     var maxAge = defaultMaxAge;
     var cacheControl = headers['cache-control'];
     if (!cacheControl) {
-      console.log('Warning: No cache-control directive (use default).');
+      logger.debug('Warning: No cache-control directive (use default).');
     } else {
       // Extract max age from cache control directive...
       var rx = /^.*max-age=(\d+).*$/;
       var vals = rx.exec(cacheControl);
       if (!vals) {
-        console.log('Warning: No max-age in cache-control directive (use default).');
+        logger.debug('Warning: No max-age in cache-control directive (use default).');
       } else {
         maxAge = parseInt(vals[1], 10);
       }
@@ -105,7 +109,7 @@ var extractExpiresFromHeader = function(headers) {
   var then = new Date();
   then.addHours(maxExpirationHours);
   if (!expires.between(new Date(), then)) {
-      console.log('Warning: Expiration date out of bound (use default): %s', expires.toISOString());
+      logger.debug('Warning: Expiration date out of bound (use default): %s', expires.toISOString());
       expires = new Date();
       expires.addSeconds(defaultMaxAge);
   }
@@ -146,14 +150,14 @@ app.on('nextfeed', function() {
                 '). No need to update. Next.';
             }
           } else {
-            console.log('Warning: Feed %s: Expires date unparsable: %s.', feed.id, feed.expires);
+            logger.debug('Warning: Feed %s: Expires date unparsable: %s.', feed.id, feed.expires);
           }
           callback(err, feed);
         }
       },
       function(feed, callback) {
         // Do HTTP request...
-        console.log('Feed %s: Requesting %s ...', feed.id, feed.xmlurl);
+        logger.debug('Feed %s: Requesting %s ...', feed.id, feed.xmlurl);
         var req = {
           'uri': feed.xmlurl,
           'headers': {}/*,
@@ -168,7 +172,7 @@ app.on('nextfeed', function() {
 
         request(req, function(err, res, body) {
           if (err) {
-            console.log('Feed %s: Error on request. Skiping.', feed.id);
+            logger.warn('Feed %s: Error on request. Skiping.', feed.id);
             Feed.update(feed, {
               status: 'error: ' + err
             }, function(e, f) {
@@ -178,8 +182,8 @@ app.on('nextfeed', function() {
             return callback(err);
           } else if (res.statusCode == 200) {
             // Update feed status and cache infos.
-            // console.log('200: Headers: %j', res.headers);
-            console.log('Feed %s: Updating...', feed.id);
+            // logger.debug('200: Headers: %j', res.headers);
+            logger.debug('Feed %s: Updating...', feed.id);
             Feed.update(feed, {
               status: 'updated',
               lastModified: res.headers['last-modified'],
@@ -190,8 +194,8 @@ app.on('nextfeed', function() {
             });
           } else if (res.statusCode == 304) {
             // Update feed status and cache infos.
-            // console.log('304: Headers: %j', res.headers);
-            console.log('Feed %s: Not modified. Skiping.', feed.id);
+            // logger.debug('304: Headers: %j', res.headers);
+            logger.debug('Feed %s: Not modified. Skiping.', feed.id);
             Feed.update(feed, {
               status: 'not modified',
               expires: extractExpiresFromHeader(res.headers),
@@ -200,7 +204,7 @@ app.on('nextfeed', function() {
               callback(e, f, null);
             });
           } else {
-            console.log('Feed %s: Bad HTTP response. Skiping.', feed.id);
+            logger.warn('Feed %s: Bad HTTP response. Skiping.', feed.id);
             Feed.update(feed, {
               status: 'error: Bad status code: ' + res.statusCode
             }, function(e, f) {
@@ -216,14 +220,14 @@ app.on('nextfeed', function() {
 
         FeedParser.parseString(body, function (err, meta, articles) {
           if (err) return callback(err);
-          console.log('Feed %s: %s - %s', feed.id, meta.title, meta.link);
+          logger.debug('Feed %s: %s - %s', feed.id, meta.title, meta.link);
           for (var i in articles) {
             var article = articles[i];
             Article.create(article, feed, function(err, a) {
               if (err) {
-                if (err != 'ALREADY_EXISTS') console.log('Feed %s: Unable to create article: %s', feed.id, err);
+                if (err != 'EEXIST') logger.warn('Feed %s: Unable to create article: %s', feed.id, err);
               }
-              else console.log('Feed %s: New article %s : %s', feed.id, a.id, a.title);
+              else logger.debug('Feed %s: New article %s : %s', feed.id, a.id, a.title);
             });
           }
           callback(null);
@@ -235,17 +239,17 @@ app.on('nextfeed', function() {
     ],
     function(err) {
       if (err == 'NO_FEED') {
-        console.log('No feed to parse. Waiting for 120s ...');
+        logger.info('No feed to parse. Waiting for 120s ...');
         setTimeout(function(){
           app.emit('nextfeed');
         }, 120000);
       } else if (err == 'TOO_CRAZY') {
-        console.log('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
+        logger.info('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
         setTimeout(function(){
           app.emit('nextfeed');
         }, defaultMaxAge * 1000);
       } else {
-        console.log(err);
+        logger.error(err);
         app.emit('nextfeed');
       }
     }

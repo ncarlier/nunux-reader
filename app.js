@@ -9,6 +9,7 @@ var express = require('express')
   , passport = require('passport')
   , GoogleStrategy = require('passport-google').Strategy
   , BrowserIDStrategy = require('passport-browserid').Strategy
+  , logger = require('./lib/logger')
   , User = require('./lib/user');
 
 var app = module.exports = express();
@@ -29,18 +30,20 @@ app.configure(function(){
 });
 
 app.configure('development', function() {
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
+  app.use(require('less-middleware')({ src: path.join(__dirname, 'public') }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(errorHandler);
+  logger.setLevel('debug');
 });
 
 app.configure('production', function() {
   app.use(express.static(path.join(__dirname, 'public-build')));
   app.use(errorHandler);
+  logger.setLevel('info');
 });
 
 function errorHandler(err, req, res, next) {
-  if ('test' != app.get('env')) console.error(err.stack || err);
+  if ('test' != app.get('env')) logger.error(err.stack || err);
   res.status(err.status || 500);
   res.format({
     html: function(){
@@ -110,6 +113,6 @@ require('./routes/index')(app);
 require('./routes/timeline')(app);
 require('./routes/subscription')(app);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(app.get('port'), function() {
+  logger.info('Express server listening on port %s (%s mode)', app.get('port'), app.get('env'));
 });
