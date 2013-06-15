@@ -57,11 +57,6 @@ NCMD="exec $DAEMON $APP_MAIN >>$LOGFILE 2>&1"
 # uncomment to override system setting
 VERBOSE=yes
 
-export NODE_ENV
-export APP_PORT
-export APP_REALM
-export APP_DAYS_TO_KEEP
-
 #
 # Function that starts the daemon/service
 #
