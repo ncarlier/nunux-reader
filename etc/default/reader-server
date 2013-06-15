@@ -1,5 +1,5 @@
 APP_MAIN=/opt/node/reader/current/app.js
-NODE_ENV="production"
-APP_PORT=8080
-APP_REALM="http://reader.nunux.org"
-APP_DAYS_TO_KEEP=60
+export NODE_ENV="production"
+export APP_PORT=3000
+export APP_REALM="http://reader.nunux.org"
+export APP_DAYS_TO_KEEP=60
