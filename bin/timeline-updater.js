@@ -2,6 +2,7 @@
 
 var program = require('commander'),
     db = require('../lib/db'),
+    logger = require('../lib/logger'),
     Article = require('../lib/article'),
     Feed = require('../lib/feed'),
     User = require('../lib/user'),
