@@ -53,7 +53,6 @@ if (process.env.HTTP_PROXY) {
 }
 
 var defaultMaxAge = 300    // 5 minutes
-  , maxRequestPerFeed = 5
   , maxExpirationHours = 2 // 2 hours
   , samples = {};
 
@@ -133,9 +132,7 @@ app.on('nextfeed', function() {
         Feed.get(fid, callback);
       },
       function(feed, callback) {
-        if (feed.errCount && parseInt(feed.errCount, 10) >= maxRequestPerFeed) {
-          callback('Warning: Feed ' + feed.id + ': Too buggy. Skipping.');
-        } else if (!feed.expires) {
+        if (!feed.expires) {
           // No expiration date... ok update!
           callback(null, feed);
         } else {
@@ -172,9 +169,13 @@ app.on('nextfeed', function() {
 
         request(req, function(err, res, body) {
           if (err) {
-            logger.warn('Feed %s: Error on request. Skiping.', feed.id);
+            logger.warn('Feed %s: Error on request. Request postponed in 2 hours. Skiping.', feed.id);
+            // Postpone expiration date in 2 hours
+            var expires = new Date();
+            expires.addHours(2);
             Feed.update(feed, {
-              status: 'error: ' + err
+              status: 'error: ' + err,
+              expires: expires.toISOString()
             }, function(e, f) {
               if (e) return callback(e);
               callback(err);
@@ -204,9 +205,13 @@ app.on('nextfeed', function() {
               callback(e, f, null);
             });
           } else {
-            logger.warn('Feed %s: Bad HTTP response. Skiping.', feed.id);
+            logger.warn('Feed %s: Bad HTTP response. Request postponed in 24 hours. Skiping.', feed.id);
+            // Postpone expiration date in 24 hours
+            var expires = new Date();
+            expires.addHours(24);
             Feed.update(feed, {
-              status: 'error: Bad status code: ' + res.statusCode
+              status: 'error: Bad status code: ' + res.statusCode,
+              expires: expires.toISOString()
             }, function(e, f) {
               if (e) return callback(e);
               callback('statusCode: ' + res.statusCode);
