@@ -53,7 +53,7 @@ fi
 # Exit if the daemon script is not present
 [ -e "$APP_MAIN" ] ||  { echo "can't find target application (APP_MAIN: $APP_MAIN)"  >&2; exit 0; }
 
-NCMD="exec $DAEMON $APP_MAIN >>$LOGFILE 2>&1"
+NCMD="exec $DAEMON $APP_MAIN $APP_OPTS >>$LOGFILE 2>&1"
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
