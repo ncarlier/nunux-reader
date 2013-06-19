@@ -12,23 +12,23 @@ module.exports = function(app){
     };
 
     res.format({
-      html: function(){
+      html: function() {
+        context.gaId = process.env.APP_GA_ID || 'UA-41864622-1';
         if (req.user) {
           context.uid = req.user.uid;
-          context.js = app.get('js');
           res.render('index', context);
         } else {
           res.render('login', context);
         }
       },
-      text: function(){
+      text: function() {
         res.type('txt').send(
           'name: ' + context.name + '\n' +
           'description: ' + context.description + '\n' +
           'version: ' + context.version + '\n'
         );
       },
-      json: function(){
+      json: function() {
         res.json(context);
       }
     })
