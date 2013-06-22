@@ -36,7 +36,7 @@ define([
     },
 
     unRegisterView: function(el) {
-      if (this.views[el]) this.views[el].remove();
+      if (this.views[el] && this.views[el].close) this.views[el].close();
     },
 
     initialize: function(){

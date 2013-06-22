@@ -24,9 +24,15 @@ define([
     },
 
     initialize: function() {
-      channel.on('app.event.timeline.size', this.updateTimelineSizeHandler.bind(this));
-      channel.on('app.event.timeline.refresh', this.updateOptions.bind(this));
+      this.listenTo(channel, 'app.event.timeline.refresh', this.updateOptions);
+      this.listenTo(channel, 'app.event.timeline.size', this.updateTimelineSizeHandler);
       this.fetchTimelineStatus();
+    },
+
+    close: function() {
+      this.stopListening();
+      this.remove();
+      this.unbind();
     },
 
     getTimelineStatusUrl: function() {
@@ -82,7 +88,9 @@ define([
     },
 
     updateTimelineSizeHandler: function(data) {
-      $('span.hint b', this.$el).text(data.size);
+      if (data.timeline == this.options.timeline) {
+        $('span.hint b', this.$el).text(data.size);
+      }
     },
 
     sortItemsHandler: function(event) {
@@ -102,9 +110,7 @@ define([
     },
 
     markAllItemsHandler: function(event) {
-      if (confirm('Do you really want to mark all items as read ?')) {
-        channel.trigger('app.event.timeline.markall');
-      }
+      channel.trigger('app.event.timeline.markall');
       return false;
     }
   });

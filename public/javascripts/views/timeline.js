@@ -26,6 +26,11 @@ define([
       this.content = new TimelineContent(this.options);
       this.$content = $('> section', this.$el);
       this.$content.html(this.content.$el);
+    },
+
+    close: function() {
+      this.header.close();
+      this.content.close();
     }
   });
 });

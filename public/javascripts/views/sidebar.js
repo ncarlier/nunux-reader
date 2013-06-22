@@ -10,16 +10,10 @@ define([
   return Backbone.View.extend({
 
     initialize: function () {
-      channel.on('app.event.timeline.size', function (data) {
+      this.listenTo(channel, 'app.event.timeline.size', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline .size'
         selector = selector.replace(':', '\\:');
         $(selector, this.$el).text(data.size).toggle(data.size > 0);
-      }.bind(this));
-      channel.on('app.event.timelinechange', function (data) {
-        var selector = '.menu-' + data.timeline + '-timeline';
-        selector = selector.replace(':', '\\:');
-        $('li', this.$el).removeClass('current_page_item');
-        $(selector, this.$el).parent().addClass('current_page_item');
       }.bind(this));
     },
 

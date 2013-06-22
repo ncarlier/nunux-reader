@@ -39,9 +39,15 @@ define([
     initialize: function() {
       this.$el.scroll(this.handleScrollEvent.bind(this));
       $(document).scroll(this.handleScrollEvent.bind(this));
-      channel.on('app.event.timeline.refresh', this.updateOptions.bind(this));
-      channel.on('app.event.timeline.markAll', this.updateOptions.bind(this));
+      this.listenTo(channel, 'app.event.timeline.refresh', this.updateOptions);
+      this.listenTo(channel, 'app.event.timeline.markall', this.markAllItemsHandler);
       this.updateOptions();
+    },
+
+    close: function() {
+      this.stopListening();
+      this.remove();
+      this.unbind();
     },
 
     getTimelineUrl: function() {
@@ -163,6 +169,22 @@ define([
           channel.trigger('app.event.timeline.size', res);
         }
       });
+    },
+
+    markAllItemsHandler: function(event) {
+      if (confirm('Do you really want to mark all items as read ?')) {
+        // todo
+        $.ajax({
+          url: this.getTimelineUrl(),
+          type: 'DELETE',
+          dataType: 'json',
+          success: function(res) {
+            this.updateOptions();
+            channel.trigger('app.event.timeline.size', res);
+          }.bind(this)
+        });
+      }
+      return false;
     }
   });
 });
