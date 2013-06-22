@@ -69,5 +69,23 @@ describe('A new User', function() {
       done();
     });
   });
+  it('should have a global timeline', function(done) {
+    User.getTimelineStatus(uid, 'global', function(err, status) {
+      if (err) return done(err);
+      status.title.should.equal('All items');
+      status.size.should.equal(0);
+      status.should.not.have.property('feed');
+      done();
+    });
+  });
+  it('should have a feed timeline', function(done) {
+    User.getTimelineStatus(uid, fid, function(err, status) {
+      if (err) return done(err);
+      status.should.have.property('feed');
+      status.feed.id.should.equal(fid);
+      status.size.should.equal(0);
+      done();
+    });
+  });
 });
 

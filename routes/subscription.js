@@ -13,6 +13,9 @@ module.exports = function(app){
     });
   });
 
+  /**
+   * POST new subscitpion(s)
+   */
   app.post('/subscription', app.ensureAuthenticated, function(req, res, next) {
     if (req.files && req.files.opml) {
       User.import(req.user.uid, req.files.opml.path, function(err) {

@@ -10,10 +10,10 @@ define([
   return Backbone.View.extend({
 
     initialize: function () {
-      channel.on('app.event.timelinesize', function (data) {
+      channel.on('app.event.timeline.size', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline .size'
         selector = selector.replace(':', '\\:');
-        $(selector, this.$el).text(data.total).toggle(data.total > 0);
+        $(selector, this.$el).text(data.size).toggle(data.size > 0);
       }.bind(this));
       channel.on('app.event.timelinechange', function (data) {
         var selector = '.menu-' + data.timeline + '-timeline';
@@ -46,6 +46,16 @@ define([
       feeds.each(function(feed) {
         var $feed = _.template(sidebarFeedTpl, feed.toJSON());
         this.$feeds.append($feed);
+      }.bind(this));
+      this.fetchAllTimelinesSize();
+    },
+
+    fetchAllTimelinesSize: function() {
+      $.getJSON('timeline/status')
+      .done(function(res) {
+        _.each(res, function(item) {
+          channel.trigger('app.event.timeline.size', item);
+        });
       }.bind(this));
     }
   });

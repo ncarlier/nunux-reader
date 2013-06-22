@@ -4,10 +4,10 @@ var db = require('../lib/db')
 
 module.exports = function(app){
   /**
-   * GET user's timeline size.
+   * GET user's timeline status.
    */
-  app.get('/timeline/:timeline/size', app.ensureAuthenticated, function(req, res, next) {
-    User.getTimelineSize(req.user.uid, req.params.timeline, function(err, result) {
+  app.get('/timeline/:timeline/status', app.ensureAuthenticated, function(req, res, next) {
+    User.getTimelineStatus(req.user.uid, req.params.timeline, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
@@ -16,8 +16,8 @@ module.exports = function(app){
   /**
    * GET user's timelines status.
    */
-  app.get('/timeline/size', app.ensureAuthenticated, function(req, res, next) {
-    User.getAllTimelinesSize(req.user.uid,
+  app.get('/timeline/status', app.ensureAuthenticated, function(req, res, next) {
+    User.getAllTimelinesStatus(req.user.uid,
                      function(err, result) {
       if (err) return next(err);
       res.json(result);
