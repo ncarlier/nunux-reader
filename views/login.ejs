@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>{{ name }}</title>
+  <title><%= name %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{{ description }}" />
+  <meta name="description" content="<%= description %>" />
   <link rel="shortcut icon" href="icons/favicon.png">
   <style>
 a { display: block; }
@@ -43,7 +43,7 @@ $("#browserid").click(function(){
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', '{{ gaId }}', 'nunux.org');
+ga('create', '<%= gaId %>', 'nunux.org');
 ga('send', 'pageview');
   </script>
 </body>

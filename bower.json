@@ -3,28 +3,31 @@
   "version": "0.0.1",
   "main": "main.js",
   "dependencies": {
-    "jquery": "~2.0.0",
-    "backbone-amd": "~1.0.0",
-    "moment": "~2.0.0",
-    "requirejs": "~2.1.5",
-    "underscore-amd": "~1.4.4",
-    "requirejs-text": "~2.0.6",
-    "bootstrap": "~2.3.2"
+    "bootstrap": "~2.3.2",
+    "html5shiv": "~3.6.2",
+    "angular": "~1.0.7",
+    "angular-sanitize": "~1.0.7",
+    "moment": "~2.0.0"
   },
   "exportsOverride": {
-    "backbone-amd":   {"": "backbone.js"},
-    "underscore-amd": {"": "underscore.js"},
-    "moment":         {"": "moment.js"},
-    "requirejs":      {"": "require.js"},
-    "requirejs-text": {"": "text.js"},
-    "bootstrap":      {"": "less/*.less"},
-    "html5shiv":      {"": "dist/html5shiv.js"}
+    "bootstrap": {
+      "": "less/*.less"
+    },
+    "html5shiv": {
+      "": "dist/html5shiv.js"
+    },
+    "angular": {
+      "": "*.js"
+    },
+    "angular-sanitize": {
+      "": "*.js"
+    },
+    "moment": {
+      "": "min/moment.min.js"
+    }
   },
   "ignore": [
     "**/.*",
     "node_modules"
-  ],
-  "devDependencies": {
-    "html5shiv": "~3.6.2"
-  }
+  ]
 }

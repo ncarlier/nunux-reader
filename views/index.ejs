@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  <meta charset="utf-8">
+  <title>NUNUX Reader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="<%= description %>" />
+  <meta name="author" content="">
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700|Open+Sans+Condensed:300,700" rel="stylesheet" />
+  <link rel="stylesheet" href="stylesheets/style.css" />
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+      <script src="lib/html5shiv/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="icons/favicon.png">
+
+</head>
+<body class="left-sidebar" ng-app="ReaderApp" >
+  <div id="wrapper">
+    <div id="title-bar">
+      <div class="toggle" onclick="$('#sidebar').toggle();"></div>
+      <div class="title">
+        <h1>READER</h1>
+      </div>
+    </div>
+    <div id="content">
+      <div id="content-inner" ng-view>
+      </div>
+    </div>
+
+    <div id="sidebar">
+      <div id="logo">
+        <h1>reader</h1>
+      </div>
+
+      <nav id="nav">
+        <ul>
+          <li>
+          <i class="icon-th icon-white"></i>
+          <a href="#timeline/global" class="menu-global-timeline">
+            All items <span class="size badge"></span>
+          </a>
+          </li>
+          <li>
+          <i class="icon-bookmark icon-white"></i>
+          <a href="#timeline/archive" class="menu-archive-timeline">
+            Saved items <span class="size badge"></span>
+          </a>
+          </li>
+          <li>
+          <i class="icon-wrench icon-white"></i>
+          <a href="#manage" class="menu-manage">Manage</a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Search -->
+      <section class="is-search" style="display: none;">
+        <form method="post" action="#">
+          <input type="text" class="text" name="search" placeholder="Search" />
+        </form>
+      </section>
+
+      <!-- Subscriptions -->
+      <nav class="is-subscriptions" ng-controller="SubscriptionCtrl">
+        <header>
+          <h2>Subscriptions ({{ subscriptions.length }})</h2>
+        </header>
+        <ul>
+          <li ng-repeat="feed in subscriptions">
+          <a href="#timeline/{{ feed.id }}" class="menu-{{ feed.id }}-timeline" title="{{ feed.title }}">
+            <div>{{ feed.title }}</div>
+            <span class="size badge"></span>
+          </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Copyright -->
+      <div id="copyright">
+        <p>&copy; 2013 NUNUX.org</p>
+      </div>
+    </div><! -- end sidebar -->
+  </div><!-- end wrapper -->
+</div>
+
+<script src="lib/moment/moment.min.js"></script>
+<script src="lib/angular/angular.min.js"></script>
+<script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+
+<script src="javascripts/app.js"></script>
+<script src="javascripts/controllers/subscription.js"></script>
+<script src="javascripts/controllers/timeline.js"></script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '<%= gaId %>', 'nunux.org');
+ga('send', 'pageview');
+</script>
+</body>
+</html>

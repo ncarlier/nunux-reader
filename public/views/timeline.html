@@ -1,0 +1,57 @@
+<div class="timeline">
+  <header>
+    <div class="toolbar">
+      <button type="button" class="btn btn-small" title="{{order == 'ASC' && 'Sort by newest' || 'Sort by oldest'}}">
+        <i class="{{order == 'ASC' && 'icon-chevron-up' || 'icon-chevron-down'}}"></i>
+      </button>
+      <button type="button" class="btn btn-small" title="Mark all as read" ng-show="isReadable">
+        <i class="icon-check"></i>
+      </button>
+      <button type="button" class="btn btn-small" title="{{isShowingAllItems && 'Show new items' || 'Show all items'}}" ng-show="haveAllItems">
+        <i class="{{isShowingAllItems && 'icon-fire' || 'icon-eye-open'}}"></i>
+      </button>
+    </div>
+
+    <h1>
+      <a ng-show="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank">{{ timeline.title }}</a>
+      <a ng-show="!timeline.feed">{{ timeline.title }}</a>
+    </h1>
+
+    <span class="hint">
+      <b>{{ timeline.size }}</b> unread articles
+      <div ng-show="timeline.feed && timeline.feed.statusLabel">
+        // <i title="{{ timeline.feed.statusDesc }}">{{ timeline.feed.statusLabel }}</i>
+        // {{ timeline.feed.updatedFrom }}
+      </div>
+    </span>
+  </header>
+  <section class="content">
+    <article id="{{ article.id }}" ng-class="{'not-seen':isReadable}" ng-repeat="article in articles">
+      <header>
+        <time title="{{article.date}}">{{ article.date | fromNow }}</time>
+        <h1><a target="_blank" href="{{ article.link }}">{{ article.title }}</a></h1>
+        <span>
+          From <a href="#timeline/{{ article.fid }}">{{article.meta.title }}</a>
+          {{ 'by ' + article.author }}
+        </span>
+      </header>
+      <div class="content">
+        <div ng-bind-html-unsafe="article.description">
+        </div>
+      </div>
+      <footer>
+        <label class="checkbox" ng-show="isReadable">
+          <input type="checkbox"> Keep unread
+        </label>
+        &nbsp;
+        <label class="checkbox">
+          <input type="checkbox"> Save this
+        </label>
+      </footer>
+    </article>
+    <article ng-show="isEnding">
+      <h1 class="ending">-- You reach ground 0 --</h1>
+    </article>
+  </section>
+</div>
+

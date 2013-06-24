@@ -1,4 +1,6 @@
 module.exports = function(grunt) {
+  // load all grunt tasks
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     mochaTest: {
@@ -30,14 +32,22 @@ module.exports = function(grunt) {
         }
       }
     },
-    requirejs: {
-      compile: {
-        options: {
-          baseUrl: 'public/javascripts',
-          mainConfigFile: 'public/javascripts/main.js',
-          name: 'main',
-          out: 'public-build/javascripts/main.js',
-          include: ['views/about', 'views/manage', 'views/timeline']
+    ngmin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: 'public/javascripts',
+          src: '*.js',
+          dest: 'public-build/javascripts',
+        }]
+      }
+    },
+    uglify: {
+      dist: {
+        files: {
+          'public-build/javascripts/scripts.js': [
+            'public-build/javascripts/scripts.js'
+          ]
         }
       }
     },
@@ -48,7 +58,6 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'public/', src: ['icons/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['images/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['templates/**'], dest: 'public-build/'},
-          {expand: true, cwd: 'public/', src: ['lib/requirejs/require.js'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['lib/jquery/jquery.js'], dest: 'public-build/'}
         ]
       }
@@ -72,16 +81,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-mocha-test');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-bower-task');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-contrib-requirejs');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-manifest');
-
   // Register building task
-  grunt.registerTask('build', ['less','requirejs','copy']);
+  grunt.registerTask('build', ['less','ngmin', 'uglify','copy']);
   grunt.registerTask('install', ['clean','build']);
   grunt.registerTask('default', 'mochaTest');
 }

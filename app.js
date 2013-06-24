@@ -18,7 +18,7 @@ app.configure(function(){
   app.set('port', process.env.APP_PORT || 3000);
   app.set('realm', process.env.APP_REALM || 'http://localhost:' + app.get('port'));
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'hjs');
+  app.set('view engine', 'ejs');
   app.use(express.logger('dev'));
   app.use(express.cookieParser());
   app.use(express.cookieSession({secret: 'NuNUXReAdR_'}));
