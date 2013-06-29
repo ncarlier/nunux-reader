@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ReaderApp', ['SubscriptionModule', 'TimelineModule'])
+angular.module('ReaderApp', ['SidebarModule', 'TimelineModule'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
   .when('/timeline/:timeline', {
@@ -14,5 +14,13 @@ angular.module('ReaderApp', ['SubscriptionModule', 'TimelineModule'])
 .filter('fromNow', function() {
   return function(dateString) {
     return moment(new Date(dateString)).fromNow()
+  };
+})
+.filter('escape', function() {
+  return window.encodeURIComponent;
+})
+.filter('prefix', function() {
+  return function(input, prefix) {
+    return input ? prefix + ' ' + input : '';
   };
 });

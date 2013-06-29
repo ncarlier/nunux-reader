@@ -7,9 +7,13 @@
     "html5shiv": "~3.6.2",
     "angular": "~1.0.7",
     "angular-sanitize": "~1.0.7",
-    "moment": "~2.0.0"
+    "moment": "~2.0.0",
+    "jquery": "~2.0.2"
   },
   "exportsOverride": {
+    "jquery": {
+      "": "jquery.*"
+    },
     "bootstrap": {
       "": "less/*.less"
     },

@@ -102,10 +102,14 @@
     > ul > li > ul {
       display: none;
     }
+    &.main {
+      li {
+        padding: 0.5em 0 0.5em 0;
+      }
+    }
     li {
       border-top: solid 1px rgba(0,0,0,0.25);
       box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.075);
-      padding: 0.5em 0 0.5em 0;
       a {
         padding-left: 1em;
         text-decoration: none;
@@ -152,7 +156,6 @@
   .badge {
     margin-top: 5px;
     float: right;
-    display: none;
     background-color: #181818;
   }
 }
@@ -291,14 +294,18 @@
         }
       }
       footer {
+        line-height: 10px;
         padding: 5px;
         background-color: #fafafa;
         color: #666;
         border-top: 1px solid #ebebeb;
-        label {
-          display: inline-block;
-          margin: 0;
+        a {
           cursor: pointer;
+          opacity: 0.25;
+          margin: 0 10px;
+        }
+        a:hover {
+          opacity: 1;
         }
       }
     }
