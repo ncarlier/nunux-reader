@@ -1,32 +1,93 @@
 'use strict';
 
 angular.module('TimelineModule', [])
-.controller('TimelineCtrl', function ($scope, $http, $routeParams) {
-  $scope.timeline = $routeParams.timeline;
-  $scope.url = '/timeline/' + $scope.timeline;
+.controller('TimelineCtrl', function ($scope, $http, $routeParams, $rootScope) {
+  $scope.timelineName = $routeParams.timeline;
+  $scope.url = '/timeline/' + $scope.timelineName;
   $scope.order = 'ASC';
   $scope.isShowingAllItems = false;
-  $scope.haveAllItems = $scope.timeline != 'global' && $scope.timeline != 'archive';
+  $scope.haveAllItems = $scope.timelineName != 'global' && $scope.timelineName != 'archive';
   $scope.isReadable = function() {
-    return !$scope.isShowingAllItems;
+    return !$scope.isShowingAllItems && $scope.timelineName != 'archive';
   };
   $scope.isEnding = false;
   $scope.articles = [];
+
+  $scope.updateArticle = function(aid, data) {
+    for (var i = 0; i < $scope.articles.length; i++) {
+      if ($scope.articles[i].id == aid) {
+        angular.extend($scope.articles[i], data);
+        break;
+      }
+    }
+  };
+
   $http.get($scope.url + '/status').success(function (data) {
     $scope.timeline = data;
+    $rootScope.$broadcast('app.event.timeline.status', data);
   });
-  $scope.onClickShow = function() {
+
+  $scope.refresh = function() {
+    $scope.articles = [];
+    $scope.next = null;
+    $scope.fetchTimeline();
+  };
+
+  $scope.toggleShow = function() {
     $scope.isShowingAllItems = !$scope.isShowingAllItems;
-    $scope.articles = [];
-    $scope.next = null;
-    $scope.fetchTimeline();
+    $scope.refresh();
   };
-  $scope.onClickSort = function() {
+
+  $scope.toggleSort = function() {
     $scope.order = ($scope.order == 'ASC') ? 'DESC' : 'ASC';
-    $scope.articles = [];
-    $scope.next = null;
-    $scope.fetchTimeline();
+    $scope.refresh();
   };
+
+  $scope.markAllAsRead = function() {
+    if (confirm('Do you really want to mark all items as read ?')) {
+      $http.delete($scope.url).success(function (data) {
+        $scope.timeline = data;
+        $scope.articles = [];
+        $scope.next = null;
+        $rootScope.$broadcast('app.event.timeline.status', data);
+      });
+    }
+  };
+
+  $scope.markAsRead = function(aid) {
+    $http.delete($scope.url + '/' + aid).success(function (data) {
+      $scope.timeline = data;
+      $rootScope.$broadcast('app.event.timeline.status', data);
+      $scope.updateArticle(aid, {read: true});
+    });
+  };
+
+  $scope.keepUnRead = function(aid) {
+    $http.put($scope.url + '/' + aid).success(function (data) {
+      $scope.timeline = data;
+      $rootScope.$broadcast('app.event.timeline.status', data);
+      $scope.updateArticle(aid, {read: false});
+    });
+  };
+
+  $scope.saveArticle = function(aid) {
+    var url = '/timeline/archive/' + aid;
+    $http.put(url).success(function(data) {
+      $rootScope.$broadcast('app.event.timeline.status', data);
+      humane.log('Article saved.');
+      $scope.updateArticle(aid, {saved: true});
+    });
+  };
+
+  $scope.trashArticle = function(aid) {
+    var url = '/timeline/archive/' + aid;
+    $http.delete(url).success(function(data) {
+      $rootScope.$broadcast('app.event.timeline.status', data);
+      humane.log('Article trashed.');
+      $scope.updateArticle(aid, {saved: false});
+    });
+  };
+
   $scope.fetchTimeline = function() {
     if ($scope.busy) return;
     $scope.busy = true;
@@ -36,8 +97,10 @@ angular.module('TimelineModule', [])
       show: $scope.isShowingAllItems ? 'all' : 'new'
     });
     var url = $scope.url + '?' + params;
-    $http.get(url).success(function (data) {
+    $http.get(url).success(function(data) {
       for (var i = 0; i < data.articles.length; i++) {
+        data.articles[i].read = false;
+        data.articles[i].saved = $scope.timelineName == 'archive';
         $scope.articles.push(data.articles[i]);
       }
       $scope.next = data.next;

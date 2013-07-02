@@ -1,13 +1,13 @@
 <div class="timeline">
   <header>
     <div class="toolbar">
-      <button type="button" class="btn btn-small" title="{{order == 'ASC' && 'Sort by newest' || 'Sort by oldest'}}" ng-click="onClickSort()">
+      <button type="button" class="btn btn-small" title="{{order == 'ASC' && 'Sort by newest' || 'Sort by oldest'}}" ng-click="toggleSort()">
         <i class="{{order == 'ASC' && 'icon-chevron-up' || 'icon-chevron-down'}}"></i>
       </button>
-      <button type="button" class="btn btn-small" title="Mark all as read" ng-show="isReadable()">
+      <button type="button" class="btn btn-small" title="Mark all as read" ng-show="isReadable()" ng-click="markAllAsRead()">
         <i class="icon-check"></i>
       </button>
-      <button type="button" class="btn btn-small" title="{{isShowingAllItems && 'Show new items' || 'Show all items'}}" ng-show="haveAllItems" ng-click="onClickShow()">
+      <button type="button" class="btn btn-small" title="{{isShowingAllItems && 'Show new items' || 'Show all items'}}" ng-show="haveAllItems" ng-click="toggleShow()">
         <i class="{{isShowingAllItems && 'icon-fire' || 'icon-eye-open'}}"></i>
       </button>
     </div>
@@ -26,7 +26,7 @@
     </span>
   </header>
   <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding">
-    <article id="{{ article.id }}" ng-class="{'not-seen':isReadable()}" ng-repeat="article in articles">
+    <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" ng-repeat="article in articles">
       <header>
         <time title="{{article.date}}">{{ article.date | fromNow }}</time>
         <h1><a target="_blank" href="{{ article.link }}">{{ article.title }}</a></h1>
@@ -40,11 +40,17 @@
         </div>
       </div>
       <footer>
-        <a title="Save this">
+        <a title="Save this" ng-show="!article.saved" ng-click="saveArticle(article.id)">
           <i class="icon-bookmark" />
         </a>
-        <a title="Keep unread" ng-show="isReadable()">
+        <a title="Trash this" ng-show="article.saved" ng-click="trashArticle(article.id)">
+          <i class="icon-trash" />
+        </a>
+        <a title="Keep unread" ng-show="isReadable() && article.read" ng-click="keepUnRead(article.id)">
           <i class="icon-eye-close" />
+        </a>
+        <a title="Mark as read" ng-show="isReadable() && !article.read" ng-click="markAsRead(article.id)">
+          <i class="icon-check" />
         </a>
         <a title="Mail this" href="mailto:?subject={{article.title | escape}}&amp;body={{article.link | escape}}">
           <i class="icon-envelope" />
