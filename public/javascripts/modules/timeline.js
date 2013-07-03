@@ -169,11 +169,6 @@ angular.module('TimelineModule', [])
               var aid = $(this).attr('id');
               var tlReadHandle = scope.$eval(attrs.timelineReadHandle);
               tlReadHandle(aid);
-              /*if ($rootScope.$$phase) {
-                scope.$eval(attrs.timelineReadHandle);
-              } else {
-                scope.$apply(attrs.timelineReadHandle);
-              }*/
             }
           });
         }
