@@ -34,31 +34,27 @@ module.exports = function(grunt) {
     },
     ngmin: {
       dist: {
-        files: [{
-          expand: true,
-          cwd: 'public/javascripts',
-          src: '*.js',
-          dest: 'public-build/javascripts',
-        }]
+        expand: true,
+        cwd: 'public/javascripts',
+        src: ['**/*.js'],
+        dest: 'public-build/javascripts'
       }
     },
     uglify: {
       dist: {
-        files: {
-          'public-build/javascripts/scripts.js': [
-            'public-build/javascripts/scripts.js'
-          ]
-        }
+        expand: true,
+        cwd: 'public-build/javascripts',
+        src: ['**/*.js'],
+        dest: 'public-build/javascripts'
       }
     },
     copy: {
       main: {
         files: [
-          {expand: true, cwd: 'public/', src: ['lib/html5shiv/html5shiv.js'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['icons/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['images/**'], dest: 'public-build/'},
-          {expand: true, cwd: 'public/', src: ['templates/**'], dest: 'public-build/'},
-          {expand: true, cwd: 'public/', src: ['lib/jquery/jquery.js'], dest: 'public-build/'}
+          {expand: true, cwd: 'public/', src: ['views/**'], dest: 'public-build/'},
+          {expand: true, cwd: 'public/', src: ['lib/**'], dest: 'public-build/'}
         ]
       }
     },
