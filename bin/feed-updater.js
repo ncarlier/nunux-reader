@@ -230,7 +230,7 @@ app.on('nextfeed', function() {
             var article = articles[i];
             Article.create(article, feed, function(err, a) {
               if (err) {
-                if (err != 'EEXIST') logger.warn('Feed %s: Unable to create article: %s', feed.id, err);
+                if (err != 'EEXIST' && err != 'ETOOOLD') logger.warn('Feed %s: Unable to create article: %s', feed.id, err);
               }
               else logger.debug('Feed %s: New article %s : %s', feed.id, a.id, a.title);
             });

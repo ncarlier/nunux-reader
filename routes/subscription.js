@@ -18,9 +18,9 @@ module.exports = function(app){
    */
   app.post('/subscription', app.ensureAuthenticated, function(req, res, next) {
     if (req.files && req.files.opml) {
-      User.import(req.user.uid, req.files.opml.path, function(err) {
+      User.import(req.user.uid, req.files.opml.path, function(err, feeds) {
         if (err) return next(err);
-        res.redirect('/');
+        res.json(feeds);
       });
     } else if (req.body.url) {
       User.subscribe(req.user.uid, req.body.url, function(err, feed) {

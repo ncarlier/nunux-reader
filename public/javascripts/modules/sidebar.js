@@ -2,14 +2,22 @@
 
 angular.module('SidebarModule', [])
 .controller('SidebarCtrl', function ($scope, $http) {
-  $http.get('/timeline').success(function (data) {
-    $scope.timelines = data;
-    $scope.globalSize = data[0].size;
-    $scope.archiveSize = data[1].size;
-  });
+  $scope.refresh = function() {
+    $http.get('/timeline').success(function (data) {
+      $scope.timelines = data;
+      $scope.globalSize = data[0].size;
+      $scope.archiveSize = data[1].size;
+    });
+  };
+
   $scope.isSubscription = function(item) {
     return (item.feed);
   };
+
+  $scope.$on('app.event.subscriptions.add', $scope.refresh);
+  $scope.$on('app.event.subscriptions.remove', $scope.refresh);
+  $scope.$on('app.event.subscriptions.refresh', $scope.refresh);
+
   $scope.$on('app.event.timeline.status', function(event, data) {
     if (data.timeline == 'global') {
       $scope.globalSize = data.size;
@@ -28,4 +36,6 @@ angular.module('SidebarModule', [])
       }
     }
   });
+
+  $scope.refresh();
 });

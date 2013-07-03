@@ -1,53 +1,63 @@
-<header>
-  <a name="manage"></a>
-  <h1>Manage Subscriptions</h1>
-</header>
-<section class="content">
-  <div class="alert" style="display:none;"></div>
-  <div class="row-fluid">
-    <div class="span6">
-      <form action="/subscription" method="post" enctype="multipart/form-data">
-        <fieldset>
-          <legend>Subscribe</legend>
-          <label>Enter a feed url</label>
-          <input type="text" name="url" placeholder="Type RSS URL here" />
-          <span class="help-block">e.g., http://rss.cnn.com/rss/edition.rss</span>
-          <button type="submit" class="btn"><i class="icon-plus"></i> Subscribe</button>
-        </fieldset>
-      </form> 
+<div class="manage">
+  <header>
+    <a name="manage"></a>
+    <h1>Manage Subscriptions</h1>
+  </header>
+  <section class="content">
+    <div class="alert" ng-show="message" ng-class="message.clazz">{{message.text}}</div>
+    <div class="row-fluid">
+      <div class="span6">
+        <form name="addSubscription">
+          <fieldset>
+            <legend>Subscribe</legend>
+            <input type="url" name="url" ng-model="newFeedUrl" placeholder="Type RSS URL here" required/>
+            <span class="help-block">e.g., http://rss.cnn.com/rss/edition.rss</span>
+            <button class="btn" ng-click="subscribe(newFeedUrl)"><i class="icon-plus"></i> Subscribe</button>
+          </fieldset>
+        </form> 
+      </div>
+      <div class="span6">
+        <form action="/subscription" ng-upload>
+          <fieldset>
+            <legend>Import subscriptions</legend>
+            <input type="file" name="opml" accept="text/xml" required />
+            <span class="help-block">Import an OPML file.</span>
+            <button type="submit" class="btn" upload-submit="uploadComplete(content, completed)" ><i class="icon-upload"></i> Import</button>
+          </fieldset>
+        </form>
+      </div>
     </div>
-    <div class="span6">
-      <form action="/subscription" method="post" enctype="multipart/form-data">
-        <fieldset>
-          <legend>Import subscriptions</legend>
-          <label>Subscriptions file</label>
-          <input type="file" name="opml" accept="text/xml" />
-          <span class="help-block">Import an OPML file.</span>
-          <button type="submit" class="btn"><i class="icon-upload"></i> Import</button>
-        </fieldset>
-      </form>
-    </div>
-  </div>
 
-  <div class="row-fluid">
-    <div class="span12">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Feed</th>
-            <th>Status</th>
-            <th>Update date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="feed-list">
-        <tr class="no-subs">
-          <td colspan="4">
-            <strong>No subscription.</strong> Maybe is the time to add some.
-          </td>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Feed</th>
+          <th>Status</th>
+          <th>Update date</th>
+          <th></th>
         </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+      </thead>
+      <tbody class="feed-list">
+      <tr ng-repeat="feed in subscriptions | orderBy:'title'">
+        <td>
+          {{ feed.title }}<br/><a href="{{ feed.xmlurl }}" target="_blank">{{ feed.xmlurl }}</a>
+        </td>
+        <td>
+          <span class="label label-{{getStatusClass(feed.status)}}" title="{{getStatusDesc(feed.status)}}">{{getStatusLabel(feed.status)}}</span>
+        </td>
+        <td>
+          {{ feed.updateDate | fromNow }}
+        </td>
+        <td>
+          <button class="btn btn-danger" title="Remove subscription" ng-click="unSubscribe(feed)">X</button>
+        </td>
+      </tr>
+      <tr class="no-subs" ng-show="!subscriptions.length">
+        <td colspan="4">
+          <strong>No subscription.</strong> Maybe is the time to add some.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
