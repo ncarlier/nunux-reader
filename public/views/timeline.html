@@ -25,7 +25,7 @@
       </span>
     </span>
   </header>
-  <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding">
+  <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding" timeline-read-enabled="isReadable()" timeline-read-handle="markAsRead">
     <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" ng-repeat="article in articles">
       <header>
         <time title="{{article.date}}">{{ article.date | fromNow }}</time>

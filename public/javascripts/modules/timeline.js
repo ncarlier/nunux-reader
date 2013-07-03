@@ -113,7 +113,7 @@ angular.module('TimelineModule', [])
            function($rootScope, $window, $timeout) {
   return {
     link: function(scope, elem, attrs) {
-      var checkWhenEnabled, handler, scrollDistance, scrollEnabled;
+      var checkWhenEnabled, handler, scrollDistance, scrollEnabled, readEnabled, readHandler;
       $window = angular.element($window);
       scrollDistance = 0;
       if (attrs.timelineScrollDistance != null) {
@@ -132,6 +132,14 @@ angular.module('TimelineModule', [])
           }
         });
       }
+
+      readEnabled = false;
+      if (attrs.timelineReadEnabled != null) {
+        scope.$watch(attrs.timelineReadEnabled, function(value) {
+          return readEnabled = value;
+        });
+      }
+
       handler = function(event) {
         var shouldFetch = false;
         if (event){
@@ -146,14 +154,31 @@ angular.module('TimelineModule', [])
         }
         if (shouldFetch && scrollEnabled) {
           if ($rootScope.$$phase) {
-            return scope.$eval(attrs.timeline);
+            scope.$eval(attrs.timeline);
           } else {
-            return scope.$apply(attrs.timeline);
+            scope.$apply(attrs.timeline);
           }
         } else if (shouldFetch) {
-          return checkWhenEnabled = true;
+          checkWhenEnabled = true;
+        }
+        if (readEnabled && event) {
+          var areaTop = event.target == document ? $(document).scrollTop() : 
+            $(event.target).offset().top;
+          $('article.not-seen', $(event.target)).each(function() {
+            if ($(this).offset().top < areaTop) {
+              var aid = $(this).attr('id');
+              var tlReadHandle = scope.$eval(attrs.timelineReadHandle);
+              tlReadHandle(aid);
+              /*if ($rootScope.$$phase) {
+                scope.$eval(attrs.timelineReadHandle);
+              } else {
+                scope.$apply(attrs.timelineReadHandle);
+              }*/
+            }
+          });
         }
       };
+
       $(document).on('scroll', handler);
       $(elem).on('scroll', handler);
       scope.$on('$destroy', function() {
