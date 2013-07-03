@@ -57,23 +57,6 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'public/', src: ['lib/**'], dest: 'public-build/'}
         ]
       }
-    },
-    manifest: {
-      generate: {
-        options: {
-          basePath: 'public-build/',
-          cache: ['javascripts/main.js', 'stylesheets/style.css'],
-          preferOnline: true,
-          verbose: false,
-          timestamp: true
-        },
-        src: [
-          'templates/*.html',
-          'lib/**/*.js',
-          'images/*.png'
-        ],
-        dest: 'public-build/manifest.appcache'
-      }
     }
   });
 
