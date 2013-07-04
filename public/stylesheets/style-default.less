@@ -119,7 +119,6 @@
         -ms-transition: color .25s ease-in-out, color .25s ease-in-out;
         transition: color .25s ease-in-out, color .25s ease-in-out;
       }
-
     }
     li:first-child {
       border: 0;
@@ -132,9 +131,12 @@
     li:hover a {
       color: #fff;
     }
-    li.current_page_item a {
-      font-weight: bold;
-      color: #fff;
+    li.current {
+      background-color: rgba(0, 122, 255, 0.15);
+      a {
+        font-weight: bold;
+        color: #fff;
+      }
     }
   }
 

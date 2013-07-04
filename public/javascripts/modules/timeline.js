@@ -3,6 +3,7 @@
 angular.module('TimelineModule', [])
 .controller('TimelineCtrl', function ($scope, $http, $routeParams, $rootScope) {
   $scope.timelineName = $routeParams.timeline;
+  $rootScope.currentPage = $routeParams.timeline;
   $scope.url = '/timeline/' + $scope.timelineName;
   $scope.order = 'ASC';
   $scope.isShowingAllItems = false;

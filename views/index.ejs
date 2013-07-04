@@ -43,19 +43,19 @@
 
       <nav class="main">
         <ul>
-          <li>
+          <li ng-class="{current: $root.currentPage == 'global'}" >
           <i class="icon-th icon-white"></i>
           <a href="#timeline/global" class="menu-global-timeline">
             All items <span class="badge">{{globalSize}}</span>
           </a>
           </li>
-          <li>
+          <li ng-class="{current: $root.currentPage == 'archive'}" >
           <i class="icon-bookmark icon-white"></i>
-          <a href="#timeline/archive" class="menu-archive-timeline">
+          <a href="#timeline/archive" class="menu-archive-timeline" >
             Saved items <span class="badge">{{archiveSize}}</span>
           </a>
           </li>
-          <li>
+          <li ng-class="{current: $root.currentPage == 'manage'}">
           <i class="icon-wrench icon-white"></i>
           <a href="#manage" class="menu-manage">Manage</a>
           </li>
@@ -75,8 +75,8 @@
           <h2>Subscriptions ({{ timelines.length - 2 }})</h2>
         </header>
         <ul>
-          <li ng-repeat="timeline in timelines | filter:isSubscription | orderBy:'-size'">
-          <a href="#timeline/{{ timeline.feed.id }}" title="{{ timeline.feed.title }}">
+          <li ng-repeat="timeline in timelines | filter:isSubscription | orderBy:'-size'" ng-class="{current: $root.currentPage == timeline.feed.id}">
+          <a href="#timeline/{{ timeline.feed.id }}" title="{{ timeline.feed.title }}" >
             <div>{{ timeline.feed.title }}</div>
             <span class="badge" ng-show="timeline.size">{{ timeline.size }}</span>
           </a>

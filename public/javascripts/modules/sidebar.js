@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('SidebarModule', [])
-.controller('SidebarCtrl', function ($scope, $http) {
+.controller('SidebarCtrl', function ($scope, $rootScope, $http) {
   $scope.refresh = function() {
     $http.get('/timeline').success(function (data) {
       $scope.timelines = data;
@@ -21,16 +21,18 @@ angular.module('SidebarModule', [])
   $scope.$on('app.event.timeline.status', function(event, data) {
     if (data.timeline == 'global') {
       $scope.globalSize = data.size;
-      // TODO update feed timeline size
+      if (data.size % 10 == 0) {
+        $scope.refresh();
+      }
     } else if (data.timeline == 'archive') {
       $scope.archiveSize = data.size;
     } else {
       for (var i=0 ; i < $scope.timelines.length ; i++) {
         if ($scope.timelines[i].timeline == data.timeline) {
-          // TODO change this: get info in server response...
-          var diff = $scope.timelines[i].size - data.size;
-          $scope.timelines[i] = data;
-          $scope.globalSize -= diff;
+          $scope.timelines[i].size = data.size;
+          if (data.size % 10 == 0) {
+            $scope.refresh();
+          }
           break;
         }
       }

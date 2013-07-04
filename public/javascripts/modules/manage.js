@@ -3,6 +3,7 @@
 angular.module('ManageModule', ['ngUpload'])
 .controller('ManageCtrl', function ($scope, $rootScope, $http) {
   $scope.newFeedUrl = null;
+  $rootScope.currentPage = 'manage';
 
   $scope.refresh = function() {
     $http.get('/subscription').success(function (data) {
