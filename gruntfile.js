@@ -12,7 +12,21 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      all: ['app.js', 'lib/*.js', 'routes/*.js', 'bin/*.js']
+      backend: ['app.js', 'lib/*.js', 'routes/*.js', 'bin/*.js'],
+      frontend: {
+        options: {
+          globalstrict: true,
+          browser: true,
+          globals: {
+            '$': false,
+            angular: false,
+            moment: false,
+            confirm: false,
+            humane: false
+          }
+        },
+        src: ['public/javascripts/**/*.js']
+      }
     },
     clean: ["public-build"],
     bower: {

@@ -117,14 +117,15 @@ angular.module('TimelineModule', [])
       var checkWhenEnabled, handler, scrollDistance, scrollEnabled, readEnabled, readHandler;
       $window = angular.element($window);
       scrollDistance = 0;
-      if (attrs.timelineScrollDistance != null) {
+      if (attrs.timelineScrollDistance !== null) {
         scope.$watch(attrs.timelineScrollDistance, function(value) {
-          return scrollDistance = parseInt(value, 10);
+          scrollDistance = parseInt(value, 10);
+          return scrollDistance;
         });
       }
       scrollEnabled = true;
       checkWhenEnabled = false;
-      if (attrs.timelineScrollDisabled != null) {
+      if (attrs.timelineScrollDisabled !== null) {
         scope.$watch(attrs.timelineScrollDisabled, function(value) {
           scrollEnabled = !value;
           if (scrollEnabled && checkWhenEnabled) {
@@ -135,9 +136,10 @@ angular.module('TimelineModule', [])
       }
 
       readEnabled = false;
-      if (attrs.timelineReadEnabled != null) {
+      if (attrs.timelineReadEnabled !== null) {
         scope.$watch(attrs.timelineReadEnabled, function(value) {
-          return readEnabled = value;
+          readEnabled = value;
+          return readEnabled;
         });
       }
 
@@ -217,6 +219,6 @@ angular.module('TimelineModule', [])
         });
       });
     }
-  }
+  };
 });
 

@@ -9,7 +9,7 @@ angular.module('ManageModule', ['ngUpload'])
     $http.get('/subscription').success(function (data) {
       $scope.subscriptions = data;
     });
-  }
+  };
 
   $scope.getStatusClass = function(status) {
     var result = 'inverse';
@@ -17,21 +17,23 @@ angular.module('ManageModule', ['ngUpload'])
       result = status.match(/^error/g) ? 'important' : 'success';
     }
     return result;
-  }
+  };
+
   $scope.getStatusDesc = function(status) {
     var result = 'This feed had not yet been parsed.';
     if (status) {
       result = status.match(/^error/g) ? status : 'Feed successfully parsed';
     }
     return result;
-  }
+  };
+
   $scope.getStatusLabel = function(status) {
     var result = 'Not updated';
     if (status) {
       result = status.match(/^error/g) ? 'In error' : status;
     }
     return result;
-  }
+  };
 
   $scope.unSubscribe = function(feed) {
     if (confirm('Do you really want to unsubscribe from "' + feed.title + '" ?')) {
@@ -51,7 +53,7 @@ angular.module('ManageModule', ['ngUpload'])
         $scope.message = {clazz: 'alert-error', text: 'Unable to remove Feed "' + feed.title + '"!'};
       });
     }
-  }
+  };
 
   $scope.subscribe = function(url) {
     if (url) {
@@ -63,10 +65,10 @@ angular.module('ManageModule', ['ngUpload'])
         $rootScope.$broadcast('app.event.subscriptions.add', feed);
       })
       .error(function() {
-        $scope.message = {clazz: 'alert-error', text: 'Unable to remove Feed "' + feed.title + '"!'};
+        $scope.message = {clazz: 'alert-error', text: 'Unable to remove Feed "' + url + '"!'};
       });
     }
-  }
+  };
 
   $scope.uploadComplete = function (content, completed) {
     if (completed && content.length > 0) {
@@ -84,7 +86,7 @@ angular.module('ManageModule', ['ngUpload'])
         $rootScope.$broadcast('app.event.subscriptions.refresh');
       }
     }
-  }
+  };
 
   $scope.refresh();
 });

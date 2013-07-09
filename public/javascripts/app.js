@@ -17,7 +17,7 @@ angular.module('ReaderApp', ['SidebarModule', 'TimelineModule', 'ManageModule'])
 }])
 .filter('fromNow', function() {
   return function(dateString) {
-    return moment(new Date(dateString)).fromNow()
+    return moment(new Date(dateString)).fromNow();
   };
 })
 .filter('escape', function() {

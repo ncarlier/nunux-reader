@@ -21,7 +21,7 @@ angular.module('SidebarModule', [])
   $scope.$on('app.event.timeline.status', function(event, data) {
     if (data.timeline == 'global') {
       $scope.globalSize = data.size;
-      if (data.size % 10 == 0) {
+      if (data.size % 10 === 0) {
         $scope.refresh();
       }
     } else if (data.timeline == 'archive') {
@@ -30,7 +30,7 @@ angular.module('SidebarModule', [])
       for (var i=0 ; i < $scope.timelines.length ; i++) {
         if ($scope.timelines[i].timeline == data.timeline) {
           $scope.timelines[i].size = data.size;
-          if (data.size % 10 == 0) {
+          if (data.size % 10 === 0) {
             $scope.refresh();
           }
           break;
