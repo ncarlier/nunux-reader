@@ -37,7 +37,7 @@ var main = function() {
         var cleanUserTimelines = function(uid, next) {
           logger.info('Cleaning timelines of %s.', uid);
           User.cleanTimelines(uid, after, next);
-        }
+        };
         async.each(uids, cleanUserTimelines, callback);
       },
       function(callback) {
@@ -49,7 +49,7 @@ var main = function() {
         var deleteArticlesFromFeed = function(fid, next) {
           logger.info('Delete old entries of feed %s.', fid);
           Timeline.deleteArticlesAfter(fid + ':articles', after, next);
-        }
+        };
         async.each(fids, deleteArticlesFromFeed, callback);
       },
       function() {

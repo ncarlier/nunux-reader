@@ -27,13 +27,12 @@ logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
 logger.info('Starting Feed Updater...');
 
-var signals = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
-for (var i in signals) {
-  process.on(signals[i], function() {
-    logger.info('Stopping Feed Updater...');
+async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
+  process.on(signal, function() {
+    console.log('Stopping Feed Updater...');
     stop = true;
   });
-}
+});
 
 db.on('connect', function() {
   app.emit('nextfeed');
@@ -52,9 +51,9 @@ if (process.env.HTTP_PROXY) {
   request = request.defaults({timeout: 5000});
 }
 
-var defaultMaxAge = 300    // 5 minutes
-  , maxExpirationHours = 2 // 2 hours
-  , samples = {};
+var defaultMaxAge = 300,    // 5 minutes
+    maxExpirationHours = 2, // 2 hours
+    samples = {};
 
 var jobIsTooCrazy = function(fid) {
   var isCrazy = false;
@@ -64,15 +63,15 @@ var jobIsTooCrazy = function(fid) {
   }
   samples[fid] = new Date();
   return isCrazy;
-}
+};
 
 var isParsableDate = function(date) {
   var timestamp = Date.parse(date);
-  return isNaN(timestamp)==false;
-}
+  return isNaN(timestamp) === false;
+};
 
 var extractExpiresFromHeader = function(headers) {
-  var expires = headers['expires'];
+  var expires = headers.expires;
 
   if (expires && isParsableDate(expires)) {
     // Extract expires from header.
@@ -113,7 +112,7 @@ var extractExpiresFromHeader = function(headers) {
       expires.addSeconds(defaultMaxAge);
   }
   return expires.toISOString();
-}
+};
 
 app.on('nextfeed', function() {
   if (stop) {
@@ -126,7 +125,7 @@ app.on('nextfeed', function() {
         db.rpoplpush('feeds', 'feeds', callback);
       },
       function(fid, callback) {
-        if (fid == null) return callback('NO_FEED');
+        if (fid === null) return callback('NO_FEED');
         if (jobIsTooCrazy(fid)) return callback('TOO_CRAZY');
         // Get feed from db...
         Feed.get(fid, callback);
@@ -170,10 +169,10 @@ app.on('nextfeed', function() {
         }
 
         request(req, function(err, res, body) {
+          var expires = new Date();
           if (err) {
             logger.warn('Feed %s: Error on request. Request postponed in 2 hours. Skiping.', feed.id);
             // Postpone expiration date in 2 hours
-            var expires = new Date();
             expires.addHours(2);
             Feed.update(feed, {
               status: 'error: ' + err,
@@ -191,7 +190,7 @@ app.on('nextfeed', function() {
               status: 'updated',
               lastModified: res.headers['last-modified'],
               expires: extractExpiresFromHeader(res.headers),
-              etag: res.headers['etag']
+              etag: res.headers.etag
             }, function(e, f) {
               callback(e, f, body);
             });
@@ -202,14 +201,13 @@ app.on('nextfeed', function() {
             Feed.update(feed, {
               status: 'not modified',
               expires: extractExpiresFromHeader(res.headers),
-              etag: res.headers['etag']
+              etag: res.headers.etag
             }, function(e, f) {
               callback(e, f, null);
             });
           } else {
             logger.warn('Feed %s: Bad HTTP response. Request postponed in 24 hours. Skiping.', feed.id);
             // Postpone expiration date in 24 hours
-            var expires = new Date();
             expires.addHours(24);
             Feed.update(feed, {
               status: 'error: Bad status code: ' + res.statusCode,
@@ -259,7 +257,7 @@ app.on('nextfeed', function() {
         default:
           logger.error(err);
           app.emit('nextfeed');
-      };
+      }
     }
   );
 });

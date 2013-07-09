@@ -3,10 +3,10 @@
 /**
  * Module dependencies.
  */
-var program = require('commander')
-  , db = require('../lib/db')
-  , logger = require('../lib/logger')
-  , User = require('../lib/user');
+var program = require('commander'),
+    db = require('../lib/db'),
+    logger = require('../lib/logger'),
+    User = require('../lib/user');
 
 program
   .version('0.0.1')

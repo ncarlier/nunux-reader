@@ -20,7 +20,7 @@ logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 db.on('connect', function() {
   var createUser = function(email, callback) {
     User.create({uid: email}, callback);
-  }
+  };
 
   async.each(program.args, createUser, function(err) {
     if (err) {

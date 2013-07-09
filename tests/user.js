@@ -1,18 +1,18 @@
-var should = require('should')
-  , path = require('path')
-  , db = require('../lib/db')
-  , logger = require('../lib/logger')
-  , User = require('../lib/user');
+var should = require('should'),
+    path = require('path'),
+    db = require('../lib/db'),
+    logger = require('../lib/logger'),
+    User = require('../lib/user');
 
 logger.setLevel('info');
 db.select(9);
 
 describe('A new User', function() {
-  var user
-    , uid = 'test@test.com'
-    , url = 'http://feeds.feedburner.com/KorbensBlog-UpgradeYourMind'
-    , fid = 'feed:4d32abddd88fd326673004a92b434f94'
-    , file = path.join(__dirname, 'data', 'subscriptions.xml');
+  var user,
+      uid = 'test@test.com',
+      url = 'http://feeds.feedburner.com/KorbensBlog-UpgradeYourMind',
+      fid = 'feed:4d32abddd88fd326673004a92b434f94',
+      file = path.join(__dirname, 'data', 'subscriptions.xml');
   before(function(done) {
     User.create({uid: uid} , function(err,u) {
       user = u;

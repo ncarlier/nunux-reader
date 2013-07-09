@@ -22,13 +22,12 @@ logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
 console.log('Starting Timeline Updater...');
 
-var signals = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
-for (var i in signals) {
-  process.on(signals[i], function() {
+async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
+  process.on(signal, function() {
     console.log('Stopping Timeline Updater...');
     stop = true;
   });
-}
+});
 
 db.on('connect', function() {
   app.emit('nextarticle');
@@ -52,7 +51,7 @@ app.on('nextarticle', function() {
         db.blpop('articles:integration', 5, callback);
       },
       function(replies, callback) {
-        if (replies == null) {
+        if (replies === null) {
           return app.emit('nextarticle');
         }
         // Get article from db...
@@ -63,7 +62,7 @@ app.on('nextarticle', function() {
         console.log('Integrating article %s (%s)...', article.id, article.pubdate);
         var updateUserTimelines = function(uid, next) {
           User.addArticleToTimeline(uid, 'global', article, next);
-        }
+        };
         // Get feed subscribers...
         var parts = article.id.split(':');
         var fid = parts[0] + ':' + parts[1];
