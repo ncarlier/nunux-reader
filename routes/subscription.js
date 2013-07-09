@@ -14,6 +14,18 @@ module.exports = function(app){
   });
 
   /**
+   * GET user subscriptions in OPML format.
+   */
+  app.get('/subscription/export', app.ensureAuthenticated, function(req, res, next) {
+    User.getSubscriptions(req.user.uid, function(err, feeds) {
+      if (err) return next(err);
+      res.attachment('subscriptions.xml');
+      res.header("Content-Type", "application/octet-stream");
+      res.render('opml', {uid: req.user.uid, feeds: feeds});
+    });
+  });
+
+  /**
    * POST new subscitpion(s)
    */
   app.post('/subscription', app.ensureAuthenticated, function(req, res, next) {

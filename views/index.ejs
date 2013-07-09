@@ -72,7 +72,12 @@
       <!-- Subscriptions -->
       <nav class="is-subscriptions">
         <header>
-          <h2>Subscriptions ({{ timelines.length - 2 }})</h2>
+          <h2>
+            Subscriptions ({{ timelines.length - 2 }})
+            <a href="/subscription/export" target="_blank" title="Export my feeds" style="float: right;">
+              <i class="icon-download"></i>
+            </a>
+          </h2>
         </header>
         <ul>
           <li ng-repeat="timeline in timelines | filter:isSubscription | orderBy:'-size'" ng-class="{current: $root.currentPage == timeline.feed.id}">

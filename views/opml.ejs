@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+<head>
+  <title>Subscriptions of <%= uid %> in Nunux Reader</title>
+</head>
+<body>
+<% for(var i = 0; i < feeds.length; i++) {%>
+  <% var feed = feeds[i] %>
+  <outline 
+    text="<%= feed.description || feed.title %>"
+    title="<%= feed.title %>"
+    type="rss"
+    xmlUrl="<%= feed.xmlurl %>"
+    htmlUrl="<%= feed.htmlurl %>"/>
+<% } %>
+</body>
+</opml>
