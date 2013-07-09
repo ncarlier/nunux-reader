@@ -31,6 +31,6 @@ module.exports = function(app){
       json: function() {
         res.json(context);
       }
-    })
+    });
   });
 };

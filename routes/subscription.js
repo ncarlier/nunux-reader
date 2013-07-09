@@ -1,6 +1,6 @@
-var db = require('../lib/db')
-  , User = require('../lib/user')
-  , async = require('async');
+var db = require('../lib/db'),
+    User = require('../lib/user'),
+    async = require('async');
 
 module.exports = function(app){
   /**

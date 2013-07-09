@@ -1,13 +1,13 @@
-var db = require('../lib/db')
-  , Feed = require('../lib/feed')
-  , logger = require('../lib/logger')
-  , async = require('async');
+var db = require('../lib/db'),
+    Feed = require('../lib/feed'),
+    logger = require('../lib/logger'),
+    async = require('async');
 
 module.exports = function(app){
   app.ensurePubSubHubBud = function(req, res, next) {
     if (app.get('pshb')) { return next(); }
     res.status(403).send('PubSubHubBud disabled.');
-  }
+  };
 
   /**
    * Update PubSubHubBud feed status.

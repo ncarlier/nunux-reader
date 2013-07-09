@@ -11,6 +11,9 @@ module.exports = function(grunt) {
         src: ['tests/**/*.js']
       }
     },
+    jshint: {
+      all: ['app.js', 'lib/*.js', 'routes/*.js']
+    },
     clean: ["public-build"],
     bower: {
       install: {
