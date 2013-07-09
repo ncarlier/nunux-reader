@@ -197,7 +197,8 @@ angular.module('TimelineModule', [])
   return {
     link: function (scope, elem, attrs) {
       // watch the expression, and update the UI on change.
-      var baseUrl = scope.article.meta.link;
+      var pathArray = scope.article.link.split( '/' );
+      var baseUrl = pathArray[0] + '//' + pathArray[2];
       scope.$watch(attrs.timelineArticle, function(value) {
         elem.html(value);
         $('script', elem).filter('script[src^="http://feeds.feedburner.com"]').remove();

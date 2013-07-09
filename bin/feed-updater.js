@@ -132,7 +132,10 @@ app.on('nextfeed', function() {
         Feed.get(fid, callback);
       },
       function(feed, callback) {
-        if (!feed.expires) {
+        if (feed.pshbEnabled && process.env.APP_PSHB_ENABLED === 'true') {
+          logger.debug('Feed %s: Using PubSubHubBud (%s). Next.', feed.id, feed.hub);
+          callback('PUBSUB');
+        } else if (!feed.expires) {
           // No expiration date... ok update!
           callback(null, feed);
         } else {
@@ -142,9 +145,8 @@ app.on('nextfeed', function() {
             var now = new Date();
             var expirationDate = new Date(feed.expires);
             if (now.isBefore(expirationDate)) {
-              err = 'Feed ' + feed.id +
-                ': Validity not expired (' + expirationDate.toISOString() +
-                '). No need to update. Next.';
+              logger.debug('Feed %s: Validity not expired (%s). Next.', feed.id, expirationDate.toISOString());
+              err = 'NOT_EXPIRED';
             }
           } else {
             logger.debug('Warning: Feed %s: Expires date unparsable: %s.', feed.id, feed.expires);
@@ -222,20 +224,14 @@ app.on('nextfeed', function() {
       function(feed, body, callback) {
         // Skip if not changed (no body)
         if (!body) return callback();
-
-        FeedParser.parseString(body, function (err, meta, articles) {
-          if (err) return callback(err);
-          logger.debug('Feed %s: %s - %s', feed.id, meta.title, meta.link);
-          for (var i in articles) {
-            var article = articles[i];
-            Article.create(article, feed, function(err, a) {
-              if (err) {
-                if (err != 'EEXIST' && err != 'ETOOOLD') logger.warn('Feed %s: Unable to create article: %s', feed.id, err);
-              }
-              else logger.debug('Feed %s: New article %s : %s', feed.id, a.id, a.title);
-            });
+        Feed.parse(body, feed, function(e) {
+          if (e) {
+            Feed.update(feed, {
+              status: 'error: ' + e
+            }, callback);
+          } else {
+            callback();
           }
-          callback(null);
         });
       },
       function() {
@@ -243,20 +239,27 @@ app.on('nextfeed', function() {
       }
     ],
     function(err) {
-      if (err == 'NO_FEED') {
-        logger.info('No feed to parse. Waiting for 120s ...');
-        setTimeout(function(){
+      switch (err) {
+        case 'PUBSUB':
+        case 'NOT_EXPIRED':
           app.emit('nextfeed');
-        }, 120000);
-      } else if (err == 'TOO_CRAZY') {
-        logger.info('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
-        setTimeout(function(){
+          break;
+        case 'NO_FEED':
+          logger.info('No feed to parse. Waiting for 120s ...');
+          setTimeout(function(){
+            app.emit('nextfeed');
+          }, 120000);
+          break;
+        case 'TOO_CRAZY':
+          logger.info('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
+          setTimeout(function(){
+            app.emit('nextfeed');
+          }, defaultMaxAge * 1000);
+          break;
+        default:
+          logger.error(err);
           app.emit('nextfeed');
-        }, defaultMaxAge * 1000);
-      } else {
-        logger.error(err);
-        app.emit('nextfeed');
-      }
+      };
     }
   );
 });

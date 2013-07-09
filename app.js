@@ -3,20 +3,21 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , http = require('http')
-  , path = require('path')
-  , passport = require('passport')
-  , GoogleStrategy = require('passport-google').Strategy
-  , BrowserIDStrategy = require('passport-browserid').Strategy
-  , logger = require('./lib/logger')
-  , User = require('./lib/user');
+var express = require('express'),
+    http = require('http'),
+    path = require('path'),
+    passport = require('passport'),
+    GoogleStrategy = require('passport-google').Strategy,
+    BrowserIDStrategy = require('passport-browserid').Strategy,
+    logger = require('./lib/logger'),
+    User = require('./lib/user');
 
 var app = module.exports = express();
 
 app.configure(function(){
   app.set('port', process.env.APP_PORT || 3000);
   app.set('realm', process.env.APP_REALM || 'http://localhost:' + app.get('port'));
+  app.set('pshb', process.env.APP_PSHB_ENABLED === 'true');
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.logger('dev'));
@@ -75,7 +76,7 @@ passport.use(new GoogleStrategy({
       uid: profile.emails[0].value,
       username: profile.displayName,
       identifier: identifier
-    }
+    };
     User.findOrCreate(user, done); 
   })
 );
@@ -87,7 +88,7 @@ passport.use(new BrowserIDStrategy({
     var user = {
       uid: email,
       username: email
-    }
+    };
     User.findOrCreate(user, done);
   }
 ));
@@ -106,12 +107,13 @@ app.post('/auth/browserid',
 app.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   res.send(403);
-}
+};
 
 // Register routes...
 require('./routes/index')(app);
 require('./routes/timeline')(app);
 require('./routes/subscription')(app);
+require('./routes/pubsubhubbud')(app);
 
 http.createServer(app).listen(app.get('port'), function() {
   logger.info('Express server listening on port %s (%s mode)', app.get('port'), app.get('env'));
