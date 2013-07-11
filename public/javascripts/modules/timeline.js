@@ -14,13 +14,16 @@ angular.module('TimelineModule', [])
   $scope.isEnding = false;
   $scope.articles = [];
 
-  $scope.updateArticle = function(aid, data) {
+  $scope.getArticle = function(aid) {
     for (var i = 0; i < $scope.articles.length; i++) {
       if ($scope.articles[i].id == aid) {
-        angular.extend($scope.articles[i], data);
-        break;
+        return $scope.articles[i];
       }
     }
+  };
+
+  $scope.updateArticle = function(aid, data) {
+    angular.extend($scope.getArticle(aid), data);
   };
 
   $http.get($scope.url + '/status').success(function (data) {
@@ -49,9 +52,17 @@ angular.module('TimelineModule', [])
       $http.delete($scope.url).success(function (data) {
         $scope.timeline = data;
         $scope.articles = [];
+        $scope.isEnding = true;
         $scope.next = null;
         $rootScope.$broadcast('app.event.timeline.status', data);
       });
+    }
+  };
+
+  $scope.autoMarkAsRead = function(aid) {
+    var article = $scope.getArticle(aid);
+    if (article && !article.read && !article.keepUnRead) {
+      $scope.markAsRead(aid);
     }
   };
 
@@ -59,7 +70,7 @@ angular.module('TimelineModule', [])
     $http.delete($scope.url + '/' + aid).success(function (data) {
       $scope.timeline = data;
       $rootScope.$broadcast('app.event.timeline.status', data);
-      $scope.updateArticle(aid, {read: true});
+      $scope.updateArticle(aid, {read: true, keepUnRead: false});
     });
   };
 
@@ -67,7 +78,7 @@ angular.module('TimelineModule', [])
     $http.put($scope.url + '/' + aid).success(function (data) {
       $scope.timeline = data;
       $rootScope.$broadcast('app.event.timeline.status', data);
-      $scope.updateArticle(aid, {read: false});
+      $scope.updateArticle(aid, {read: false, keepUnRead: true});
     });
   };
 
@@ -100,9 +111,12 @@ angular.module('TimelineModule', [])
     var url = $scope.url + '?' + params;
     $http.get(url).success(function(data) {
       for (var i = 0; i < data.articles.length; i++) {
-        data.articles[i].read = false;
-        data.articles[i].saved = $scope.timelineName == 'archive';
-        $scope.articles.push(data.articles[i]);
+        var article = data.articles[i];
+        article.fold = false;
+        article.keepUnRead = false;
+        article.read = false;
+        article.saved = $scope.timelineName == 'archive';
+        $scope.articles.push(article);
       }
       $scope.next = data.next;
       $scope.isEnding = !data.next;

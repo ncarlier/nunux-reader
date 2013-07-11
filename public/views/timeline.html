@@ -25,17 +25,20 @@
       </span>
     </span>
   </header>
-  <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding" timeline-read-enabled="isReadable()" timeline-read-handle="markAsRead">
+  <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding" timeline-read-enabled="isReadable()" timeline-read-handle="autoMarkAsRead">
     <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" ng-repeat="article in articles">
       <header>
         <time title="{{article.date}}">{{ article.date | fromNow }}</time>
-        <h1><a target="_blank" href="{{ article.link }}">{{ article.title }}</a></h1>
-        <span>
+        <h1>
+          <i class="{{article.fold && 'icon-folder-close' || 'icon-folder-open'}}" ng-click="article.fold = !article.fold"></i>
+          <a target="_blank" href="{{ article.link }}">{{ article.title }}</a>
+        </h1>
+        <span ng-show="!article.fold">
           From <a href="#timeline/{{ article.fid }}">{{article.meta.title }}</a>
           {{ article.author | prefix:'by' }}
         </span>
       </header>
-      <div class="content">
+      <div class="content" ng-show="!article.fold">
         <div timeline-article="article.description">
         </div>
       </div>
