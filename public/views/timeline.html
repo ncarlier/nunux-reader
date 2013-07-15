@@ -28,7 +28,7 @@
   <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding" timeline-read-enabled="isReadable()" timeline-read-handle="autoMarkAsRead">
     <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" ng-repeat="article in articles">
       <header>
-        <time title="{{article.date}}">{{ article.date | fromNow }}</time>
+        <time title="{{article.date | date}}">{{ article.date | fromNow }}</time>
         <h1>
           <i class="{{article.fold && 'icon-folder-close' || 'icon-folder-open'}}" ng-click="article.fold = !article.fold"></i>
           <a target="_blank" href="{{ article.link }}">{{ article.title }}</a>
