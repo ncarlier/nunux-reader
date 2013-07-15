@@ -11,9 +11,12 @@ var program = require('commander'),
 
 program
   .version('0.0.1')
+  .usage('[options] <mail ...>')
   .option('-v, --verbose', 'Verbose flag')
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
+
+if (program.args.length <= 0) program.help();
 
 logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
