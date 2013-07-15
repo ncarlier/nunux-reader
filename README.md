@@ -1,5 +1,22 @@
 # NUNUX Reader
 
+The super-fast-minimalist-nosql-opensource Google Reader revival.
+
+Features:
+
+ * Fast as the wind thanks to Redis and Node.js
+ * Responsive Web Design
+ * Login with Google OpenID or Mozilla Persona
+ * OPML import/export
+ * Manage subscriptions
+ * Auto read article on scroll
+ * Save articles
+ * Keep article as not read
+ * Powerfull ireactive aggregator daemon (no cron job)
+ * RESTFul JSON API
+ * 99% Javascript (AngularJS and NodeJS)
+ * Horizontal scaling architecture
+
 ## Installation guide
 ### Prerequisites
 
@@ -9,11 +26,15 @@
 
 #### Install Git and Redis (on Debian Wheezy)
 
-        aptitude install git redis-server
+        sudo aptitude install git redis-server
 
 #### Install Node.JS
 
 See following installation procedure : [https://github.com/joyent/node/wiki/Installation](https://github.com/joyent/node/wiki/Installation)
+
+#### Install Grunt
+
+        sudo npm install -g grunt-cli
 
 ### Install Web Site
 
@@ -24,14 +45,17 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
 
 ### Jobs
 
+* **clean-db.js**: Clean database (aka remove old articles). Usage:
+
+        ./bin/clean-db.js -v --days 30
+
 * **create-user.js**: Create new user. Usage:
 
-        ./bin/create-user.js nicolas@nunux.org -v
+        ./bin/create-user.js foo@bar.com -v
 
 * **import-opml.js**: Import OPML file and add feed to user subscriptions. Usage:
 
-        ./bin/import-opml.js -u nicolas@nunux.org ./data/subscriptions.xml
-
+        ./bin/import-opml.js -u foo@bar.com ./data/subscriptions.xml
 
 * **feed-updater.js**: Update feeds content. It's a daemon. Use CTRL+C to stop. Usage:
 
@@ -45,20 +69,37 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
 ### Run Web Site
 
     #!/bin/sh
-    # Optional ENV (default: development)
-    export NODE_ENV=production
-    # Optional PORT (default: 3000)
-    export APP_PORT=8081
-    # Run
+    # See etc/default/reader-server for environment configuration.
     node app.js 2>&1 >> app.log
 
 ##API
 ### Get user subscriptions
 
     GET /subscription HTTP/1.1
-    Accept: application/json
 
-    HTTP/1.1
+    HTTP/1.1 200
+    Content-Type: application/json
+    [
+      {id:"", title:"", xmlurl:"", htmlurl:"", status="", updateDate=""},
+      {id:"", title:"", xmlurl:"", htmlurl:"", status="", updateDate=""},
+      ...
+    ]
+
+### Export user subscriptions as OPML file.
+
+    GET /subscription/export HTTP/1.1
+
+    HTTP/1.1 200
+    Content-Type: application/octet-stream
+    attachment: subscribtions.xml
+
+### Import user subscriptions with OPML file.
+
+    POST /subscription HTTP/1.1
+    file=<OPML File>
+
+    HTTP/1.1 201
+    Content-Type: application/json
     [
       {id:"", title:"", xmlurl:"", htmlurl:"", status="", updateDate=""},
       {id:"", title:"", xmlurl:"", htmlurl:"", status="", updateDate=""},
@@ -68,41 +109,32 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
 ### Add a new subscription
 
     POST /subscription HTTP/1.1
-    Host: <host>
     url=<feed xml url>
 
-    HTTP/1.1 201 OK
-    Date: Mon, 1 Jul 2013 00:55:59 GMT
+    HTTP/1.1 201
     Content-Type: application/json
-    Content-Length: 12345
-    Location: <host>/subscription
-
     {id:"", title:"", xmlurl:"", htmlurl:""}
 
 ### Remove a subscription
-    
-    DELETE /subscription/:id HTTP/1.1
-    Host: <host>
 
-    HTTP/1.1 204 OK
-    Date: Mon, 1 Jul 2013 00:55:59 GMT
-    Content-Length: 0
-    Location: <host>/subscription
+    DELETE /subscription/:id HTTP/1.1
+
+    HTTP/1.1 204
 
 ###Get status of a timeline
 
     GET /timeline/:timeline/status HTTP/1.1
-    Accept: application/json
 
-    HTTP/1.1
+    HTTP/1.1 200
+    Content-Type: application/json
     {timeline: "", size: 1, title: "", feed: {}}
 
-###Get status of all timelines
+###Get all timelines
 
-    GET /timeline/status HTTP/1.1
-    Accept: application/json
+    GET /timeline HTTP/1.1
 
-    HTTP/1.1
+    HTTP/1.1 200
+    Content-Type: application/json
     [
       {timeline: "", size: 1, title: "", feed: {}},
       {timeline: "", size: 1, title: "", feed: {}},
@@ -112,9 +144,9 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
 ###Get content of a timeline
 
     GET /timeline/:timeline? HTTP/1.1
-    Accept: application/json
 
-    HTTP/1.1
+    HTTP/1.1 200
+    Content-Type: application/json
     {
       articles: [
         {
@@ -143,22 +175,16 @@ Query string parameters:
 ###Mark an article in the timeline as read
 
     DELETE /timeline/:timeline/:aid HTTP/1.1
-    Host: <host>
 
-    HTTP/1.1 200 OK
-    Date: Mon, 1 Jul 2013 00:55:59 GMT
-    Content-Length: 1234
+    HTTP/1.1 200
     Content-Type: application/json
     {timeline: "", size: 1, title: "", feed: {}}
 
 ###Mark all articles of the timeline as read
 
     DELETE /timeline/:timeline HTTP/1.1
-    Host: <host>
 
-    HTTP/1.1 200 OK
-    Date: Mon, 1 Jul 2013 00:55:59 GMT
-    Content-Length: 1234
+    HTTP/1.1 200
     Content-Type: application/json
     {timeline: "", size: 1, title: "", feed: {}}
 
@@ -174,11 +200,13 @@ The HASH is compute with the feed xml url.
 Fields are follows:
 
 - **title**: feed title
-- **text**: feed text (in most case same as the title)
+- **description**: feed text (in most case same as the title)
 - **xmlurl**: feed url (depending the type)
 - **htmlurl**: feed html url (in most case the website url)
-- **type**: feed type (RSS or ATOM)
-- **lastUpdate**: feed last update (set by the update process)
+- **hub**: HUB url (if PubSubHubBud compliant)
+- **updateDate**: feed last update (set by the update process)
+- **status**: status of the last update process
+- **...*: and other technicals fields
 
 ### List of Feeds
 The list is stored into a LIST.
@@ -194,14 +222,15 @@ KEY : **feed:<HASH>:<HASH>**
 
 First HASH is the feed one. Second is compute with the article url.
 
-The content is stored as is. Aka is the JSON feed entry.
+The content is stored as is. Aka is the JSON string format.
 
-### List of feed's articles
-The list is stored into a LIST (at the begining)
+### Feed's timeline (aka feed articles)
+The timeline is stored into a SORTED SET.
 
 KEY: **feed:<HASH>:articles**
 
-*NOT YET USED*
+The sort score is the article date.
+An entry is a key that referred an Article.
 
 ### Article integration list
 This technical list is stored into a LIST.
@@ -225,18 +254,49 @@ The list is stored into a SET.
 
 KEY: **user:<EMAIL>:subscriptions**
 
-*NOT YET USED*
+An entry is a key that referred a Feed.
 
-### User playlist
-The list is stored into a SORTED SET.
+### User global timeline
+The timeline is stored into a SORTED SET.
 
-KEY: **user:<EMAIL>:playlist**
+KEY: **user:<EMAIL>:global**
 
 The sort score is the article date.
+An entry is a key that referred an Article.
+
+### User archive timeline
+The timeline is stored into a SORTED SET.
+
+KEY: **user:<EMAIL>:archive**
+
+An entry is a key that referred an saved Article (aka an article with a user prefixed key).
+
+### User feed timeline
+The timeline is stored into a SORTED SET.
+
+KEY: **user:<EMAIL>:feed:<HASH>**
 
 ### Feed subscribers
 The list is stored into a SET.
 
 KEY: **feed:<HASH>:subscribers**
 
+------------------------------------------------------------------------------
 
+NUNUX Reader
+
+Copyright (c) 2013 Nicolas CARLIER (https://github.com/ncarlier)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+------------------------------------------------------------------------------
