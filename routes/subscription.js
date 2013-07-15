@@ -30,14 +30,14 @@ module.exports = function(app){
    */
   app.post('/subscription', app.ensureAuthenticated, function(req, res, next) {
     if (req.files && req.files.opml) {
-      User.import(req.user.uid, req.files.opml.path, function(err, feeds) {
+      User.importSubscriptions(req.user.uid, req.files.opml.path, function(err, feeds) {
         if (err) return next(err);
-        res.json(feeds);
+        res.status(201).json(feeds);
       });
     } else if (req.body.url) {
       User.subscribe(req.user.uid, req.body.url, function(err, feed) {
         if (err) return next(err);
-        res.json(feed);
+        res.status(201).json(feed);
       });
     } else {
       res.send(400);

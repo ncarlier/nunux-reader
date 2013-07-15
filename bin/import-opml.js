@@ -26,7 +26,7 @@ var uid = program.user;
 logger.info('Import OPML file: %s for %s ...', file, uid);
 
 db.on('connect', function() {
-  User.import(uid, file, function(err) {
+  User.importSubscriptions(uid, file, function(err) {
     db.quit();
     if (err) {
       return logger.error(err);
