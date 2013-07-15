@@ -1,5 +1,26 @@
+# Application location
 APP_MAIN=/opt/node/reader/current/app.js
+
+# Env
+# Default: development
 export NODE_ENV="production"
+
+# Server port
+# Default: 3000
 export APP_PORT=3000
+
+# Server base URL (Realm)
+# Default: http://localhost
 export APP_REALM="http://reader.nunux.org"
+
+# Number of days to keep an article in the database
+# Default: 30
 export APP_DAYS_TO_KEEP=60
+
+# PubSubHubBud feature status
+# Default: false
+export APP_PSHB_ENABLED=false
+
+# Automatic grant access
+# Default: true
+export APP_AUTO_GRANT_ACCESS=false
