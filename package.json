@@ -3,7 +3,7 @@
   "name": "nunux-reader",
   "version": "0.0.1",
   "description": "NUNUX RSS Reader",
-  "private": true,
+  "license": "gplv3",
   "homepage": "https://bitbucket.org/ncarlier/reader",
   "repository": {
     "type": "git",
@@ -28,7 +28,8 @@
     "passport": "0.1.x",
     "passport-google": "0.3.0",
     "passport-browserid": "0.1.4",
-    "hiredis": "~0.1.15"
+    "hiredis": "~0.1.15",
+    "JSONStream": "~0.6.4"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
