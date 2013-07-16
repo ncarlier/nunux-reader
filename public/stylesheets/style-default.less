@@ -320,7 +320,7 @@
 }
 
 /*********************************************************************************/
-/* Managee                                                                       */
+/* Manage                                                                        */
 /*********************************************************************************/
 .manage {
   width: 100%;
@@ -342,11 +342,41 @@
     top: 0;
     bottom: 0;
     margin-top: 63px;
+    width: 100%;
     table {
       a {
         word-break: break-all;
       }
+      button {
+        display: none;
+      }
+    }
+  }
+  tr:hover {
+    .flag {
+      display: initial;
+    }
+    button {
+      display: initial;
     }
   }
 }
 
+.flag {
+  display: none;
+  color: #FFF;
+  font-size: 0.8em;
+  text-decoration: none;
+  padding: 0 4px;
+  font-variant: small-caps;
+  font-weight: bold;
+  &.rss {
+    background-color: #F0721E;
+  }
+  &.html {
+    background-color: #409AB6;
+  }
+  &.timeline {
+    background-color: #364050;
+  }
+}

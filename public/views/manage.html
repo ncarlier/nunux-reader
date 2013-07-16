@@ -31,16 +31,19 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>Feed</th>
-          <th>Status</th>
-          <th>Update date</th>
+          <th><a href="" ng-click="predicate = 'title'; reverse=!reverse">Feed</a></th>
+          <th><a href="" ng-click="predicate = 'status'; reverse=!reverse">Status</a></th>
+          <th><a href="" ng-click="predicate = 'updateDate'; reverse=!reverse">Update date</a></th>
           <th></th>
         </tr>
       </thead>
       <tbody class="feed-list">
-      <tr ng-repeat="feed in subscriptions | orderBy:'title'">
+      <tr ng-repeat="feed in subscriptions | orderBy:predicate:reverse">
         <td>
-          {{ feed.title }}<br/><a href="{{ feed.xmlurl }}" target="_blank">{{ feed.xmlurl }}</a>
+          {{ feed.title }}<br/>
+          <a href="{{ feed.xmlurl }}"       class="flag rss"      target="_blank" title="{{ feed.xmlurl }}">rss</a>
+          <a href="{{ feed.htmlurl }}"      class="flag html"     target="_blank" title="{{ feed.htmlurl }}">html</a>
+          <a href="#timeline/{{ feed.id }}" class="flag timeline" title="Go to timeline">timeline</a>
         </td>
         <td>
           <span class="label label-{{getStatusClass(feed.status)}}" title="{{getStatusDesc(feed.status)}}">{{getStatusLabel(feed.status)}}</span>
