@@ -21,7 +21,7 @@ module.exports = function(app){
       if (err) return next(err);
       res.attachment('subscriptions.xml');
       res.header("Content-Type", "application/octet-stream");
-      res.render('opml', {uid: req.user.uid, feeds: feeds});
+      res.render('opml', {uid: req.user.uid, feeds: feeds, info: app.get('info')});
     });
   });
 

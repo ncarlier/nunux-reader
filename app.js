@@ -25,11 +25,19 @@ var express = require('express'),
     GoogleStrategy = require('passport-google').Strategy,
     BrowserIDStrategy = require('passport-browserid').Strategy,
     logger = require('./lib/logger'),
-    User = require('./lib/user');
+    User = require('./lib/user'),
+    appInfo = require('./package.json');
 
 var app = module.exports = express();
 
-app.configure(function(){
+app.configure(function() {
+  app.set('info', {
+    name: appInfo.name,
+    title: appInfo.name,
+    description: appInfo.description,
+    version: appInfo.version,
+    author: appInfo.author
+  });
   app.set('port', process.env.APP_PORT || 3000);
   app.set('realm', process.env.APP_REALM || 'http://localhost:' + app.get('port'));
   app.set('pshb', process.env.APP_PSHB_ENABLED === 'true');
@@ -63,7 +71,7 @@ function errorHandler(err, req, res, next) {
   res.status(err.status || 500);
   res.format({
     html: function(){
-      res.render('error', {error: err});
+      res.render('error', {error: err, info: app.get('info')});
     },
     text: function(){
       res.type('txt').send('error: ' + err + '\n');
@@ -129,7 +137,11 @@ require('./routes/index')(app);
 require('./routes/timeline')(app);
 require('./routes/subscription')(app);
 require('./routes/pubsubhubbud')(app);
+require('./routes/archive')(app);
 
 http.createServer(app).listen(app.get('port'), function() {
-  logger.info('Express server listening on port %s (%s mode)', app.get('port'), app.get('env'));
+  logger.info('%s web server listening on port %s (%s mode)',
+              app.get('info').name,
+              app.get('port'),
+              app.get('env'));
 });

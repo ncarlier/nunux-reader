@@ -1,14 +1,11 @@
-var globalAppInfo = require('../package.json');
-
 module.exports = function(app){
   /**
    * Index page.
    */
   app.get('/', function(req, res) {
     var context = {
-      name: globalAppInfo.name,
-      description: globalAppInfo.description,
-      version: globalAppInfo.version
+      info: app.get('info'),
+      realm: app.get('realm')
     };
 
     res.format({
@@ -18,7 +15,7 @@ module.exports = function(app){
           context.uid = req.user.uid;
           res.render('index', context);
         } else {
-          res.render('login', context);
+          res.render('home', context);
         }
       },
       text: function() {

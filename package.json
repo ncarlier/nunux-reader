@@ -1,8 +1,8 @@
 {
   "author": "Nicolas Carlier (https://github.com/ncarlier/)",
-  "name": "nunux-reader",
+  "name": "reader",
   "version": "0.0.1",
-  "description": "NUNUX RSS Reader",
+  "description": "The super-fast-minimalist-nosql-opensource Google Reader revival.",
   "license": "gplv3",
   "homepage": "https://bitbucket.org/ncarlier/reader",
   "repository": {
