@@ -45,7 +45,8 @@ module.exports = function(grunt) {
           yuicompress: true
         },
         files: {
-          'public-build/stylesheets/style.css': 'public/stylesheets/style.less'
+          'public-build/stylesheets/style.css': 'public/stylesheets/style.less',
+          'public-build/stylesheets/home.css': 'public/stylesheets/home.less'
         }
       }
     },
