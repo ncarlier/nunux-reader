@@ -3,9 +3,9 @@
   <head>
 
   <meta charset="utf-8">
-  <title>NUNUX Reader</title>
+  <title><%= info.title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="<%= description %>" />
+  <meta name="description" content="<%= info.description %>" />
   <meta name="author" content="">
   <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700|Open+Sans+Condensed:300,700" rel="stylesheet" />
   <link rel="stylesheet" href="stylesheets/style.css" />
@@ -28,7 +28,7 @@
     <div id="title-bar">
       <div class="toggle" onclick="$('#sidebar').toggle();"></div>
       <div class="title">
-        <h1>READER</h1>
+        <h1><%= info.name %></h1>
       </div>
     </div>
     <div id="content">
@@ -38,7 +38,11 @@
 
     <div id="sidebar" ng-controller="SidebarCtrl">
       <div id="logo">
-        <h1>reader</h1>
+        <h1><a href="javascript:
+(function(){RDR_REALM='<%= realm %>';RDR_SCR=document.createElement('SCRIPT');
+RDR_SCR.type='text/javascript';RDR_SCR.src=RDR_REALM+'/javascripts/bookmarklet.js';
+document.getElementsByTagName('head')[0].appendChild(RDR_SCR)})();"
+            onclick="return false;" title="Drag me in your toolbar!">not read it</a></h1>
       </div>
 
       <nav class="main">

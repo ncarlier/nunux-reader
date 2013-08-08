@@ -1,0 +1,120 @@
+@import "../lib/bootstrap/reset.less";
+@import "../lib/bootstrap/utilities.less";
+@import "variables.less";
+@import "../lib/bootstrap/mixins.less";
+@import "basic.less";
+@import "../lib/bootstrap/grid.less";
+@import "../lib/bootstrap/carousel.less";
+@import "../lib/bootstrap/modals.less";
+
+@font-face {
+  font-family: 'h5u';
+  src:url('fonts/h5u.eot');
+  src:url('fonts/h5u.eot?#iefix') format('embedded-opentype'),
+  url('fonts/h5u.woff') format('woff'),
+  url('fonts/h5u.ttf') format('truetype'),
+  url('fonts/h5u.svg#h5u') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background: #191919 url('../images/bg.jpg');
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 50px 0;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.07);
+  h1 {
+    margin: 0;
+    padding: 20px;
+    font-variant: small-caps;
+    border-bottom: 2px solid white;
+    border-top: 2px solid white;
+    width: 200px;
+    display: inline-block;
+  }
+}
+
+section {
+  margin: 0;
+}
+
+.marketing {
+  text-align: center;
+  padding: 20px 0;
+  h1 {
+    margin: 0;
+    text-align: center;
+    color: #5A5A5A;
+  }
+  ul {
+    list-style: none;
+    text-align: center;
+    padding: 0;
+  }
+  li {
+    display: inline-block;
+    text-align: center;
+    width: 12em;
+    height: 10em;
+    padding: 1em;
+    vertical-align: top;
+    line-height: 1.25em;
+    border-left: solid 1px #242424;
+  }
+  li:first-child {
+    border-left: 0;
+  }
+  .icon:before {
+    font-size: 3.5em;
+    margin: 0 0 0.4em 0;
+  }
+}
+
+.screenshots {
+  text-align: center;
+  margin-bottom: 20px;
+  img {
+    border-radius: 0.25em;
+  }
+}
+
+.features {
+  background: rgba(255, 255, 255, 0.07);
+  padding-bottom: 100px;
+  > * {
+    margin: 0 auto;
+    width: 50%;
+    min-width: 200px;
+  }
+}
+
+
+.login {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.icon:before {
+  font-family: 'h5u';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-responsive:before { content: "\e000"; }
+.icon-ftl:before { content: "\e002"; }
+.icon-gift:before { content: "\e003"; }
+.icon-zoom-in:before { content: "\e004"; }
+.icon-download-alt:before { content: "\e005"; }
+.icon-twitter:before { content: "\e006"; }
+.icon-arrow-left:before { content: "\e007"; }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title><%= info.title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="<%= info.description %>" />
+  <link rel="shortcut icon" href="icons/favicon.png">
+  <link rel="stylesheet" href="stylesheets/home.css" />
+</head>
+<body>
+  <header>
+    <div class="login">
+      <a href="#loginModal" role="button" class="btn" data-toggle="modal">Login</a>
+    </div>
+    <h1><%= info.name %></h1>
+  </header>
+  <section class="marketing">
+    <ul >
+      <li class="icon">
+        <img src="images/meter.png"/>
+        Faster than light
+      </li>
+      <li class="icon">
+        <img src="images/responsive-design.png"/>
+        Responsive
+      </li>
+      <li class="icon">
+        <img src="images/open-source.png"/>
+        <a title="Under the GPLv3 licence" href="#">Open Source</a>
+      </li>
+    </ul>
+  </section>
+  <section class="screenshots">
+    <img alt="Screenshots" src="images/screenshots.png"/>
+  </section>
+  <section class="features">
+    <h1>Features</h1>
+    <ul>
+      <li>Faster than light wind thanks to Redis and Node.js</li>
+      <li>Responsive Web Design</li>
+      <li>Login with Google OpenID or Mozilla Persona</li>
+      <li>OPML import/export</li>
+      <li>Manage subscriptions</li>
+      <li>Auto read article on scroll</li>
+      <li>Save articles</li>
+      <li>Keep article as not read</li>
+      <li>Powerfull ireactive aggregator daemon (no cron job)</li>
+      <li>RESTFul JSON API</li>
+      <li>99% Javascript (AngularJS and NodeJS)</li>
+    </ul>
+  </section>
+  <footer>
+
+  </footer>
+  <div= id="loginModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="loginModalLabel">Login</h3>
+    </div>
+    <div class="modal-body">
+      <p><i>Don't try to click if you are not invited.</i> - The Bouncer</p>
+      <a href="/auth/google" title="Sign in with your Google account." id="google">
+        <img src="images/sign-in-with-google.png" alt="Sign in with Google"/>
+      </a>
+      <hr/>OR<hr/>
+      <a>
+        <img src="images/sign-in-with-persona.png" alt="Sign in with Mozilla Persona"/>
+      </a>
+    </div>
+  </div>
+  <form action="/auth/browserid" method="post" style="display:none;">
+    <input type="text" name="assertion"/>
+  </form>
+
+  <script src="lib/jquery/jquery.js"></script>
+  <script src="https://login.persona.org/include.js"></script>
+  <script>
+$("#browserid").click(function(){
+  navigator.id.get(function(assertion) {
+    if (assertion) {
+      $("input").val(assertion);
+      $("form").submit();
+    } else {
+      location.reload();
+    }
+  });
+});
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '<%= gaId %>', 'nunux.org');
+ga('send', 'pageview');
+  </script>
+  </body>
+  </html>
