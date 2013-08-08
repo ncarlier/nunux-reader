@@ -17,7 +17,7 @@
       "": "jquery.*"
     },
     "bootstrap": {
-      "": "less/*.less"
+      "": ["./less/*.less", "./docs/assets/js/bootstrap.js"]
     },
     "html5shiv": {
       "": "dist/html5shiv.js"

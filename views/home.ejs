@@ -8,25 +8,23 @@
   <link rel="stylesheet" href="stylesheets/home.css" />
 </head>
 <body>
+  <a href="https://github.com/ncarlier"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
   <header>
     <div class="login">
-      <a href="#loginModal" role="button" class="btn" data-toggle="modal">Login</a>
+      <a href="#loginModal" role="button" class="btn" data-toggle="modal">Sign in</a>
     </div>
-    <h1><%= info.name %></h1>
+    <h1>NUNUX <%= info.name %></h1>
   </header>
   <section class="marketing">
     <ul >
-      <li class="icon">
-        <img src="images/meter.png"/>
-        Faster than light
+      <li class="icon icon-meter">
+        <span>Faster than light</span>
       </li>
-      <li class="icon">
-        <img src="images/responsive-design.png"/>
-        Responsive
+      <li class="icon icon-responsive">
+        <span>Responsive</span>
       </li>
-      <li class="icon">
-        <img src="images/open-source.png"/>
-        <a title="Under the GPLv3 licence" href="#">Open Source</a>
+      <li class="icon icon-opensource">
+        <a title="Under the GPLv3 licence" href="http://www.gnu.org/licenses/gpl.html" target="_blank">Open Source</a>
       </li>
     </ul>
   </section>
@@ -36,33 +34,34 @@
   <section class="features">
     <h1>Features</h1>
     <ul>
-      <li>Faster than light wind thanks to Redis and Node.js</li>
+      <li>Faster than light wind thanks to <a href="http://redis.io/" target="_blank">Redis</a> and <a href="http://nodejs.org/" target="_blank">Node.js</a></li>
+      <li>Dynamic GUI thanks to <a href="http://angularjs.org/" target="_blank">AngularJS</a></li>
       <li>Responsive Web Design</li>
-      <li>Login with Google OpenID or Mozilla Persona</li>
+      <li>Login with <a href="https://developers.google.com/accounts/docs/OpenID" target="_blank">Google OpenID</a> or <a href="http://www.mozilla.org/en-US/persona/" target="_blank">Mozilla Persona</a></li>
       <li>OPML import/export</li>
       <li>Manage subscriptions</li>
       <li>Auto read article on scroll</li>
       <li>Save articles</li>
       <li>Keep article as not read</li>
-      <li>Powerfull ireactive aggregator daemon (no cron job)</li>
+      <li>Powerfull reactive aggregator daemon (no cron job)</li>
       <li>RESTFul JSON API</li>
-      <li>99% Javascript (AngularJS and NodeJS)</li>
+      <li>99% Javascript!</li>
     </ul>
   </section>
   <footer>
 
   </footer>
-  <div= id="loginModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="loginModalLabel">Login</h3>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+      <h3 id="loginModalLabel">Sign in</h3>
     </div>
     <div class="modal-body">
-      <p><i>Don't try to click if you are not invited.</i> - The Bouncer</p>
+      <p><i>Don't try to click if you are not invited.</i> -- The Bouncer</p>
       <a href="/auth/google" title="Sign in with your Google account." id="google">
         <img src="images/sign-in-with-google.png" alt="Sign in with Google"/>
       </a>
-      <hr/>OR<hr/>
+      <strong> or </strong>
       <a>
         <img src="images/sign-in-with-persona.png" alt="Sign in with Mozilla Persona"/>
       </a>
@@ -73,6 +72,7 @@
   </form>
 
   <script src="lib/jquery/jquery.js"></script>
+  <script src="lib/bootstrap/bootstrap.js"></script>
   <script src="https://login.persona.org/include.js"></script>
   <script>
 $("#browserid").click(function(){
@@ -94,5 +94,5 @@ $("#browserid").click(function(){
 ga('create', '<%= gaId %>', 'nunux.org');
 ga('send', 'pageview');
   </script>
-  </body>
-  </html>
+</body>
+</html>
