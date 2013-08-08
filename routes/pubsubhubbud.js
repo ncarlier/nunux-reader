@@ -19,23 +19,25 @@ module.exports = function(app){
     var lease = req.query['hub.lease_seconds'];
     var verifyToken = req.query['hub.verify_token'];
 
-    if ('subscribe' == mode) {
-      logger.info('PubSubHubBud confirmation callback received for %s', topic);
-      var fid = Feed.getKey(topic);
+    if ('subscribe' == mode || 'unsubscribe' == mode) {
+      logger.info('PubSubHubBud %s confirmation callback received for %s', mode, topic);
       async.waterfall(
         [
           function(callback) {
-            Feed.get(fid, callback);
+            Feed.getByUrl(topic, callback);
           },
           function(feed, callback) {
-            Feed.update(feed, {pshbEnabled: true}, callback);
+            Feed.update(feed, {
+              pshbEnabled: 'subscribe' == mode,
+              pshbLease: lease
+            }, callback);
           },
           function() {
             res.send(challenge);
           }
         ],
         function(err) {
-          logger.error('Error will updating PubSubHubBud status: %s', err);
+          logger.error('Error will updating PubSubHubBud status (%s) of topic %s: %s', mode, topic, err);
           next(err);
         }
       );
