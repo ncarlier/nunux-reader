@@ -56,15 +56,12 @@ app.on('nextarticle', function() {
         }
         // Get article from db...
         var aid = replies[1];
-        Article.get(aid, callback);
-      },
-      function(article, callback) {
-        console.log('Integrating article %s (%s)...', article.id, article.pubdate);
+        console.log('Integrating article %s...', aid);
         var updateUserTimelines = function(uid, next) {
-          User.addArticleToTimeline(uid, 'global', article, next);
+          User.addArticleToTimeline(uid, 'global', aid, next);
         };
         // Get feed subscribers...
-        var parts = article.id.split(':');
+        var parts = aid.split(':');
         var fid = parts[0] + ':' + parts[1];
         Feed.getSubscribers(fid, function(err, uids) {
           if (err) return callback(err);
