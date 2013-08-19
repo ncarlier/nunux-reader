@@ -4,7 +4,8 @@ The super-fast-minimalist-nosql-opensource Google Reader revival.
 
 Features:
 
- * Fast as the wind thanks to Redis and Node.js
+ * Faster than light thanks to Redis and Node.js
+ * Dynamic GUI thanks to AngularJS 
  * Responsive Web Design
  * Login with Google OpenID or Mozilla Persona
  * OPML import/export
@@ -14,8 +15,7 @@ Features:
  * Keep article as not read
  * Powerfull ireactive aggregator daemon (no cron job)
  * RESTFul JSON API
- * 99% Javascript (AngularJS and NodeJS)
- * Horizontal scaling architecture
+ * 99% Javascript!
 
 ## Installation guide
 ### Prerequisites
@@ -121,7 +121,7 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
 
     HTTP/1.1 204
 
-###Get status of a timeline
+### Get status of a timeline
 
     GET /timeline/:timeline/status HTTP/1.1
 
@@ -129,7 +129,7 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
     Content-Type: application/json
     {timeline: "", size: 1, title: "", feed: {}}
 
-###Get all timelines
+### Get all timelines
 
     GET /timeline HTTP/1.1
 
@@ -141,7 +141,7 @@ See following installation procedure : [https://github.com/joyent/node/wiki/Inst
       ...
     ]
 
-###Get content of a timeline
+### Get content of a timeline
 
     GET /timeline/:timeline? HTTP/1.1
 
@@ -172,7 +172,7 @@ Query string parameters:
  - show: 'new' or 'all'
  - size: size of the window (10 by default)
 
-###Mark an article in the timeline as read
+### Mark an article in the timeline as read
 
     DELETE /timeline/:timeline/:aid HTTP/1.1
 
@@ -180,7 +180,7 @@ Query string parameters:
     Content-Type: application/json
     {timeline: "", size: 1, title: "", feed: {}}
 
-###Mark all articles of the timeline as read
+### Mark all articles of the timeline as read
 
     DELETE /timeline/:timeline HTTP/1.1
 
@@ -189,7 +189,7 @@ Query string parameters:
     {timeline: "", size: 1, title: "", feed: {}}
 
 
-##Models
+## Models
 ### Feed model
 A feed is stored into HASHES.
 
@@ -206,7 +206,7 @@ Fields are follows:
 - **hub**: HUB url (if PubSubHubBud compliant)
 - **updateDate**: feed last update (set by the update process)
 - **status**: status of the last update process
-- **...*: and other technicals fields
+- **...**: and other technicals fields
 
 ### List of Feeds
 The list is stored into a LIST.

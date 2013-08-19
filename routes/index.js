@@ -11,6 +11,7 @@ module.exports = function(app){
     res.format({
       html: function() {
         context.gaId = process.env.APP_GA_ID || 'UA-41864622-1';
+        context.gaDomain = process.env.APP_GA_DOMAIN || 'nunux.org';
         if (req.user) {
           context.uid = req.user.uid;
           res.render('index', context);

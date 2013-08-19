@@ -45,7 +45,7 @@ app.configure(function() {
   app.set('view engine', 'ejs');
   app.use(express.logger('dev'));
   app.use(express.cookieParser());
-  app.use(express.cookieSession({secret: 'NuNUXReAdR_'}));
+  app.use(express.cookieSession({secret: process.env.APP_SESSION_SECRET || 'NuNUXReAdR_'}));
   app.use(express.bodyParser());
   app.use(passport.initialize());
   app.use(passport.session());

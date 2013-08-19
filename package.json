@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "description": "The super-fast-minimalist-nosql-opensource Google Reader revival.",
   "license": "gplv3",
-  "homepage": "https://bitbucket.org/ncarlier/reader",
+  "homepage": "http://reader.nunux.org",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:ncarlier/reader.git"
+    "url": "https://github.com/ncarlier/nunux-reader.git"
   },
   "scripts": {
     "start": "node app",
