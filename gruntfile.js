@@ -19,8 +19,10 @@ module.exports = function(grunt) {
           browser: true,
           globals: {
             '$': false,
+            console: false,
             angular: false,
             moment: false,
+            alert: false,
             confirm: false,
             humane: false
           }
@@ -72,7 +74,8 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'public/', src: ['icons/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['images/**'], dest: 'public-build/'},
           {expand: true, cwd: 'public/', src: ['views/**'], dest: 'public-build/'},
-          {expand: true, cwd: 'public/', src: ['lib/**'], dest: 'public-build/'}
+          {expand: true, cwd: 'public/', src: ['lib/**'], dest: 'public-build/'},
+          {expand: true, cwd: 'public/', src: ['robots.txt'], dest: 'public-build/'}
         ]
       }
     }
