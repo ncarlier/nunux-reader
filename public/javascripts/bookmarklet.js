@@ -1,3 +1,5 @@
+'use strict';
+
 var B_CONTAINER = 'RDR_B__CONTAINER',
     B_FRAME = 'RDR_B__FRAME';
 var c = document.getElementById(B_CONTAINER);
@@ -13,7 +15,7 @@ if (!c) {
   c.style.zIndex = 999999999;
   c.style['box-shadow'] = '0px 0px 20px rgba(0,0,0,0.4)';
   c.style['border-bottom'] = '1px solid white';
-  document.body.appendChild(c)
+  document.body.appendChild(c);
 }
 
 var ifrm = document.createElement('iframe');
