@@ -218,7 +218,7 @@ angular.module('TimelineModule', [])
       var pathArray = $scope.article.link.split( '/' );
       var baseUrl = pathArray[0] + '//' + pathArray[2];
       $scope.$watch(attrs.timelineArticle, function(value) {
-        var $content = $('<div/>').html(value);
+        var $content = $('<div>').html(value);
         $('script', $content).filter('script[src^="http://feeds.feedburner.com"]').remove();
         $('a', $content).each(function() {
           $(this).attr('target', '_blank');
@@ -233,7 +233,7 @@ angular.module('TimelineModule', [])
             $(this).attr('data-lazy-src', baseUrl + '/' + src);
           }
         });
-        $elem.html($compile($content.html())($scope));
+        $elem.html($compile($('<div>').append($content).html())($scope));
       });
     }
   };
