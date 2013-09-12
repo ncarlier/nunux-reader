@@ -211,7 +211,7 @@ angular.module('TimelineModule', [])
   };
 }
 ])
-.directive('timelineArticle', function ($compile) {
+.directive('timelineArticle', ['$compile', function ($compile) {
   return {
     link: function ($scope, $elem, attrs) {
       // watch the expression, and update the UI on change.
@@ -237,5 +237,5 @@ angular.module('TimelineModule', [])
       });
     }
   };
-});
+}]);
 
