@@ -228,9 +228,13 @@ angular.module('TimelineModule', [])
           }
         });
         $('img', $content).each(function() {
-          var src = $(this).attr('data-lazy-src');
-          if(src && !src.match(/^\s*http/g)) {
-            $(this).attr('data-lazy-src', baseUrl + '/' + src);
+          var src = $(this).attr('data-src');
+          if (src) {
+            if(!src.match(/^\s*http/g)) {
+              src = baseUrl + '/' + src;
+            }
+            $(this).attr('bn-lazy-load', src);
+            $(this).removeAttr('data-src');
           }
         });
         $elem.html($compile($('<div>').append($content).html())($scope));

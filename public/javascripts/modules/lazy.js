@@ -2,7 +2,7 @@
 
 // I lazily load the images, when they come into view.
 angular.module('LazyModule', []).directive(
-  'lazySrc',
+  'bnLazyLoad',
   function( $window, $document ) {
     // I manage all the images that are currently being
     // monitored on the page for lazy loading.
@@ -19,8 +19,6 @@ angular.module('LazyModule', []).directive(
 
       // I cache the window element as a jQuery reference.
       var win = $( $window );
-
-      var section = $('section.content');
 
       // I cache the document document height so that
       // we can respond to changes in the height due to
@@ -168,8 +166,8 @@ angular.module('LazyModule', []).directive(
         isWatchingWindow = true;
 
         // Listen for window changes.
-        win.on("resize.bnLazySrc", windowChanged);
-        section.on("scroll.bnLazySrc", windowChanged);
+        win.on('resize.bnLazyLoad', windowChanged);
+        $('section.content').on('scroll.bnLazyLoad', windowChanged);
 
         // Set up a timer to watch for document-height changes.
         documentTimer = setInterval( checkDocumentHeight, documentDelay );
@@ -180,13 +178,17 @@ angular.module('LazyModule', []).directive(
         isWatchingWindow = false;
 
         // Stop watching for window changes.
-        win.off("resize.bnLazySrc");
-        section.off("scroll.bnLazySrc");
+        win.off('resize.bnLazyLoad');
+        $('section.content').off('scroll.bnLazyLoad');
 
         // Stop watching for document changes.
         clearInterval(documentTimer);
       }
 
+      function restartWatchingWindow() {
+        stopWatchingWindow();
+        startWatchingWindow();
+      }
 
       // I start the render time if the window changes.
       function windowChanged() {
@@ -198,7 +200,8 @@ angular.module('LazyModule', []).directive(
       // Return the public API.
       return({
         addImage: addImage,
-        removeImage: removeImage
+        removeImage: removeImage,
+        restartWatchingWindow: restartWatchingWindow
       });
     })();
 
@@ -303,7 +306,7 @@ angular.module('LazyModule', []).directive(
       // Since the lazy-src will likely need some sort
       // of string interpolation, we don't want to
       attributes.$observe(
-        "lazySrc",
+        "bnLazyLoad",
         function(newSource) {
           lazyImage.setSource(newSource);
         }
