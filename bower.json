@@ -10,14 +10,19 @@
     "moment": "~2.0.0",
     "jquery": "~2.0.2",
     "humane-js": "~3.1.0",
-    "ngUpload": "~0.3.8"
+    "ngUpload": "~0.3.8",
+    "qrcode-generator": "git://github.com/monospaced/bower-qrcode-generator.git#0.0.0",
+    "angular-strap": "~0.7.7"
   },
   "exportsOverride": {
     "jquery": {
       "": "jquery.*"
     },
     "bootstrap": {
-      "": ["./less/*.less", "./docs/assets/js/bootstrap.js"]
+      "": [
+        "./less/*.less",
+        "./docs/assets/js/bootstrap.js"
+      ]
     },
     "html5shiv": {
       "": "dist/html5shiv.js"

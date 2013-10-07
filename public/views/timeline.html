@@ -58,6 +58,9 @@
         <a title="Mail this" href="mailto:?subject={{article.title | escape}}&amp;body={{article.link | escape}}">
           <i class="icon-envelope" />
         </a>
+        <a title="QR code" bs-popover="'qrcode.html'" data-placement="top">
+          <i class="icon-qrcode" />
+        </a>
       </footer>
     </article>
     <article ng-show="isEnding">
@@ -66,3 +69,7 @@
   </section>
 </div>
 
+
+<script type="text/ng-template" id="qrcode.html">
+  <qrcode size="160" text="{{ article.link }}"></qrcode>
+</script>
