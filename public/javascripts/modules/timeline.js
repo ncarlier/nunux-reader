@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('TimelineModule', [])
+angular.module('TimelineModule', ['ui.qrcode'])
 .controller('TimelineCtrl', function ($scope, $http, $routeParams, $rootScope) {
   $scope.timelineName = $routeParams.timeline;
   $rootScope.currentPage = $routeParams.timeline;
   $scope.url = '/timeline/' + $scope.timelineName;
-  $scope.order = 'ASC';
+  $scope.order = $scope.timelineName == 'archive' ? 'DESC' : 'ASC';
   $scope.isShowingAllItems = false;
   $scope.haveAllItems = $scope.timelineName != 'global' && $scope.timelineName != 'archive';
   $scope.isReadable = function() {
@@ -39,6 +39,7 @@ angular.module('TimelineModule', [])
 
   $scope.toggleShow = function() {
     $scope.isShowingAllItems = !$scope.isShowingAllItems;
+    //$scope.order = $scope.isShowingAllItems ? 'DESC' : 'ASC';
     $scope.refresh();
   };
 
