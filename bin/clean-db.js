@@ -41,19 +41,27 @@ var main = function() {
         async.each(uids, cleanUserTimelines, callback);
       },
       function(callback) {
-        logger.info('All timelines cleaned. Now deleting old articles...');
+        logger.info('All timelines cleaned. Now cleaning feeds...');
         // Get all feeds
         Feed.getAll(callback);
       },
       function(fids, callback) {
-        var deleteArticlesFromFeed = function(fid, next) {
-          logger.info('Delete old entries of feed %s.', fid);
-          Timeline.deleteArticlesAfter(fid + ':articles', after, next);
+        var cleanFeed = function(fid, next) {
+          Feed.countSubscribers(fid, function(err, nb) {
+            if (err) return next(err);
+            if (nb > 0) {
+              logger.info('Deleting old entries of feed %s...', fid);
+              Timeline.deleteArticlesAfter(fid + ':articles', after, next);
+            } else {
+              logger.info('No more subscriber. Deleting feed %s...', fid);
+              Feed.del(fid, next);
+            }
+          });
         };
-        async.each(fids, deleteArticlesFromFeed, callback);
+        async.each(fids, cleanFeed, callback);
       },
       function() {
-        logger.info('Old articles deleted.');
+        logger.info('Feeds cleaned.');
         logger.info('Database cleaned.');
         db.quit();
       }

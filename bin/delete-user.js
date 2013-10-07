@@ -18,11 +18,7 @@ if (program.args.length <= 0) program.help();
 logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
 db.on('connect', function() {
-  var deleteUser = function(email, callback) {
-    User.remove(email, callback);
-  };
-
-  async.each(program.args, deleteUser, function(err) {
+  async.each(program.args, User.del, function(err) {
     if (err) {
       logger.error(err);
     }
