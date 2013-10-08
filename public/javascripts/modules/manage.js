@@ -40,6 +40,19 @@ angular.module('ManageModule', ['ngUpload'])
     return result;
   };
 
+  $scope.getHubUrl = function(feed) {
+    var path = '/subscription-details?';
+    var query = {
+      'hub.callback': window.location.origin + '/pubsubhubbud/callback',
+      'hub.topic': feed.xmlurl
+    };
+    var result = 'Not updated';
+    if (status) {
+      result = status.match(/^error/g) ? 'In error' : status;
+    }
+    return feed.hub + path + $.param(query);
+  };
+
   $scope.unSubscribe = function(feed) {
     if (confirm('Do you really want to unsubscribe from "' + feed.title + '" ?')) {
       $http.delete('/subscription/' + feed.id)
