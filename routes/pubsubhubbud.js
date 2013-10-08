@@ -19,7 +19,7 @@ module.exports = function(app){
     var lease = req.query['hub.lease_seconds'];
     var verifyToken = req.query['hub.verify_token'];
 
-    if ('subscribe' == mode || 'unsubscribe' == mode) {
+    if (topic && ('subscribe' == mode || 'unsubscribe' == mode)) {
       logger.info('PubSubHubBud %s confirmation callback received for %s', mode, topic);
       async.waterfall(
         [
