@@ -31,8 +31,11 @@ logger.info('Starting Feed Updater...');
 async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
   process.on(signal, function() {
     console.log('Stopping Feed Updater...');
-    if (timeout) clearTimeout(timeout);
     stop = true;
+    if (timeout) {
+      clearTimeout(timeout);
+      app.emit('nextfeed');
+    }
   });
 });
 

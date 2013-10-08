@@ -28,7 +28,7 @@ module.exports = function(app){
           },
           function(feed, callback) {
             Feed.update(feed, {
-              pshbEnabled: 'subscribe' == mode,
+              pshbStatus: mode,
               pshbLease: lease
             }, callback);
           },
