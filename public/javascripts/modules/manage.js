@@ -12,18 +12,22 @@ angular.module('ManageModule', ['ngUpload'])
     });
   };
 
-  $scope.getStatusClass = function(status) {
+  $scope.getStatusClass = function(feed) {
     var result = 'inverse';
-    if (status) {
-      result = status.match(/^error/g) ? 'important' : 'success';
+    if (feed.status) {
+      if (feed.status.match(/^error/g)) result = 'important';
+      else if (feed.pshbStatus == 'subscribe') result = 'info';
+      else result = 'success';
     }
     return result;
   };
 
-  $scope.getStatusDesc = function(status) {
+  $scope.getStatusDesc = function(feed) {
     var result = 'This feed had not yet been parsed.';
-    if (status) {
-      result = status.match(/^error/g) ? status : 'Feed successfully parsed';
+    if (feed.status) {
+      if (feed.status.match(/^error/g)) result = feed.status;
+      else if (feed.pshbStatus == 'subscribe') result = 'Feed subscribed to ' + feed.hub;
+      else result = 'Feed successfully parsed';
     }
     return result;
   };
