@@ -16,6 +16,7 @@ var program = require('commander'),
 
 var app = new EventEmitter();
 var stop = false;
+var timeout = null;
 
 program
   .version('0.0.1')
@@ -30,6 +31,7 @@ logger.info('Starting Feed Updater...');
 async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
   process.on(signal, function() {
     console.log('Stopping Feed Updater...');
+    if (timeout) clearTimeout(timeout);
     stop = true;
   });
 });
@@ -115,6 +117,7 @@ var extractExpiresFromHeader = function(headers) {
 };
 
 app.on('nextfeed', function() {
+  timeout = null;
   if (stop) {
     return app.emit('stop');
   }
@@ -238,13 +241,13 @@ app.on('nextfeed', function() {
           break;
         case 'NO_FEED':
           logger.info('No feed to parse. Waiting for 120s ...');
-          setTimeout(function(){
+          timeout = setTimeout(function(){
             app.emit('nextfeed');
           }, 120000);
           break;
         case 'TOO_CRAZY':
           logger.info('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
-          setTimeout(function(){
+          timeout = setTimeout(function(){
             app.emit('nextfeed');
           }, defaultMaxAge * 1000);
           break;
