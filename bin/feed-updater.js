@@ -23,7 +23,7 @@ program
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
+logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'warn');
 
 logger.info('Starting Feed Updater...');
 
@@ -118,6 +118,7 @@ app.on('nextfeed', function() {
   if (stop) {
     return app.emit('stop');
   }
+  var feed = null;
   async.waterfall(
     [
       function(callback) {
@@ -130,13 +131,14 @@ app.on('nextfeed', function() {
         // Get feed from db...
         Feed.get(fid, callback);
       },
-      function(feed, callback) {
+      function(_feed, callback) {
+        feed = _feed;
         if (feed.pshbEnabled && process.env.APP_PSHB_ENABLED === 'true') {
           logger.debug('Feed %s: Using PubSubHubBud (%s). Next.', feed.id, feed.hub);
           callback('PUBSUB');
         } else if (!feed.expires) {
           // No expiration date... ok update!
-          callback(null, feed);
+          callback();
         } else {
           // Check expiration date...
           var err = null;
@@ -150,10 +152,10 @@ app.on('nextfeed', function() {
           } else {
             logger.debug('Warning: Feed %s: Expires date unparsable: %s.', feed.id, feed.expires);
           }
-          callback(err, feed);
+          callback(err);
         }
       },
-      function(feed, callback) {
+      function(callback) {
         // Do HTTP request...
         logger.debug('Feed %s: Requesting %s ...', feed.id, feed.xmlurl);
         var req = {
@@ -171,17 +173,16 @@ app.on('nextfeed', function() {
         request(req, function(err, res, body) {
           var expires = new Date();
           if (err) {
+            // Error on HTTP request
             logger.warn('Feed %s: Error on request. Request postponed in 2 hours. Skiping.', feed.id);
             // Postpone expiration date in 2 hours
             expires.addHours(2);
             Feed.update(feed, {
               status: 'error: ' + err,
               expires: expires.toISOString()
-            }, function(e, f) {
-              if (e) return callback(e);
-              callback(err);
+            }, function(e) {
+              callback(e || err);
             });
-            return callback(err);
           } else if (res.statusCode == 200) {
             // Update feed status and cache infos.
             // logger.debug('200: Headers: %j', res.headers);
@@ -219,18 +220,11 @@ app.on('nextfeed', function() {
           }
         });
       },
-      function(feed, body, callback) {
-        // Skip if not changed (no body)
-        if (!body) return callback();
-        Feed.parse(body, feed, function(e) {
-          if (e) {
-            Feed.update(feed, {
-              status: 'error: ' + e
-            }, callback);
-          } else {
-            callback();
-          }
-        });
+      function(_feed, content, callback) {
+        feed = _feed;
+        // Skip if not changed (no content)
+        if (!content) return callback();
+        Feed.updateArticles(content, feed, callback);
       },
       function() {
         app.emit('nextfeed');

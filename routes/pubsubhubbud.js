@@ -51,7 +51,7 @@ module.exports = function(app){
    * Update PubSubHubBud feed status.
    */
   app.post('/pubsubhubbub/callback', app.ensurePubSubHubBud, function(req, res, next) {
-    Feed.parse(req.body, null, function(err, articles) {
+    Feed.updateArticles(req.body, null, function(err) {
       if (err) return next(err);
       res.send(200);
     });
