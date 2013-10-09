@@ -44,9 +44,7 @@
           <a href="{{ feed.xmlurl }}"       class="flag rss"      target="_blank" title="{{ feed.xmlurl }}">rss</a>
           <a href="{{ feed.htmlurl }}"      class="flag html"     target="_blank" title="{{ feed.htmlurl }}">html</a>
           <a href="#timeline/{{ feed.id }}" class="flag timeline" title="Go to timeline">timeline</a>
-          <a href="{{ getHubUrl(feed) }}"   class="flag"          target="_blank" title="PubSubHubbub supported" ng-show="feed.hub">
-            <img alt="PubSubHubbub" src="images/pubsubhubbub.png" />
-          </a>
+          <a href="{{ getHubUrl(feed) }}"   class="flag pshb"     target="_blank" title="PubSubHubbub supported" ng-show="feed.hub">pubsubhubbud</a>
         </td>
         <td>
           <span class="label label-{{getStatusClass(feed)}}" title="{{getStatusDesc(feed)}}">{{getStatusLabel(feed.status)}}</span>
