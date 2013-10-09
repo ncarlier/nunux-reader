@@ -47,6 +47,15 @@ app.configure(function() {
   app.use(express.cookieParser());
   app.use(express.cookieSession({secret: process.env.APP_SESSION_SECRET || 'NuNUXReAdR_'}));
   app.use(express.bodyParser());
+  app.use (function(req, res, next) {
+    if (req._body) return next();
+    req.rawBody = '';
+    req.setEncoding('utf8');
+    req.on('data', function(chunk) {
+      req.rawBody += chunk;
+    });
+    req.on('end', next);
+  });
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(express.methodOverride());
@@ -117,15 +126,13 @@ passport.use(new BrowserIDStrategy({
 ));
 
 app.get('/auth/google', passport.authenticate('google'));
-app.get('/auth/google/return',
-        passport.authenticate('google', {
-          successRedirect: '/',
-          failureRedirect: '/' }));
+app.get('/auth/google/return', passport.authenticate('google', {
+  successRedirect: '/', failureRedirect: '/'
+}));
 
-app.post('/auth/browserid',
-         passport.authenticate('browserid', {
-           successRedirect: '/',
-           failureRedirect: '/' }));
+app.post('/auth/browserid', passport.authenticate('browserid', {
+  successRedirect: '/', failureRedirect: '/'
+}));
 
 app.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
