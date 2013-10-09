@@ -53,8 +53,8 @@ module.exports = function(app){
   app.post('/pubsubhubbud/callback', app.ensurePubSubHubBud, function(req, res, next) {
     Feed.updateArticles(req.body, null, function(err) {
       if (err) {
+        logger.error('PSHB REQUEST: %s', err);
         logger.error('PSHB REQUEST: %j', req.body);
-        return next(err);
       }
       res.send(200);
     });
