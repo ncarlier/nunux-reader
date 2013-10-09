@@ -54,7 +54,6 @@ module.exports = function(app){
     Feed.updateArticles(req.rawBody, null, function(err) {
       if (err) {
         logger.error('PSHB REQUEST: %s', err);
-        logger.error('PSHB REQUEST: %j', req.rawBody);
       }
       res.send(200);
     });
