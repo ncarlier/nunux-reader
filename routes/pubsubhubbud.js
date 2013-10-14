@@ -1,3 +1,4 @@
+require('date-utils');
 var db = require('../lib/db'),
     Feed = require('../lib/feed'),
     logger = require('../lib/logger'),
@@ -18,6 +19,10 @@ module.exports = function(app){
     var challenge = req.query['hub.challenge'];
     var lease = req.query['hub.lease_seconds'];
     var verifyToken = req.query['hub.verify_token'];
+    var expires = new Date();
+    if (lease && parseInt(lease, 10)) {
+      expires.addSeconds(parseInt(lease, 10));
+    }
 
     if (topic && ('subscribe' == mode || 'unsubscribe' == mode)) {
       logger.info('PubSubHubBud %s confirmation callback received for %s', mode, topic);
@@ -29,7 +34,7 @@ module.exports = function(app){
           function(feed, callback) {
             Feed.update(feed, {
               pshbStatus: mode,
-              pshbLease: lease
+              expires: expires.toISOString()
             }, callback);
           },
           function() {

@@ -139,10 +139,7 @@ app.on('nextfeed', function() {
       },
       function(_feed, callback) {
         feed = _feed;
-        if (feed.pshbEnabled && process.env.APP_PSHB_ENABLED === 'true') {
-          logger.debug('Feed %s: Using PubSubHubBud (%s). Next.', feed.id, feed.hub);
-          callback('PUBSUB');
-        } else if (!feed.expires) {
+        if (!feed.expires) {
           // No expiration date... ok update!
           callback();
         } else {
@@ -194,7 +191,7 @@ app.on('nextfeed', function() {
             // logger.debug('200: Headers: %j', res.headers);
             logger.debug('Feed %s: Updating...', feed.id);
             Feed.update(feed, {
-              status: 'updated',
+              status: 'updating',
               lastModified: res.headers['last-modified'],
               expires: extractExpiresFromHeader(res.headers),
               etag: res.headers.etag
@@ -238,7 +235,6 @@ app.on('nextfeed', function() {
     ],
     function(err) {
       switch (err) {
-        case 'PUBSUB':
         case 'NOT_EXPIRED':
           app.emit('nextfeed');
           break;
