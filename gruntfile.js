@@ -24,7 +24,8 @@ module.exports = function(grunt) {
             moment: false,
             alert: false,
             confirm: false,
-            humane: false
+            humane: false,
+            qrcode: false
           }
         },
         src: ['public/javascripts/**/*.js']

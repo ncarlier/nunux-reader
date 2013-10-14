@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * angular-qrcode v1.1.0
  * (c) 2013 Monospaced http://monospaced.com
