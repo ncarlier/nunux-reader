@@ -23,13 +23,11 @@
   <link rel="shortcut icon" href="icons/favicon.png">
 
 </head>
-<body class="left-sidebar" ng-app="ReaderApp" >
+<body ng-app="ReaderApp" >
   <div id="wrapper">
     <div id="title-bar">
-      <div class="toggle" onclick="$('#sidebar').toggle();"></div>
-      <div class="title">
-        <h1><%= info.name %></h1>
-      </div>
+      <a onclick="$('#wrapper').toggleClass('open');">&#9776;</a>
+      <h1><%= info.name %></h1>
     </div>
     <div id="content">
       <div id="content-inner" ng-view>
@@ -126,6 +124,10 @@ onclick="return false;" title="Drag me in your toolbar!"><%= info.name %></a></h
 
 ga('create', '<%= gaId %>', '<%= gaDomain %>');
 ga('send', 'pageview');
+
+function toggleMenu() {
+  $('#wrapper').toggleClass('open');
+}
 </script>
 </body>
 </html>

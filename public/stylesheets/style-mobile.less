@@ -3,7 +3,6 @@
 /*********************************************************************************/
 
 body, input, textarea {
-  line-height: 1.75em;
   font-size: 11pt;
   letter-spacing: 0;
 }
@@ -25,75 +24,47 @@ article {
   margin: 0.5em 0 0.5em 0;
 }
 
+@openWidth: 70%;
+#wrapper.open {
+  #title-bar {
+    left: @openWidth;
+  }
+  #content {
+    left: @openWidth;
+  }
+  #sidebar {
+    display: block;
+    left: 0;
+    width: @openWidth;
+  }
+}
+
 /*********************************************************************************/
 /* Title Bar                                                                     */
 /*********************************************************************************/
 
 #title-bar {
-  position: absolute;
+  background: linear-gradient(#526788, #364050);
+  height: 45px;
+  text-align: center;
+  color: white;
+  text-shadow: #222 0px -1px 1px;
+  position: fixed;
   width: 100%;
-  z-index: 2;
-  background: #364050;
-  .title {
-    color: #fff;
-    line-height: 44px;
-    font-size: 1em;
-    font-family: 'Open Sans Condensed', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-shadow: -1px -1px 0px rgba(0,0,0,0.5);
-    box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.25);
-    text-align: center;
-    h1 {
-      margin: 0;
-      font-variant: small-caps;
-    }
-  }
-  .toggle {
-    text-indent: -9999em;
-    width: 80px;
-    height: 60px;
+  left: 0;
+  transition: all 0.3s ease;
+  a {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 10px;
+    color: white;
+    font-size: 32px;
     cursor: pointer;
   }
-  .toggle:before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 7px;
-    top: 7px;
-    width: 50px;
-    height: 30px;
+  h1 {
+    letter-spacing: 0.1em;
+    margin: 0;
+    font-variant: small-caps;
   }
-  .toggle:after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 22px;
-    top: 15px;
-    width: 50px;
-    height: 30px;
-    background: url('../images/mobile-menu.svg') 0 0 no-repeat;
-    opacity: 0.75;
-  }
-  .toggle:active {
-  }
-  .toggle:active:before {
-    background-color: #eee;
-  }
-  .toggle:active:after {
-    opacity: 1.0;
-  }
-}
-
-/*********************************************************************************/
-/* Side Panel                                                                    */
-/*********************************************************************************/
-
-#sidePanel {
-  background: #28303a;
 }
 
 /*********************************************************************************/
@@ -136,6 +107,7 @@ article {
 #content {
   /*padding-top: 3em;*/
   top: 45px;
+  transition: all 0.3s ease;
 }
 
 #content-inner {
@@ -146,30 +118,9 @@ article {
 /*********************************************************************************/
 
 #sidebar {
-  display: none;
-  position: absolute;
-  z-index: 1;
-  padding: 60px 12px 20px 10px;
-  background: #364050;
-  box-shadow: inset -1px 0 0 0 rgba(255,255,255,0.15), inset -0.1em 0 0.5em 0 rgba(0,0,0,0.25);
-}
-
-/*********************************************************************************/
-/* Copyright                                                                     */
-/*********************************************************************************/
-
-#copyright {
-  margin: 2em 0 0 0;
-  text-align: center;
-  p {
-    font-size: 0.9em;
-    line-height: 2em;
-  }
-}
-
-#copyright:before {
-  height: 0.5em;
-  margin: 0 0 2em 0;
+  position: fixed;
+  left: -@openWidth;
+  transition: all 0.3s ease;
 }
 
 // Make all grid-sized elements block level again
