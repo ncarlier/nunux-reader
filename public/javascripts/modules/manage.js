@@ -13,10 +13,10 @@ angular.module('ManageModule', ['ngUpload'])
   };
 
   $scope.getStatusClass = function(feed) {
-    var result = 'inverse';
+    var result = 'default';
     if (feed.status) {
-      if (feed.status.match(/^error/g)) result = 'important';
-      else if (feed.pshbStatus == 'subscribe') result = 'info';
+      if (feed.status.match(/^error/g)) result = 'danger';
+      else if (feed.pshbStatus == 'subscribe') result = 'primary';
       else result = 'success';
     }
     return result;
@@ -68,7 +68,7 @@ angular.module('ManageModule', ['ngUpload'])
         }
       })
       .error(function() {
-        $scope.message = {clazz: 'alert-error', text: 'Unable to remove Feed "' + feed.title + '"!'};
+        $scope.message = {clazz: 'alert-danger', text: 'Unable to remove Feed "' + feed.title + '"!'};
       });
     }
   };
@@ -83,7 +83,7 @@ angular.module('ManageModule', ['ngUpload'])
         $rootScope.$broadcast('app.event.subscriptions.add', feed);
       })
       .error(function() {
-        $scope.message = {clazz: 'alert-error', text: 'Unable to remove Feed "' + url + '"!'};
+        $scope.message = {clazz: 'alert-danger', text: 'Unable to remove Feed "' + url + '"!'};
       });
     }
   };
@@ -97,7 +97,7 @@ angular.module('ManageModule', ['ngUpload'])
         res.error = res.error ? res.error[1] : 'Unknown';
       }
       if (res.error) {
-        $scope.message = {clazz: 'alert-error', text: 'Unable to import file: ' + res.error};
+        $scope.message = {clazz: 'alert-danger', text: 'Unable to import file: ' + res.error};
       } else {
         $scope.message = {clazz: 'alert-success', text: content.length + ' subscription(s) successfully imported.'};
         $scope.refresh();

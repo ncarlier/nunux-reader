@@ -1,5 +1,5 @@
 /*!
- * bootstrap-select v1.3.4
+ * bootstrap-select v1.3.5
  * http://silviomoreto.github.io/bootstrap-select/
  *
  * Copyright 2013 bootstrap-select
@@ -82,7 +82,7 @@
         createDropdown: function() {
             //If we are multiple, then add the show-tick class by default
             var multiple = this.multiple ? ' show-tick' : '';
-            var header = this.options.header ? '<h3 class="popover-title">' + this.options.header + '<button type="button" class="close" aria-hidden="true">&times;</button></h3>' : '';
+            var header = this.options.header ? '<div class="popover-title"><button type="button" class="close" aria-hidden="true">&times;</button>' + this.options.header + '</div>' : '';
             var searchbox = this.options.liveSearch ? '<div class="bootstrap-select-searchbox"><input type="text" class="input-block-level form-control" /></div>' : '';
             var drop =
                 "<div class='btn-group bootstrap-select" + multiple + "'>" +
@@ -132,7 +132,7 @@
                 var optionClass = $this.attr("class") || '';
                 var inline = $this.attr("style") || '';
                 var text =  $this.data('content') ? $this.data('content') : $this.html();
-                var subtext = $this.data('subtext') !== undefined ? '<small class="muted">' + $this.data('subtext') + '</small>' : '';
+                var subtext = $this.data('subtext') !== undefined ? '<small class="muted text-muted">' + $this.data('subtext') + '</small>' : '';
                 var icon = $this.data('icon') !== undefined ? '<i class="glyphicon '+$this.data('icon')+'"></i> ' : '';
                 if (icon !== '' && ($this.is(':disabled') || $this.parent().is(':disabled'))) {
                     icon = '<span>'+icon+'</span>';
@@ -149,7 +149,7 @@
                     if ($this.index() == 0) {
                         //Get the opt group label
                         var label = $this.parent().attr('label');
-                        var labelSubtext = $this.parent().data('subtext') !== undefined ? '<small class="muted">'+$this.parent().data('subtext')+'</small>' : '';
+                        var labelSubtext = $this.parent().data('subtext') !== undefined ? '<small class="muted text-muted">'+$this.parent().data('subtext')+'</small>' : '';
                         var labelIcon = $this.parent().data('icon') ? '<i class="'+$this.parent().data('icon')+'"></i> ' : '';
                         label = labelIcon + '<span class="text">' + label + labelSubtext + '</span>';
 
@@ -211,7 +211,7 @@
                 var icon = $this.data('icon') && that.options.showIcon ? '<i class="glyphicon ' + $this.data('icon') + '"></i> ' : '';
                 var subtext;
                 if (that.options.showSubtext && $this.attr('data-subtext') && !that.multiple) {
-                    subtext = ' <small class="muted">'+$this.data('subtext') +'</small>';
+                    subtext = ' <small class="muted text-muted">'+$this.data('subtext') +'</small>';
                 } else {
                     subtext = '';
                 }
@@ -268,7 +268,7 @@
             var $menuClone = selectClone.addClass('open').find('> .dropdown-menu');
             var liHeight = $menuClone.find('li > a').outerHeight();
             var headerHeight = this.options.header ? $menuClone.find('.popover-title').outerHeight() : 0;
-            var searchHeight = this.options.header ? $menuClone.find('.bootstrap-select-searchbox').outerHeight() : 0;
+            var searchHeight = this.options.liveSearch ? $menuClone.find('.bootstrap-select-searchbox').outerHeight() : 0;
             selectClone.remove();
             this.$newElement.data('liHeight', liHeight).data('headerHeight', headerHeight).data('searchHeight', searchHeight);
         },

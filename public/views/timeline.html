@@ -1,19 +1,55 @@
 <div class="timeline">
+  <div class="loading" ng-show="busy">
+    <span class="glyphicon glyphicon-repeat"><p>LOADING...</p></span>
+  </div>
   <header>
-    <div class="toolbar">
-      <button type="button" class="btn btn-small" title="{{order == 'ASC' && 'Sort by newest' || 'Sort by oldest'}}" ng-click="toggleSort()">
-        <i class="{{order == 'ASC' && 'icon-chevron-up' || 'icon-chevron-down'}}"></i>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="glyphicon glyphicon-th"></span>
+        <span class="caret"></span>
       </button>
-      <button type="button" class="btn btn-small" title="Mark all as read" ng-show="isReadable()" ng-click="markAllAsRead()">
-        <i class="icon-check"></i>
-      </button>
-      <button type="button" class="btn btn-small" title="{{isShowingAllItems && 'Show new items' || 'Show all items'}}" ng-show="haveAllItems" ng-click="toggleShow()">
-        <i class="{{isShowingAllItems && 'icon-fire' || 'icon-eye-open'}}"></i>
-      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li ng-show="isReadable()" class="pointer">
+        <a ng-click="markAllAsRead()">
+          Mark all as read
+        </a>
+        </li>
+        <li ng-show="isReadable()" class="divider"></li>
+
+        <li><a>Sort by:</a></li>
+        <li>
+        <a ng-click="order = 'ASC'" class="pointer">
+          <span class="glyphicon {{order == 'ASC' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
+          oldest
+        </a>
+        </li>
+        <li>
+        <a ng-click="order = 'DESC'" class="pointer">
+          <span class="glyphicon {{order == 'DESC' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
+          newest
+        </a>
+        </li>
+
+        <li ng-show="timeline.feed" class="divider"></li>
+        <li ng-show="timeline.feed"><a>Show:</a></li>
+        <li ng-show="timeline.feed">
+        <a ng-click="show = 'new'" class="pointer">
+          <span class="glyphicon {{show == 'new' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
+          new articles
+        </a>
+        </li>
+        <li ng-show="timeline.feed">
+        <a ng-click="show = 'all'" class="pointer">
+          <span class="glyphicon {{show == 'all' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
+          all articles
+        </a>
+        </li>
+      </ul>
     </div>
 
     <h1>
-      <a ng-show="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank">{{ timeline.title }}</a>
+      <div class="glyphicon glyphicon-th-large" onclick="$('#wrapper').toggleClass('open');" title="Show main menu"></div>
+      <a ng-show="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank" title="Go to source web site">{{ timeline.title }}</a>
       <a ng-show="!timeline.feed">{{ timeline.title }}</a>
     </h1>
 
@@ -25,51 +61,77 @@
       </span>
     </span>
   </header>
-  <section class="content" timeline="fetchTimeline()" timeline-scroll-distance="200" timeline-scroll-disabled="isEnding" timeline-read-enabled="isReadable()" timeline-read-handle="autoMarkAsRead">
-    <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" ng-repeat="article in articles">
-      <header>
-        <time title="{{article.date | date}}">{{ article.date | fromNow }}</time>
-        <h1>
-          <i class="{{article.fold && 'icon-folder-close' || 'icon-folder-open'}}" ng-click="article.fold = !article.fold"></i>
-          <a target="_blank" href="{{ article.link }}">{{ article.title }}</a>
-        </h1>
-        <span ng-show="!article.fold">
-          From <a href="#timeline/{{ article.fid }}">{{article.meta.title }}</a>
-          {{ article.author | prefix:'by' }}
-        </span>
-      </header>
-      <div class="content" ng-show="!article.fold">
-        <div timeline-article="article.description">
+  <section>
+    <ul rn-carousel rn-carousel-buffered rn-carousel-watch rn-carousel-index="articleIndex">
+      <li ng-repeat="article in articles">
+      <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article">
+        <header>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+              <li ng-show="!article.saved" >
+              <a ng-click="saveArticle(article)" class="pointer">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                Save this article
+              </a>
+              </li>
+              <li ng-show="article.saved" >
+              <a ng-click="trashArticle(article)" class="pointer">
+                <span class="glyphicon glyphicon-trash"></span>
+                Trash this article
+              </a>
+              </li>
+              <li ng-show="isReadable() && article.read" >
+              <a ng-click="keepUnRead(article)" class="pointer">
+                <span class="glyphicon glyphicon-eye-close"></span>
+                Keep it as unread
+              </a>
+              </li>
+              <li ng-show="isReadable() && !article.read" >
+              <a ng-click="markAsRead(article)" class="pointer">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                Mark it as read
+              </a>
+              </li>
+              <li>
+              <a href="mailto:?subject={{article.title | escape}}&amp;body={{article.link | escape}}">
+                <span class="glyphicon glyphicon-envelope"></span>
+                Mail it
+              </a>
+              </li>
+              <li>
+              <a href="#">
+                <span class="glyphicon glyphicon-qrcode"></span>
+                Show QR Code
+              </a>
+              </li>
+            </ul>
+          </div>
+          <h1>
+            <a target="_blank" href="{{ article.link }}" title="Go to original article">{{ article.title }}</a>
+          </h1>
+          <span>
+            <span class="glyphicon glyphicon-globe"></span>
+            <a href="#timeline/{{ article.fid }}" title="Go to timeline">{{ article.meta.title }}</a>
+            <span class="glyphicon glyphicon-time"></span>
+            <time title="{{article.date | date}}">{{ article.date | fromNow }}</time>
+          </span>
+        </header>
+        <div class="content">
+          <a title="Previous article [p or <-]" class="prev" ng-click="prevArticle()" ng-show="articleIndex > 0">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+          </a>
+          <a title="Next article [n or ->]" class="next" ng-click="nextArticle()" ng-show="articleIndex < articles.length" >
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </a>
+          <div timeline-article="article.description">
+          </div>
         </div>
-      </div>
-      <footer>
-        <a title="Save this" ng-show="!article.saved" ng-click="saveArticle(article.id)">
-          <i class="icon-bookmark" />
-        </a>
-        <a title="Trash this" ng-show="article.saved" ng-click="trashArticle(article.id)">
-          <i class="icon-trash" />
-        </a>
-        <a title="Keep unread" ng-show="isReadable() && article.read" ng-click="keepUnRead(article.id)">
-          <i class="icon-eye-close" />
-        </a>
-        <a title="Mark as read" ng-show="isReadable() && !article.read" ng-click="markAsRead(article.id)">
-          <i class="icon-check" />
-        </a>
-        <a title="Mail this" href="mailto:?subject={{article.title | escape}}&amp;body={{article.link | escape}}">
-          <i class="icon-envelope" />
-        </a>
-        <a title="QR code" bs-popover="'qrcode.html'" data-placement="top">
-          <i class="icon-qrcode" />
-        </a>
-      </footer>
-    </article>
-    <article ng-show="isEnding">
-      <h1 class="ending">-- You reach ground 0 --</h1>
-    </article>
+      </article>
+      </li>
+    </ul>
   </section>
 </div>
-
-
-<script type="text/ng-template" id="qrcode.html">
-  <qrcode size="160" text="{{ article.link }}"></qrcode>
-</script>

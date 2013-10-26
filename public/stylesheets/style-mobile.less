@@ -26,9 +26,6 @@ article {
 
 @openWidth: 70%;
 #wrapper.open {
-  #title-bar {
-    left: @openWidth;
-  }
   #content {
     left: @openWidth;
   }
@@ -40,77 +37,11 @@ article {
 }
 
 /*********************************************************************************/
-/* Title Bar                                                                     */
-/*********************************************************************************/
-
-#title-bar {
-  background: linear-gradient(#526788, #364050);
-  height: 45px;
-  text-align: center;
-  color: white;
-  text-shadow: #222 0px -1px 1px;
-  position: fixed;
-  width: 100%;
-  left: 0;
-  transition: all 0.3s ease;
-  a {
-    position: absolute;
-    left: 10px;
-    color: white;
-    font-size: 32px;
-    cursor: pointer;
-  }
-  h1 {
-    letter-spacing: 0.1em;
-    margin: 0;
-    font-variant: small-caps;
-  }
-}
-
-/*********************************************************************************/
-/* Section/Article Types                                                         */
-/*********************************************************************************/
-
-.is-post {
-  padding-bottom: 5em;
-  margin-bottom: 6em;
-}
-
-/*********************************************************************************/
-/* Logo                                                                          */
-/*********************************************************************************/
-
-#logo {
-  display: none;
-}
-
-/*********************************************************************************/
-/* Nav                                                                           */
-/*********************************************************************************/
-
-#nav {
-  margin-top: 0 !important;
-}
-
-#nav:before {
-  display: none !important;
-}
-
-#nav li:hover a {
-  background: none;
-}
-
-/*********************************************************************************/
 /* Content                                                                       */
 /*********************************************************************************/
 
 #content {
-  /*padding-top: 3em;*/
-  top: 45px;
   transition: all 0.3s ease;
-}
-
-#content-inner {
 }
 
 /*********************************************************************************/
@@ -123,33 +54,14 @@ article {
   transition: all 0.3s ease;
 }
 
-// Make all grid-sized elements block level again
-[class*="span"],
-.uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
-.row-fluid [class*="span"] {
-  float: none;
-  display: block;
-  width: 100%;
-  margin-left: 0;
-  .box-sizing(border-box);
-}
-.span12,
-.row-fluid .span12 {
-  width: 100%;
-  .box-sizing(border-box);
-}
-.row-fluid [class*="offset"]:first-child {
-  margin-left: 0;
-}
-
 /*********************************************************************************/
 /* Timeline                                                                      */
 /*********************************************************************************/
-.timeline {
+.timeline, .manage {
   > header {
-    button {
-      span {
-        display: none;
+    h1 {
+      div {
+        display: inline-block;
       }
     }
   }

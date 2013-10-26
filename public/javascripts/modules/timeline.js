@@ -1,30 +1,20 @@
 'use strict';
 
-angular.module('TimelineModule', ['ui.qrcode'])
-.controller('TimelineCtrl', function ($scope, $http, $routeParams, $rootScope) {
+angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
+.controller('TimelineCtrl', function ($scope, $http, $q, $timeout, $routeParams, $rootScope) {
+  var initializing = true;
   $scope.timelineName = $routeParams.timeline;
   $rootScope.currentPage = $routeParams.timeline;
   $scope.url = '/timeline/' + $scope.timelineName;
   $scope.order = $scope.timelineName == 'archive' ? 'DESC' : 'ASC';
-  $scope.isShowingAllItems = false;
-  $scope.haveAllItems = $scope.timelineName != 'global' && $scope.timelineName != 'archive';
+  $scope.show = 'new';
   $scope.isReadable = function() {
-    return !$scope.isShowingAllItems && $scope.timelineName != 'archive';
+    return $scope.show == 'new' && $scope.timelineName != 'archive';
   };
-  $scope.isEnding = false;
+  $scope.isEnded = false;
   $scope.articles = [];
-
-  $scope.getArticle = function(aid) {
-    for (var i = 0; i < $scope.articles.length; i++) {
-      if ($scope.articles[i].id == aid) {
-        return $scope.articles[i];
-      }
-    }
-  };
-
-  $scope.updateArticle = function(aid, data) {
-    angular.extend($scope.getArticle(aid), data);
-  };
+  $scope.next = null;
+  $scope.articleIndex = 0;
 
   $http.get($scope.url + '/status').success(function (data) {
     $scope.timeline = data;
@@ -34,76 +24,12 @@ angular.module('TimelineModule', ['ui.qrcode'])
   $scope.refresh = function() {
     $scope.articles = [];
     $scope.next = null;
-    $scope.fetchTimeline();
+    $scope.fetch();
   };
 
-  $scope.toggleShow = function() {
-    $scope.isShowingAllItems = !$scope.isShowingAllItems;
-    //$scope.order = $scope.isShowingAllItems ? 'DESC' : 'ASC';
-    $scope.refresh();
-  };
-
-  $scope.toggleSort = function() {
-    $scope.order = ($scope.order == 'ASC') ? 'DESC' : 'ASC';
-    $scope.refresh();
-  };
-
-  $scope.markAllAsRead = function() {
-    if (confirm('Do you really want to mark all items as read ?')) {
-      $http.delete($scope.url).success(function (data) {
-        $scope.timeline = data;
-        $scope.articles = [];
-        $scope.isEnding = true;
-        $scope.next = null;
-        $rootScope.$broadcast('app.event.timeline.status', data);
-      });
-    }
-  };
-
-  $scope.autoMarkAsRead = function(aid) {
-    var article = $scope.getArticle(aid);
-    if (article && !article.read && !article.keepUnRead && !article.reading) {
-      article.reading = true;
-      $scope.markAsRead(aid);
-    }
-  };
-
-  $scope.markAsRead = function(aid) {
-    $http.delete($scope.url + '/' + aid).success(function (data) {
-      $scope.timeline = data;
-      $rootScope.$broadcast('app.event.timeline.status', data);
-      $scope.updateArticle(aid, {read: true, keepUnRead: false});
-    });
-  };
-
-  $scope.keepUnRead = function(aid) {
-    $http.put($scope.url + '/' + aid).success(function (data) {
-      $scope.timeline = data;
-      $rootScope.$broadcast('app.event.timeline.status', data);
-      $scope.updateArticle(aid, {read: false, keepUnRead: true});
-    });
-  };
-
-  $scope.saveArticle = function(aid) {
-    var url = '/timeline/archive/' + aid;
-    $http.put(url).success(function(data) {
-      $rootScope.$broadcast('app.event.timeline.status', data);
-      humane.log('Article saved.');
-      $scope.updateArticle(aid, {saved: true});
-    });
-  };
-
-  $scope.trashArticle = function(aid) {
-    var url = '/timeline/archive/' + aid;
-    $http.delete(url).success(function(data) {
-      $rootScope.$broadcast('app.event.timeline.status', data);
-      humane.log('Article trashed.');
-      $scope.updateArticle(aid, {saved: false});
-    });
-  };
-
-  $scope.fetchTimeline = function() {
-    if ($scope.busy) return;
+  $scope.fetch = function(callback) {
+    if ($scope.busy || $scope.isEnded) return;
+    console.log('Fetching articles...');
     $scope.busy = true;
     var params = $.param({
       next: $scope.next,
@@ -111,10 +37,11 @@ angular.module('TimelineModule', ['ui.qrcode'])
       show: $scope.isShowingAllItems ? 'all' : 'new'
     });
     var url = $scope.url + '?' + params;
+    initializing = false;
     $http.get(url).success(function(data) {
+      //$scope.articles = [];
       for (var i = 0; i < data.articles.length; i++) {
         var article = data.articles[i];
-        article.fold = false;
         article.keepUnRead = false;
         article.read = false;
         article.reading = false;
@@ -122,96 +49,112 @@ angular.module('TimelineModule', ['ui.qrcode'])
         $scope.articles.push(article);
       }
       $scope.next = data.next;
-      $scope.isEnding = !data.next;
+      $scope.isEnded = !data.next;
       $scope.busy = false;
+      if (callback) callback();
     });
   };
-})
-.directive('timeline', ['$rootScope', '$window', '$timeout',
-           function($rootScope, $window, $timeout) {
-  return {
-    link: function(scope, elem, attrs) {
-      var checkWhenEnabled, handler, scrollDistance, scrollEnabled, readEnabled, readHandler;
-      $window = angular.element($window);
-      scrollDistance = 0;
-      if (attrs.timelineScrollDistance !== null) {
-        scope.$watch(attrs.timelineScrollDistance, function(value) {
-          scrollDistance = parseInt(value, 10);
-          return scrollDistance;
-        });
-      }
-      scrollEnabled = true;
-      checkWhenEnabled = false;
-      if (attrs.timelineScrollDisabled !== null) {
-        scope.$watch(attrs.timelineScrollDisabled, function(value) {
-          scrollEnabled = !value;
-          if (scrollEnabled && checkWhenEnabled) {
-            checkWhenEnabled = false;
-            return handler();
-          }
-        });
-      }
 
-      readEnabled = false;
-      if (attrs.timelineReadEnabled !== null) {
-        scope.$watch(attrs.timelineReadEnabled, function(value) {
-          readEnabled = value;
-          return readEnabled;
-        });
-      }
-
-      handler = function(event) {
-        var shouldFetch = false;
-        if (event){
-          var $target = $(event.target);
-          if (event.target == document) {
-            shouldFetch = $target.scrollTop() + $window.height() + scrollDistance >= $target.height();
-          } else {
-            shouldFetch = $target.scrollTop() + $target.innerHeight() + scrollDistance >= $target[0].scrollHeight;
-          }
-        } else {
-          shouldFetch = true;
-        }
-        if (shouldFetch && scrollEnabled) {
-          if ($rootScope.$$phase) {
-            scope.$eval(attrs.timeline);
-          } else {
-            scope.$apply(attrs.timeline);
-          }
-        } else if (shouldFetch) {
-          checkWhenEnabled = true;
-        }
-        if (readEnabled && event) {
-          var areaTop = event.target == document ? $(document).scrollTop() : 
-            $(event.target).offset().top;
-          $('article.not-seen', $(event.target)).each(function() {
-            if ($(this).offset().top < areaTop) {
-              var aid = $(this).attr('id');
-              var tlReadHandle = scope.$eval(attrs.timelineReadHandle);
-              tlReadHandle(aid);
-            }
-          });
-        }
-      };
-
-      $(document).on('scroll', handler);
-      $(elem).on('scroll', handler);
-      scope.$on('$destroy', function() {
-        return $(document).off('scroll', handler) && $(elem).off('scroll', handler);
+  $scope.markAllAsRead = function() {
+    if ($scope.isReadable() && confirm('Do you really want to mark all items as read ?')) {
+      console.log('Marking all articles as read...');
+      $http.delete($scope.url).success(function (data) {
+        $scope.timeline = data;
+        $scope.articles = [];
+        $scope.isEnded = true;
+        $scope.next = null;
+        $rootScope.$broadcast('app.event.timeline.status', data);
       });
-      return $timeout((function() {
-        if (attrs.timelineImmediateCheck) {
-          if (scope.$eval(attrs.timelineImmediateCheck)) {
-            return handler();
-          }
-        } else {
-          return handler();
-        }
-      }), 0);
     }
   };
-}
-])
+
+  $scope.markAsRead = function(article) {
+    if ($scope.isReadable()) {
+      console.log('Marking article ' + article.id + ' as read...');
+      $http.delete($scope.url + '/' + article.id).success(function (data) {
+        $scope.timeline = data;
+        $rootScope.$broadcast('app.event.timeline.status', data);
+        article.read = true;
+        article.keepUnRead = false;
+      });
+    }
+  };
+
+  $scope.keepUnRead = function(article) {
+    if ($scope.isReadable()) {
+      $http.put($scope.url + '/' + article.id).success(function (data) {
+        $scope.timeline = data;
+        $rootScope.$broadcast('app.event.timeline.status', data);
+        article.read = false;
+        article.keepUnRead = true;
+      });
+    }
+  };
+
+  $scope.saveArticle = function(article) {
+    var url = '/timeline/archive/' + article.id;
+    $http.put(url).success(function(data) {
+      $rootScope.$broadcast('app.event.timeline.status', data);
+      humane.log('Article saved.');
+      article.saved = true;
+    });
+  };
+
+  $scope.trashArticle = function(article) {
+    var url = '/timeline/archive/' + article.id;
+    $http.delete(url).success(function(data) {
+      $rootScope.$broadcast('app.event.timeline.status', data);
+      humane.log('Article trashed.');
+      article.saved = false;
+    });
+  };
+
+  $scope.nextArticle = function() {
+    if ($scope.articleIndex < $scope.articles.length - 1) {
+      $scope.articleIndex++;
+    }
+  };
+
+  $scope.prevArticle = function() {
+    if ($scope.articleIndex > 0) {
+      $scope.articleIndex--;
+    }
+  };
+
+  // Key bindings...
+  Mousetrap.bind(['right', 'n'], function() {
+    $scope.$apply($scope.nextArticle);
+  });
+  Mousetrap.bind(['left', 'p'], function() {
+    $scope.$apply($scope.prevArticle);
+  });
+
+  $scope.$watch('articleIndex', function(newValue) {
+    if ($scope.isReadable() && newValue > 0) {
+      var article = $scope.articles[newValue-1];
+      if (!article.read && !article.keepUnRead) {
+        $scope.markAsRead(article);
+      }
+    }
+    if (!$scope.isEnded && newValue != 0 && newValue >= $scope.articles.length - 1) {
+      $scope.fetch();
+    }
+  });
+
+  $scope.$watch('order', function(newValue) {
+    if (!initializing) {
+      $scope.refresh();
+    }
+  });
+
+  $scope.$watch('show', function(newValue) {
+    if (!initializing) {
+      $scope.refresh();
+    }
+  });
+
+  $scope.fetch();
+})
 .directive('timelineArticle', ['$compile', function ($compile) {
   return {
     link: function ($scope, $elem, attrs) {
@@ -234,7 +177,7 @@ angular.module('TimelineModule', ['ui.qrcode'])
             if(!src.match(/^\s*http/g)) {
               src = baseUrl + '/' + src;
             }
-            $(this).attr('bn-lazy-load', src);
+          $(this).attr('ui-lazy-load', src);
             $(this).removeAttr('data-src');
           }
         });

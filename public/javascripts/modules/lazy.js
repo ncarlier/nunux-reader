@@ -1,8 +1,8 @@
 'use strict';
 
 // I lazily load the images, when they come into view.
-angular.module('LazyModule', []).directive(
-  'bnLazyLoad',
+angular.module('ui.lazy', []).directive(
+  'uiLazyLoad',
   function( $window, $document ) {
     // I manage all the images that are currently being
     // monitored on the page for lazy loading.
@@ -166,8 +166,8 @@ angular.module('LazyModule', []).directive(
         isWatchingWindow = true;
 
         // Listen for window changes.
-        win.on('resize.bnLazyLoad', windowChanged);
-        $('section.content').on('scroll.bnLazyLoad', windowChanged);
+        win.on('resize.uiLazyLoad', windowChanged);
+        $('section.content').on('scroll.uiLazyLoad', windowChanged);
 
         // Set up a timer to watch for document-height changes.
         documentTimer = setInterval( checkDocumentHeight, documentDelay );
@@ -178,8 +178,8 @@ angular.module('LazyModule', []).directive(
         isWatchingWindow = false;
 
         // Stop watching for window changes.
-        win.off('resize.bnLazyLoad');
-        $('section.content').off('scroll.bnLazyLoad');
+        win.off('resize.uiLazyLoad');
+        $('section.content').off('scroll.uiLazyLoad');
 
         // Stop watching for document changes.
         clearInterval(documentTimer);
@@ -306,7 +306,7 @@ angular.module('LazyModule', []).directive(
       // Since the lazy-src will likely need some sort
       // of string interpolation, we don't want to
       attributes.$observe(
-        "bnLazyLoad",
+        "uiLazyLoad",
         function(newSource) {
           lazyImage.setSource(newSource);
         }
