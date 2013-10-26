@@ -53,27 +53,31 @@
 
   </footer>
   <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-      <h3 id="loginModalLabel">Sign in</h3>
-    </div>
-    <div class="modal-body">
-      <p><i>Don't try to click if you are not invited.</i> -- The Bouncer</p>
-      <a href="/auth/google" title="Sign in with your Google account." id="google">
-        <img src="images/sign-in-with-google.png" alt="Sign in with Google"/>
-      </a>
-      <strong> or </strong>
-      <a>
-        <img src="images/sign-in-with-persona.png" alt="Sign in with Mozilla Persona"/>
-      </a>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Sign in</h4>
+        </div>
+        <div class="modal-body">
+          <p><i>Don't try to click if you are not invited.</i> -- The Bouncer</p>
+          <a href="/auth/google" title="Sign in with your Google account." id="google">
+            <img src="images/sign-in-with-google.png" alt="Sign in with Google"/>
+          </a>
+          <strong> or </strong>
+          <a>
+            <img src="images/sign-in-with-persona.png" alt="Sign in with Mozilla Persona"/>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
   <form action="/auth/browserid" method="post" style="display:none;">
     <input type="text" name="assertion"/>
   </form>
 
-  <script src="lib/jquery/jquery.js"></script>
-  <script src="lib/bootstrap/bootstrap.js"></script>
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/bootstrap.min.js"></script>
   <script src="https://login.persona.org/include.js"></script>
   <script>
 $("#browserid").click(function(){
