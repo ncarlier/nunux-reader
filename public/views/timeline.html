@@ -64,7 +64,7 @@
   <section>
     <ul rn-carousel rn-carousel-buffered rn-carousel-watch rn-carousel-index="articleIndex">
       <li ng-repeat="article in articles">
-      <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article">
+      <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article" ui-lazy-scroll>
         <header>
           <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

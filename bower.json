@@ -11,7 +11,6 @@
     "humane-js": "~3.1.0",
     "ngUpload": "~0.3.8",
     "qrcode-generator": "git://github.com/monospaced/bower-qrcode-generator.git#0.0.0",
-    "angular-strap": "~0.7.7",
     "revolunet-angular-carousel": "*",
     "mousetrap": "~1.4.5"
   },
@@ -46,7 +45,6 @@
     "node_modules"
   ],
   "resolutions": {
-    "jquery": ">= 1.9.0",
-    "bootstrap": "~3.0.0"
+    "jquery": ">= 1.9.0"
   }
 }

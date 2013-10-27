@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
-.controller('TimelineCtrl', function ($scope, $http, $q, $timeout, $routeParams, $rootScope) {
+.controller('TimelineCtrl', function ($scope, $http, $q, $timeout, $routeParams, $rootScope, $lazy) {
   var initializing = true;
   $scope.timelineName = $routeParams.timeline;
   $rootScope.currentPage = $routeParams.timeline;
@@ -24,6 +24,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   $scope.refresh = function() {
     $scope.articles = [];
     $scope.next = null;
+    $scope.isEnded = false;
     $scope.fetch();
   };
 
@@ -34,7 +35,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     var params = $.param({
       next: $scope.next,
       order: $scope.order,
-      show: $scope.isShowingAllItems ? 'all' : 'new'
+      show: $scope.show
     });
     var url = $scope.url + '?' + params;
     initializing = false;
@@ -130,6 +131,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   });
 
   $scope.$watch('articleIndex', function(newValue) {
+    setTimeout($lazy.checkImages, 500);
     if ($scope.isReadable() && newValue > 0) {
       var article = $scope.articles[newValue-1];
       if (!article.read && !article.keepUnRead) {
@@ -161,6 +163,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
       // watch the expression, and update the UI on change.
       var pathArray = $scope.article.link.split( '/' );
       var baseUrl = pathArray[0] + '//' + pathArray[2];
+
       $scope.$watch(attrs.timelineArticle, function(value) {
         var $content = $('<div>').html(value);
         $('script', $content).filter('script[src^="http://feeds.feedburner.com"]').remove();
