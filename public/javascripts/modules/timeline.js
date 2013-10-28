@@ -21,11 +21,14 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     $rootScope.$broadcast('app.event.timeline.status', data);
   });
 
-  $scope.refresh = function() {
+  $scope.refresh = function(broadcast) {
     $scope.articles = [];
     $scope.next = null;
     $scope.isEnded = false;
     $scope.fetch();
+    if (broadcast) {
+      $rootScope.$broadcast('app.event.subscriptions.refresh');
+    }
   };
 
   $scope.fetch = function(callback) {

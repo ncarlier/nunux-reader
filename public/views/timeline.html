@@ -50,7 +50,7 @@
     <h1>
       <div class="glyphicon glyphicon-th-large" onclick="$('#wrapper').toggleClass('open');" title="Show main menu"></div>
       <a ng-show="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank" title="Go to source web site">{{ timeline.title }}</a>
-      <a ng-show="!timeline.feed">{{ timeline.title }}</a>
+      <a ng-show="!timeline.feed" ng-click="refresh(true)" class="pointer" title="Click to refresh">{{ timeline.title }}</a>
     </h1>
 
     <span class="hint">
