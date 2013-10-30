@@ -1341,6 +1341,7 @@ section a {
 }
 .icon {
   background-repeat: no-repeat;
+  background-position: center 30px;
 }
 .icon-responsive {
   background-image: url('../images/responsive.png');
