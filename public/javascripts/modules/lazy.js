@@ -177,9 +177,9 @@ angular.module('ui.lazy', [])
     function isVisible(boundaries) {
       // If the element is not visible because it
       // is hidden, don't bother testing it.
-      if (!element.is(":visible")) {
-        return(false);
-      }
+      //if (!element.is(":visible")) {
+      //  return(false);
+      //}
 
       // Update the dimensions of the element.
       var top = element.offset().top;
