@@ -324,7 +324,6 @@ article.article {
   }
   > section {
     background: @reader-alt-color;
-    padding: 5px;
     overflow: auto;
     position: absolute;
     top: 0;
@@ -335,29 +334,31 @@ article.article {
       margin: 0;
     }
     table {
+      text-align: center;
+      .feed {
+        text-align: left;
+      }
+      .date, .status {
+        text-align: center;
+      }
       a {
         word-break: break-all;
       }
-      button {
+      a.delete {
+        color: #B92B2B;
         display: none;
       }
     }
   }
+  tr:hover a.delete {
+      display: inline-block;
+  }
   td {
     border: none !important;
-  }
-  tr:hover {
-    .flag {
-      display: initial;
-    }
-    button {
-      display: initial;
-    }
   }
 }
 
 .flag {
-  display: none;
   color: #FFF;
   font-size: 0.8em;
   text-decoration: none;
