@@ -34,12 +34,12 @@
         <h1><%= info.name %></h1>
       </div>
       <div class="list-group">
-        <a href="#timeline/global" class="list-group-item" title="View all fresh items" ng-class="{active: $root.currentPage == 'global'}">
+        <a href="#timeline/global" target="_self" class="list-group-item" title="View all fresh items" ng-class="{active: $root.currentPage == 'global'}">
           <span class="badge">{{globalSize}}</span>
           <span class="glyphicon glyphicon-fire"></span>
           All items
         </a>
-        <a href="#timeline/archive" class="list-group-item" title="View archived items" ng-class="{active: $root.currentPage == 'archive'}">
+        <a href="#timeline/archive" target="_self" class="list-group-item" title="View archived items" ng-class="{active: $root.currentPage == 'archive'}">
           <span class="badge">{{archiveSize}}</span>
           <span class="glyphicon glyphicon-floppy-disk"></span>
           Saved items
@@ -60,7 +60,8 @@
         <a
           href="#timeline/{{ timeline.feed.id }}"
           title="{{ timeline.feed.title }}"
-          class="list-group-item" 
+          class="list-group-item"
+          target="_self"
           ng-repeat="timeline in timelines | filter:isSubscription | orderBy:'-size'"
           ng-class="{active: $root.currentPage == timeline.feed.id}">
           <span class="badge" ng-show="timeline.size">{{ timeline.size }}</span>
