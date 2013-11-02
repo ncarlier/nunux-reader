@@ -16,19 +16,19 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   $scope.next = null;
   $scope.articleIndex = 0;
 
-  $http.get($scope.url + '/status').success(function (data) {
-    $scope.timeline = data;
-    $rootScope.$broadcast('app.event.timeline.status', data);
-  });
+  $scope.fetchStatus = function() {
+    $http.get($scope.url + '/status').success(function (data) {
+      $scope.timeline = data;
+    });
+  };
 
-  $scope.refresh = function(broadcast) {
+  $scope.fetchStatus();
+
+  $scope.refresh = function() {
     $scope.articles = [];
     $scope.next = null;
     $scope.isEnded = false;
-    $scope.fetch();
-    if (broadcast) {
-      $rootScope.$broadcast('app.event.subscriptions.refresh');
-    }
+    $scope.fetch($scope.fetchStatus);
   };
 
   $scope.fetch = function(callback) {
@@ -55,6 +55,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
       $scope.next = data.next;
       $scope.isEnded = !data.next;
       $scope.busy = false;
+      $rootScope.$broadcast('app.event.subscriptions.refresh');
       if (callback) callback();
     });
   };
@@ -134,15 +135,20 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   });
 
   $scope.$watch('articleIndex', function(newValue) {
+    // Use timeout to prevent animation flicker
     setTimeout($lazy.checkImages, 500);
     if ($scope.isReadable() && newValue > 0) {
       var article = $scope.articles[newValue-1];
       if (!article.read && !article.keepUnRead) {
-        $scope.markAsRead(article);
+        $timeout(function() {
+          $scope.markAsRead(article);
+        }, 500);
       }
     }
     if (!$scope.isEnded && newValue != 0 && newValue >= $scope.articles.length - 1) {
-      $scope.fetch();
+      $timeout(function() {
+        $scope.fetch();
+      }, 500);
     }
   });
 
