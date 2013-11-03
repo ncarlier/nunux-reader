@@ -43,6 +43,15 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     var url = $scope.url + '?' + params;
     initializing = false;
     $http.get(url).success(function(data) {
+      $scope.isEnded = !data.next;
+      if ($scope.isEnded) {
+        var end = {
+          fake: true,
+          link: 'foo/bar',
+          description: '<h1>You reach ground 0</h1>'
+        };
+        data.articles.push(end);
+      }
       //$scope.articles = [];
       for (var i = 0; i < data.articles.length; i++) {
         var article = data.articles[i];
@@ -53,7 +62,6 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
         $scope.articles.push(article);
       }
       $scope.next = data.next;
-      $scope.isEnded = !data.next;
       $scope.busy = false;
       $rootScope.$broadcast('app.event.subscriptions.refresh');
       if (callback) callback();

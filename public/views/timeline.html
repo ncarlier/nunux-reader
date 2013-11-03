@@ -65,7 +65,7 @@
     <ul rn-carousel rn-carousel-buffered rn-carousel-watch rn-carousel-index="articleIndex">
       <li ng-repeat="article in articles">
       <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article" ui-lazy-scroll>
-        <header>
+        <header ng-show="!article.fake">
           <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="glyphicon glyphicon-plus"></span>
@@ -120,11 +120,11 @@
             <time title="{{article.date | date}}">{{ article.date | fromNow }}</time>
           </span>
         </header>
-        <div class="content">
+        <div class="content {{article.fake && 'ending'}}">
           <a title="Previous article [p or <-]" class="prev" ng-click="prevArticle()" ng-show="articleIndex > 0">
             <span class="glyphicon glyphicon-chevron-left"></span>
           </a>
-          <a title="Next article [n or ->]" class="next" ng-click="nextArticle()" ng-show="articleIndex < articles.length" >
+          <a title="Next article [n or ->]" class="next" ng-click="nextArticle()" ng-show="articleIndex < articles.length - 1" >
             <span class="glyphicon glyphicon-chevron-right"></span>
           </a>
           <div timeline-article="article.description">
