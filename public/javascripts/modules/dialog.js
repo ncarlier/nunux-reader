@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('ui.dialog', [])
 .factory('$dialog', ["$document", "$compile", "$rootScope", "$controller", "$timeout", function ($document, $compile, $rootScope, $controller, $timeout) {
   var defaults = {
@@ -48,7 +50,7 @@ angular.module('ui.dialog', [])
         }
       } else {
         // Template url
-        return '<div class="modal-body" ng-include="\'' + options.templateUrl + '\'"></div>'
+        return '<div class="modal-body" ng-include="\'' + options.templateUrl + '\'"></div>';
       }
     })();
     //We don't have the scope we're gonna use yet, so just get a compile function for modal

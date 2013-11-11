@@ -18,7 +18,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
 
   $scope.getCurrent = function() {
     return $scope.articles.length > 0 ? $scope.articles[$scope.articleIndex] : null;
-  }
+  };
 
   $scope.fetchStatus = function() {
     $http.get($scope.url + '/status').success(function (data) {
@@ -189,7 +189,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
         }, 500);
       }
     }
-    if (!$scope.isEnded && newValue != 0 && newValue >= $scope.articles.length - 1) {
+    if (!$scope.isEnded && newValue !== 0 && newValue >= $scope.articles.length - 1) {
       $timeout(function() {
         $scope.fetch();
       }, 500);
@@ -222,7 +222,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
       backdrop: true,
       success: {label: 'ok', fn: function() {}}
     });
-  }
+  };
 })
 .directive('timelineArticle', ['$compile', function ($compile) {
   return {

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
  * @version v0.0.8 - 2013-08-22
@@ -100,7 +102,7 @@ angular.module('angular-carousel')
             originalItem = exprMatch[1],
             trackProperty = exprMatch[3] || '';
         originalCollection = exprMatch[2];
-        isBuffered = angular.isDefined(tAttrs['rnCarouselBuffered']);
+        isBuffered = angular.isDefined(tAttrs.rnCarouselBuffered);
 
           /* update the current ngRepeat expression and add a slice operator */
           repeatAttribute.value = originalItem + ' in carouselCollection.cards ' + trackProperty;
@@ -294,7 +296,7 @@ angular.module('angular-carousel')
         var resizeTimeoutId;
 
         function resize (event) {
-          resizeTimeoutId && window.clearTimeout(resizeTimeoutId);
+          if (resizeTimeoutId) window.clearTimeout(resizeTimeoutId);
           resizeTimeoutId = window.setTimeout(function() {
             updateContainerWidth();
             updateSlidePosition();

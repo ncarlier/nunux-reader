@@ -156,7 +156,7 @@ angular.module('ui.lazy', [])
 }).directive('uiLazyScroll', function($lazy) {
   return function ($scope, element, $attributes) {
     element.on('scroll.uiLazyLoad', $lazy.onScroll);
-  }
+  };
 }).directive('uiLazyLoad', function($window, $lazy) {
   // I represent a single lazy-load image.
   function LazyImage(element) {

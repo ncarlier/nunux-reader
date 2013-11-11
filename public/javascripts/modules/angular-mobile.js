@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
  * @version v0.0.8 - 2013-08-22
@@ -11,7 +13,6 @@
  * License: MIT
  */
 (function(window, angular, undefined) {
-'use strict';
 
 /**
  * @ngdoc overview
