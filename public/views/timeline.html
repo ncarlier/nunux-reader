@@ -50,7 +50,7 @@
     <h1>
       <div class="glyphicon glyphicon-th-large" onclick="$('#wrapper').toggleClass('open');" title="Show main menu"></div>
       <a ng-show="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank" title="Go to source web site">{{ timeline.title }}</a>
-      <a ng-show="!timeline.feed" ng-click="refresh()" class="pointer" title="Click to refresh">{{ timeline.title }}</a>
+      <a ng-show="!timeline.feed" ng-click="refresh()" class="pointer" title="Click to refresh or press [r]">{{ timeline.title }}</a>
     </h1>
 
     <span class="hint">
@@ -75,25 +75,25 @@
               <li ng-show="!article.saved" >
               <a ng-click="saveArticle(article)" class="pointer">
                 <span class="glyphicon glyphicon-floppy-disk"></span>
-                Save this article
+                Save this article [s]
               </a>
               </li>
               <li ng-show="article.saved" >
               <a ng-click="trashArticle(article)" class="pointer">
                 <span class="glyphicon glyphicon-trash"></span>
-                Trash this article
+                Trash this article [s]
               </a>
               </li>
               <li ng-show="isReadable() && article.read" >
               <a ng-click="keepUnRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-close"></span>
-                Keep it as unread
+                Keep it as unread [m]
               </a>
               </li>
               <li ng-show="isReadable() && !article.read" >
               <a ng-click="markAsRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-open"></span>
-                Mark it as read
+                Mark it as read [m]
               </a>
               </li>
               <li>
@@ -103,9 +103,9 @@
               </a>
               </li>
               <li>
-              <a href="#">
+              <a ng-click="viewQrcode(article)" class="pointer">
                 <span class="glyphicon glyphicon-qrcode"></span>
-                Show QR Code
+                Show QR Code [q]
               </a>
               </li>
             </ul>

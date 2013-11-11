@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
-.controller('TimelineCtrl', function ($scope, $http, $q, $timeout, $routeParams, $rootScope, $lazy) {
+.controller('TimelineCtrl', function ($scope, $http, $q, $timeout, $routeParams, $rootScope, $lazy, $dialog) {
   var initializing = true;
   $scope.timelineName = $routeParams.timeline;
   $rootScope.currentPage = $routeParams.timeline;
@@ -15,6 +15,10 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   $scope.articles = [];
   $scope.next = null;
   $scope.articleIndex = 0;
+
+  $scope.getCurrent = function() {
+    return $scope.articles.length > 0 ? $scope.articles[$scope.articleIndex] : null;
+  }
 
   $scope.fetchStatus = function() {
     $http.get($scope.url + '/status').success(function (data) {
@@ -95,6 +99,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
 
   $scope.keepUnRead = function(article) {
     if ($scope.isReadable()) {
+      console.log('Marking article ' + article.id + ' as unread...');
       $http.put($scope.url + '/' + article.id).success(function (data) {
         $scope.timeline = data;
         $rootScope.$broadcast('app.event.timeline.status', data);
@@ -135,11 +140,42 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   };
 
   // Key bindings...
-  Mousetrap.bind(['right', 'n'], function() {
+  Mousetrap.bind(['right', 'n','space'], function() {
     $scope.$apply($scope.nextArticle);
   });
-  Mousetrap.bind(['left', 'p'], function() {
+  Mousetrap.bind(['left', 'p', 'shift+space'], function() {
     $scope.$apply($scope.prevArticle);
+  });
+  Mousetrap.bind(['r'], function() {
+    $scope.$apply($scope.refresh);
+  });
+  Mousetrap.bind(['q'], function() {
+    var art = $scope.getCurrent();
+    $scope.$apply(function() {
+      if (art) {
+        $scope.viewQrcode(art);
+      }
+    });
+  });
+  Mousetrap.bind(['m'], function() {
+    var art = $scope.getCurrent();
+    $scope.$apply(function() {
+      if (art && art.read) {
+        $scope.keepUnRead(art);
+      } else if (art && !art.read) {
+        $scope.markAsRead(art);
+      }
+    });
+  });
+  Mousetrap.bind(['s'], function() {
+    var art = $scope.getCurrent();
+    $scope.$apply(function() {
+      if (art && art.saved) {
+        $scope.trashArticle(art);
+      } else if (art && !art.saved) {
+        $scope.saveArticle(art);
+      }
+    });
   });
 
   $scope.$watch('articleIndex', function(newValue) {
@@ -173,6 +209,20 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   });
 
   $scope.fetch();
+
+  $scope.viewQrcode = function(article) {
+    $dialog({
+      id: 'qrDialog',
+      template:
+        '<div class="row-fluid">' +
+        '  <qrcode size="160" text="'+ article.link + '"></qrcode>' +
+        '</div>',
+      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+      title: 'View QR code',
+      backdrop: true,
+      success: {label: 'ok', fn: function() {}}
+    });
+  }
 })
 .directive('timelineArticle', ['$compile', function ($compile) {
   return {

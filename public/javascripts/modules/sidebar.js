@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('SidebarModule', [])
-.controller('SidebarCtrl', function ($scope, $rootScope, $http) {
+.controller('SidebarCtrl', function ($scope, $rootScope, $http, $location, $dialog) {
   $scope.refresh = function() {
     $http.get('/timeline').success(function (data) {
       $scope.timelines = data;
@@ -31,6 +31,34 @@ angular.module('SidebarModule', [])
         }
       }
     }
+  });
+
+  // Key bindings...
+  Mousetrap.bind(['g h'], function() {
+    $scope.$apply(function() {
+      $location.url('/');
+    });
+  });
+  Mousetrap.bind(['g a'], function() {
+    $scope.$apply(function() {
+      $location.url('/timeline/archive');
+    });
+  });
+  Mousetrap.bind(['g u'], function() {
+    $scope.$apply(function() {
+      $location.url('/manage');
+    });
+  });
+  Mousetrap.bind(['?'], function() {
+    $scope.$apply(function() {
+      $dialog('/views/keybindings.html', {
+        id: 'keyBindingsDialog',
+        title: 'Keyboard shortcuts',
+        backdrop: true,
+        footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+        success: {label: 'ok', fn: function() {}}
+      });
+    });
   });
 
   $scope.refresh();
