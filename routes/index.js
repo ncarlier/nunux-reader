@@ -5,7 +5,8 @@ module.exports = function(app){
   app.get('/', function(req, res) {
     var context = {
       info: app.get('info'),
-      realm: app.get('realm')
+      realm: app.get('realm'),
+      env: app.get('env')
     };
 
     res.format({

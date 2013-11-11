@@ -43,6 +43,7 @@
     "grunt-bower-task": "~0.2.3",
     "grunt-ngmin": "0.0.3",
     "grunt-mocha-test": "~0.4.0",
-    "grunt-contrib-jshint": "~0.6.0"
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-concat": "~0.3.0"
   }
 }

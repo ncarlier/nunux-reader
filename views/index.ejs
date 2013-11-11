@@ -34,17 +34,17 @@
         <h1><%= info.name %></h1>
       </div>
       <div class="list-group">
-        <a href="#timeline/global" target="_self" class="list-group-item" title="View all fresh items" ng-class="{active: $root.currentPage == 'global'}">
+        <a href="#timeline/global" target="_self" class="list-group-item" title="View all fresh items [g h]" ng-class="{active: $root.currentPage == 'global'}">
           <span class="badge">{{globalSize}}</span>
           <span class="glyphicon glyphicon-fire"></span>
           All items
         </a>
-        <a href="#timeline/archive" target="_self" class="list-group-item" title="View archived items" ng-class="{active: $root.currentPage == 'archive'}">
+        <a href="#timeline/archive" target="_self" class="list-group-item" title="View archived items [g a]" ng-class="{active: $root.currentPage == 'archive'}">
           <span class="badge">{{archiveSize}}</span>
           <span class="glyphicon glyphicon-floppy-disk"></span>
           Saved items
         </a>
-        <a href="#manage" class="list-group-item" title="Manage your subscriptions" ng-class="{active: $root.currentPage == 'manage'}">
+        <a href="#manage" class="list-group-item" title="Manage your subscriptions [g u]" ng-class="{active: $root.currentPage == 'manage'}">
           <span class="glyphicon glyphicon-cog"></span>
           Manage
         </a>
@@ -76,6 +76,9 @@
   </div><!-- end wrapper -->
 </div>
 
+<% if (env == 'production') {%>
+<script src="javascripts/reader.min.js"></script>
+<% } else { %>
 <script src="lib/jquery/jquery.min.js"></script>
 <script src="lib/bootstrap/bootstrap.min.js"></script>
 <script src="lib/moment/moment.min.js"></script>
@@ -93,7 +96,9 @@
 <script src="javascripts/modules/timeline.js"></script>
 <script src="javascripts/modules/manage.js"></script>
 <script src="javascripts/modules/lazy.js"></script>
+<script src="javascripts/modules/dialog.js"></script>
 <script src="javascripts/modules/qrcode.js"></script>
+<% } %>
 
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -44,6 +44,7 @@ app.configure(function() {
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.logger('dev'));
+  app.use(express.compress());
   app.use(express.cookieParser());
   app.use(express.cookieSession({secret: process.env.APP_SESSION_SECRET || 'NuNUXReAdR_'}));
   app.use(express.bodyParser());
@@ -70,7 +71,8 @@ app.configure('development', function() {
 });
 
 app.configure('production', function() {
-  app.use(express.static(path.join(__dirname, 'public-build')));
+  var oneDay = 86400000;
+  app.use(express.static(path.join(__dirname, 'public-build'), {maxAge: oneDay}));
   app.use(errorHandler);
   logger.setLevel('info');
 });
