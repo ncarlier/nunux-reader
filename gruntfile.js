@@ -25,7 +25,8 @@ module.exports = function(grunt) {
             alert: false,
             confirm: false,
             humane: false,
-            qrcode: false
+            qrcode: false,
+            Mousetrap: false
           }
         },
         src: ['public/javascripts/**/*.js']
@@ -102,11 +103,28 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'public/', src: ['robots.txt'], dest: 'public-build/'}
         ]
       }
+    },
+    manifest: {
+      generate: {
+        options: {
+          basePath: 'public-build',
+          cache: ['javascripts/reader.min.js', 'stylesheets/style.css'],
+          network: ['*', 'http://*', 'https://*'],
+          //fallback: ['/ /offline.html'],
+          verbose: false,
+          timestamp: true
+        },
+        src: [
+          'views/*',
+          'fonts/*'
+        ],
+        dest: 'public-build/manifest.appcache'
+      }
     }
   });
 
   // Register building task
-  grunt.registerTask('build', ['less','ngmin','uglify','concat','copy']);
+  grunt.registerTask('build', ['less','ngmin','uglify','concat','copy','manifest']);
   grunt.registerTask('install', ['clean','build']);
   grunt.registerTask('default', 'mochaTest');
 }

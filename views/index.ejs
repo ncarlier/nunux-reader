@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html <% if (env == 'production') {%> manifest="manifest.appcache" <%}%>>
   <head>
 
   <meta charset="utf-8">
@@ -78,6 +78,15 @@
 
 <% if (env == 'production') {%>
 <script src="javascripts/reader.min.js"></script>
+<script>
+if (window.applicationCache) {
+  applicationCache.addEventListener('updateready', function() {
+      if (confirm('An update is available. Reload now?')) {
+      window.location.reload();
+      }
+  });
+}
+</script>
 <% } else { %>
 <script src="lib/jquery/jquery.min.js"></script>
 <script src="lib/bootstrap/bootstrap.min.js"></script>
