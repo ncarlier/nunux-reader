@@ -7,7 +7,7 @@ angular.module('ManageModule', ['ngUpload'])
   $scope.predicate = 'title';
 
   $scope.refresh = function() {
-    $http.get('/subscription').success(function (data) {
+    $http.get('/api/subscription').success(function (data) {
       $scope.subscriptions = data;
     });
   };
@@ -55,7 +55,7 @@ angular.module('ManageModule', ['ngUpload'])
 
   $scope.unSubscribe = function(feed) {
     if (confirm('Do you really want to unsubscribe from "' + feed.title + '" ?')) {
-      $http.delete('/subscription/' + feed.id)
+      $http.delete('/api/subscription/' + feed.id)
       .success(function(data) {
         $scope.message = {clazz: 'alert-success', text: 'Feed "' + feed.title + '" successfully removed.'};
         for (var i = 0; i < $scope.subscriptions.length; i++) {
@@ -75,7 +75,7 @@ angular.module('ManageModule', ['ngUpload'])
 
   $scope.subscribe = function(url) {
     if (url) {
-      $http.post('/subscription', {url: url})
+      $http.post('/api/subscription', {url: url})
       .success(function(feed) {
         $scope.message = {clazz: 'alert-success', text: 'Feed "' + feed.title + '" successfully added.'};
         $scope.subscriptions.push(feed);

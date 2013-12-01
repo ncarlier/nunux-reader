@@ -5,7 +5,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   var initializing = true;
   $scope.timelineName = $routeParams.timeline;
   $rootScope.currentPage = $routeParams.timeline;
-  $scope.url = '/timeline/' + $scope.timelineName;
+  $scope.url = '/api/timeline/' + $scope.timelineName;
   $scope.order = $scope.timelineName == 'archive' ? 'DESC' : 'ASC';
   $scope.show = 'new';
   $scope.isReadable = function() {
@@ -110,7 +110,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   };
 
   $scope.saveArticle = function(article) {
-    var url = '/timeline/archive/' + article.id;
+    var url = '/api/timeline/archive/' + article.id;
     $http.put(url).success(function(data) {
       $rootScope.$broadcast('app.event.timeline.status', data);
       humane.log('Article saved.');
@@ -119,7 +119,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   };
 
   $scope.trashArticle = function(article) {
-    var url = '/timeline/archive/' + article.id;
+    var url = '/api/timeline/archive/' + article.id;
     $http.delete(url).success(function(data) {
       $rootScope.$broadcast('app.event.timeline.status', data);
       humane.log('Article trashed.');
@@ -176,6 +176,18 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
         $scope.saveArticle(art);
       }
     });
+  });
+  Mousetrap.bind(['o'], function() {
+    $scope.$apply(function() {
+      $scope.order = $scope.order == 'ASC' ? 'DESC' : 'ASC';
+    });
+  });
+  Mousetrap.bind(['v'], function() {
+    if ($scope.timeline.feed) {
+      $scope.$apply(function() {
+        $scope.show = $scope.show == 'new' ? 'all' : 'new';
+      });
+    }
   });
 
   $scope.$watch('articleIndex', function(newValue) {

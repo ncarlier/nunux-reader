@@ -2,8 +2,9 @@
 
 angular.module('SidebarModule', [])
 .controller('SidebarCtrl', function ($scope, $rootScope, $http, $location, $dialog) {
+  $scope.order = '-size';
   $scope.refresh = function() {
-    $http.get('/timeline').success(function (data) {
+    $http.get('/api/timeline').success(function (data) {
       $scope.timelines = data;
       $scope.globalSize = data[0].size;
       $scope.archiveSize = data[1].size;
@@ -33,6 +34,10 @@ angular.module('SidebarModule', [])
     }
   });
 
+  $scope.switchOrder = function() {
+    $scope.order = $scope.order == '-size' ? 'feed.title' : '-size';
+  };
+
   // Key bindings...
   Mousetrap.bind(['g h'], function() {
     $scope.$apply(function() {
@@ -60,6 +65,16 @@ angular.module('SidebarModule', [])
       });
     });
   });
+
+  $scope.showProfile = function() {
+    $dialog('/views/profile.html', {
+      id: 'userProfileDialog',
+      title: 'My profile',
+      backdrop: true,
+      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+      success: {label: 'ok', fn: function() {}}
+    });
+  };
 
   $scope.refresh();
 });

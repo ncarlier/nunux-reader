@@ -6,7 +6,7 @@ module.exports = function(app){
   /**
    * GET user subscriptions.
    */
-  app.get('/subscription', app.ensureAuthenticated, function(req, res, next) {
+  app.get('/api/subscription', app.ensureAuthenticated, function(req, res, next) {
     User.getSubscriptions(req.user.uid, function(err, feeds) {
       if (err) return next(err);
       res.json(feeds);
@@ -16,7 +16,7 @@ module.exports = function(app){
   /**
    * GET user subscriptions in OPML format.
    */
-  app.get('/subscription/export', app.ensureAuthenticated, function(req, res, next) {
+  app.get('/api/subscription/export', app.ensureAuthenticated, function(req, res, next) {
     User.getSubscriptions(req.user.uid, function(err, feeds) {
       if (err) return next(err);
       res.attachment('subscriptions.xml');
@@ -28,7 +28,7 @@ module.exports = function(app){
   /**
    * POST new subscitpion(s)
    */
-  app.post('/subscription', app.ensureAuthenticated, function(req, res, next) {
+  app.post('/api/subscription', app.ensureAuthenticated, function(req, res, next) {
     if (req.files && req.files.opml) {
       User.importSubscriptions(req.user.uid, req.files.opml.path, function(err, feeds) {
         if (err) return next(err);
@@ -47,7 +47,7 @@ module.exports = function(app){
   /**
    * DELETE user subscription.
    */
-  app.delete('/subscription/:id', app.ensureAuthenticated, function(req, res, next) {
+  app.delete('/api/subscription/:id', app.ensureAuthenticated, function(req, res, next) {
     User.unSubscribe(req.user.uid, req.params.id, function(err) {
       if (err) return next(err);
       res.send(204);

@@ -4,7 +4,7 @@
 
   <meta charset="utf-8">
   <title><%= info.title %></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
   <meta name="description" content="<%= info.description %>" />
   <meta name="author" content="">
   <link rel="stylesheet" href="stylesheets/style.css" />
@@ -31,6 +31,7 @@
 
     <div id="sidebar" ng-controller="SidebarCtrl">
       <div id="logo">
+        <img src="http://www.gravatar.com/avatar/<%= user.gravatar %>?s=30" alt="<%= user.uid %>" title="<%= user.uid %>" ng-click="showProfile()" />
         <h1><%= info.name %></h1>
       </div>
       <div class="list-group">
@@ -51,7 +52,7 @@
       </div>
 
       <h2>
-        Subscriptions ({{ timelines.length - 2 }})
+        <span ng-click="switchOrder()">Subscriptions ({{ timelines.length - 2 }})</span>
         <a href="/subscription/export" target="_blank" title="Export my feeds" style="float: right;">
           <span class="glyphicon glyphicon-cloud-download"></span>
         </a>
@@ -62,7 +63,7 @@
           title="{{ timeline.feed.title }}"
           class="list-group-item"
           target="_self"
-          ng-repeat="timeline in timelines | filter:isSubscription | orderBy:'-size'"
+          ng-repeat="timeline in timelines | filter:isSubscription | orderBy:order"
           ng-class="{active: $root.currentPage == timeline.feed.id}">
           <span class="badge" ng-show="timeline.size">{{ timeline.size }}</span>
           {{ timeline.feed.title }}
@@ -110,17 +111,21 @@ if (window.applicationCache) {
 <% } %>
 
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', '<%= gaId %>', '<%= gaDomain %>');
-ga('send', 'pageview');
-
 function toggleMenu() {
   $('#wrapper').toggleClass('open');
 }
+</script>
+<script type="text/ng-template" id="/views/profile.html">
+  <img src="http://www.gravatar.com/avatar/<%= user.gravatar %>?s=100" alt="<%= user.uid %>" title="<%= user.uid %>" ng-click="showProfile()" />
+  <p>
+    <strong><%= user.username %></strong>
+    <br/>
+    <%= user.uid %>
+    <br/>
+    <i>Register {{ <%= user.registrationDate %> | date | fromNow }}</i>
+    <br/><br/>
+    <a href='/logout' class='btn btn-danger'><span class='glyphicon glyphicon-off'></span> logout</a>
+  </p>
 </script>
 </body>
 </html>

@@ -16,7 +16,7 @@
         </li>
         <li ng-show="isReadable()" class="divider"></li>
 
-        <li><a>Sort by:</a></li>
+        <li><a>Sort by: [o]</a></li>
         <li>
         <a ng-click="order = 'ASC'" class="pointer">
           <span class="glyphicon {{order == 'ASC' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
@@ -31,7 +31,7 @@
         </li>
 
         <li ng-show="timeline.feed" class="divider"></li>
-        <li ng-show="timeline.feed"><a>Show:</a></li>
+        <li ng-show="timeline.feed"><a>Show: [v]</a></li>
         <li ng-show="timeline.feed">
         <a ng-click="show = 'new'" class="pointer">
           <span class="glyphicon {{show == 'new' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
