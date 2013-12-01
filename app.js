@@ -136,8 +136,18 @@ app.post('/auth/browserid', passport.authenticate('browserid', {
   successRedirect: '/', failureRedirect: '/'
 }));
 
+app.get('/logout', function(req, res, next) {
+  req.logout();
+  res.redirect('/');
+});
+
 app.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
+  res.send(401);
+};
+
+app.ensureIsAdmin = function(req, res, next) {
+  if (req.user.uid == process.env.APP_ADMIN) { return next(); }
   res.send(403);
 };
 
@@ -147,6 +157,7 @@ require('./routes/timeline')(app);
 require('./routes/subscription')(app);
 require('./routes/pubsubhubbud')(app);
 require('./routes/archive')(app);
+require('./routes/admin')(app);
 
 http.createServer(app).listen(app.get('port'), function() {
   logger.info('%s web server listening on port %s (%s mode)',
