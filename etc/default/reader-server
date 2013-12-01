@@ -37,3 +37,6 @@ export APP_GA_ID="UA-41864622-1"
 # Default: NuNUXReAdR_
 export APP_SESSION_SECRET="NuNUXReAdR_"
 
+# Admin account
+export APP_ADMIN="foo@bar.com"
+
