@@ -50,7 +50,7 @@ module.exports = function(grunt) {
         },
         files: {
           'public-build/stylesheets/style.css': 'public/stylesheets/style.less',
-          'public-build/stylesheets/home.css': 'public/stylesheets/home.less'
+          'public-build/stylesheets/welcome.css': 'public/stylesheets/welcome.less'
         }
       }
     },
@@ -108,13 +108,14 @@ module.exports = function(grunt) {
       generate: {
         options: {
           basePath: 'public-build',
-          cache: ['javascripts/reader.min.js', 'stylesheets/style.css'],
+          cache: ['javascripts/reader.min.js'],
           network: ['*', 'http://*', 'https://*'],
           //fallback: ['/ /offline.html'],
           verbose: false,
           timestamp: true
         },
         src: [
+          'stylesheets/*.css',
           'views/*',
           'fonts/*'
         ],
