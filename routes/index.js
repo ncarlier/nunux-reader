@@ -4,7 +4,7 @@ module.exports = function(app){
    */
   app.get('/', function(req, res) {
     if (!req.user) {
-      res.redirect('/welcome');
+      return res.redirect('/welcome');
     }
 
     var context = {
