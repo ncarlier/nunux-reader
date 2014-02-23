@@ -156,7 +156,6 @@ require('./routes/index')(app);
 require('./routes/timeline')(app);
 require('./routes/subscription')(app);
 require('./routes/pubsubhubbud')(app);
-require('./routes/archive')(app);
 require('./routes/admin')(app);
 
 http.createServer(app).listen(app.get('port'), function() {
