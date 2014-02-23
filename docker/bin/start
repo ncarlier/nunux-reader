@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker run -rm -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 nunux/reader npm start /opt/reader
+

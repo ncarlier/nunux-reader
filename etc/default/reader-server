@@ -9,6 +9,10 @@ export NODE_ENV="production"
 # Default: 3000
 export APP_PORT=3000
 
+# Redis URI
+# Default: redis://localhost:6379/5
+export APP_REDIS_URI="redis://localhost:6379/5"
+
 # Server base URL (Realm)
 # Default: http://localhost
 export APP_REALM="http://reader.nunux.org"
