@@ -1,2 +1,2 @@
 # Clean old entries in DB
-00 01 * * * node [ -x /opt/node/reader/current/bin/clean-db.js ] && APP_DAYS_TO_KEEP=60 /opt/node/reader/current/bin/clean-db.js
+00 01 * * * node [ -x /opt/node/reader/current/server/bin/clean-db.js ] && APP_DAYS_TO_KEEP=60 /opt/node/reader/current/server/bin/clean-db.js

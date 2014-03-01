@@ -1,0 +1,42 @@
+<div class="sidebar">
+  <div id="logo">
+    <h1>reader</h1>
+  </div>
+  <div class="list-group">
+    <a href="#profile" target="_self" class="list-group-item" title="View profile [g p]" >
+      <span class="glyphicon glyphicon-user"></span>
+      Profile
+      <img ng-src="{{user.uid | gravatar}}?s=35" alt="{{user.uid}}" title="{{user.uid}}" />
+    </a>
+    <a href="#timeline/global" target="_self" class="list-group-item" title="View all fresh items [g a]" >
+      <span class="glyphicon glyphicon-fire"></span>
+      All items
+      <span class="badge">{{ globalSize }}</span>
+    </a>
+  </div>
+  <h2>
+    <span ng-click="switchOrder()">Subscriptions</span>
+    <a href="#manage" target="_self" title="Manage subscriptions" >
+      <span class="glyphicon glyphicon-cog"></span>
+    </a>
+    <a href="/api/subscription/export" target="_blank" title="Export my feeds" >
+      <span class="glyphicon glyphicon-cloud-download"></span>
+    </a>
+  </h2>
+  <div class="list-group">
+    <a
+      href="#timeline/{{ timeline.feed.id }}"
+      title="{{ timeline.feed.title }}"
+      class="list-group-item"
+      target="_self"
+      ng-repeat="timeline in timelines | filter:isSubscription | orderBy:order">
+      {{ timeline.feed.title }}
+      <span class="badge" ng-show="timeline.size">{{ timeline.size }}</span>
+    </a>
+  </div>
+  <!-- Copyright -->
+  <div id="copyright">
+    <p>&copy; 2013 NUNUX.org</p>
+  </div>
+</div>
+

@@ -10,7 +10,7 @@
     "url": "https://github.com/ncarlier/nunux-reader.git"
   },
   "scripts": {
-    "start": "node app",
+    "start": "node server/app",
     "test": "grunt",
     "postinstall": "grunt install"
   },
@@ -36,15 +36,13 @@
     "should": "~1.2.2",
     "matchdep": "~0.1.2",
     "grunt": "~0.4.1",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-less": "~0.6.2",
-    "grunt-contrib-uglify": "~0.2.2",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-bower-task": "~0.2.3",
-    "grunt-ngmin": "0.0.3",
-    "grunt-mocha-test": "~0.4.0",
-    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-bower-task": "~0.3.4",
+    "grunt-mocha-test": "~0.8.1",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-uglify": "~0.3.2",
+    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-manifest": "~0.4.0"
-  }
+    "grunt-contrib-less": "~0.9.0"
+   }
 }
