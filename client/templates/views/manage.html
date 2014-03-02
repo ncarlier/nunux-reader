@@ -9,7 +9,7 @@
     </span>
   </nav>
   <section>
-    <div class="alert" ng-show="message" ng-class="message.clazz">{{message.text}}</div>
+    <div class="alert" ng-if="message" ng-class="message.clazz">{{message.text}}</div>
     <div class="row">
       <div class="col-xs-11 col-md-5">
         <form name="urlForm" ng-submit="subscribe()">

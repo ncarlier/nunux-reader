@@ -16,6 +16,7 @@ module.exports = function(app){
     res.format({
       html: function() {
         context.user = req.user;
+        context.user.configuration = JSON.parse(req.user.configuration);
         res.render('index', context);
       },
       text: function() {

@@ -27,28 +27,31 @@ angular.module('ReaderApp', [
   'ManageModule',
   'ProfileModule',
   'TimelineService',
-  'ArchiveService',
+  'ArchiveProvider',
   'ui.bootstrap',
   'angular-md5'
 ])
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider
-  .when('/timeline/:timeline', {
-    templateUrl: 'templates/views/timeline.html',
-    controller: 'TimelineCtrl'
-  })
-  .when('/manage', {
-    templateUrl: 'templates/views/manage.html',
-    controller: 'ManageCtrl'
-  })
-  .when('/profile', {
-    templateUrl: 'templates/views/profile.html',
-    controller: 'ProfileCtrl'
-  })
-  .otherwise({
-    redirectTo: '/timeline/global'
-  });
-}])
+.config([
+  '$routeProvider',
+  function($routeProvider) {
+    $routeProvider
+    .when('/timeline/:timeline', {
+      templateUrl: 'templates/views/timeline.html',
+      controller: 'TimelineCtrl'
+    })
+    .when('/manage', {
+      templateUrl: 'templates/views/manage.html',
+      controller: 'ManageCtrl'
+    })
+    .when('/profile', {
+      templateUrl: 'templates/views/profile.html',
+      controller: 'ProfileCtrl'
+    })
+    .otherwise({
+      redirectTo: '/timeline/global'
+    });
+  }
+])
 .filter('fromNow', function() {
   return function(dateString) {
     return moment(new Date(dateString)).fromNow();

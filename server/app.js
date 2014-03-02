@@ -157,6 +157,7 @@ require('./routes/timeline')(app);
 require('./routes/subscription')(app);
 require('./routes/pubsubhubbud')(app);
 require('./routes/admin')(app);
+require('./routes/user')(app);
 
 http.createServer(app).listen(app.get('port'), function() {
   logger.info('%s web server listening on port %s (%s mode)',

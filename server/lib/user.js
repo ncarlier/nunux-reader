@@ -100,6 +100,34 @@ User.findOrCreate = function(user, done) {
 };
 
 /**
+ * Update user configuration.
+ * @param {Object}   user User.
+ * @param {Object}   config New user configuration.
+ * @param {Function} done Callback with user configuration in params.
+ */
+User.updateConfig = function(user, config, done) {
+  var uid = user.uid;
+  async.waterfall(
+    [
+      function(callback) {
+        User.find(uid, callback);
+      },
+      function(user, callback) {
+        db.hset(User.getKey(uid), 'configuration', JSON.stringify(config), callback);
+      },
+      function() {
+        logger.info('User %s updated.', uid);
+        done(null, config);
+      }
+    ],
+    function(err) {
+      logger.error('Error will User.updateConfig: %s', err);
+      done(err);
+    }
+  );
+};
+
+/**
  * Find a user.
  * @param {String}   uid  User ID.
  * @param {Function} done Callback with user in params.
@@ -107,9 +135,6 @@ User.findOrCreate = function(user, done) {
 User.find = function(uid, done) {
   db.hgetall(User.getKey(uid), function(err, user) {
     if (err) return done(err);
-    if (user) {
-      user.gravatar = crypto.createHash('md5').update(user.uid.toLowerCase()).digest("hex");
-    }
     done(null, user);
   });
 };

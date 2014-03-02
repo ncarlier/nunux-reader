@@ -6463,12 +6463,20 @@ article.article footer a:hover {
   top: 10px;
   right: 10px;
 }
+#profile h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+#profile section {
+  padding: 10px;
+}
 #profile > .content {
   position: absolute;
   top: 0;
   bottom: 0;
   margin-top: 52px;
   width: 100%;
+  overflow: auto;
 }
 /*********************************************************************************/
 /* Misc                                                                          */
