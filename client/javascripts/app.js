@@ -26,6 +26,8 @@ angular.module('ReaderApp', [
   'TimelineModule',
   'ManageModule',
   'ProfileModule',
+  'TimelineService',
+  'ArchiveService',
   'ui.bootstrap',
   'angular-md5'
 ])

@@ -2,53 +2,51 @@
 
 angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
 .controller('TimelineCtrl', [
-  '$rootScope', '$scope', '$http', '$q', '$timeout', '$routeParams', '$lazy',
-  function ($rootScope, $scope, $http, $q, $timeout, $routeParams, $lazy) {
-    var initializing = true;
+  '$rootScope', '$scope', '$q', '$timeout', '$routeParams',
+  '$lazy', '$log', '$modal', 'timelineService', 'archiveService',
+  function ($rootScope, $scope, $q, $timeout, $routeParams, $lazy, $log, $modal,
+            timelineService, archiveService) {
+    var initializing = true,
+        tln = $routeParams.timeline;
 
-    $scope.timelineName = $routeParams.timeline;
-    $scope.url = '/api/timeline/' + $scope.timelineName;
-    $scope.order = $scope.timelineName == 'archive' ? 'DESC' : 'ASC';
+    // defaults
+    $scope.order = 'ASC';
     $scope.show = 'new';
-    $scope.isReadable = function() {
-      return $scope.show == 'new' && $scope.timelineName != 'archive';
-    };
     $scope.isEnded = false;
     $scope.articles = [];
     $scope.next = null;
     $scope.articleIndex = 0;
 
+    $scope.isReadable = function() {
+      return $scope.show === 'new';
+    };
+
     $scope.getCurrent = function() {
       return $scope.articles.length > 0 ? $scope.articles[$scope.articleIndex] : null;
     };
 
-    $scope.fetchStatus = function() {
-      $http.get($scope.url + '/status').success(function (data) {
-        $scope.timeline = data;
+    var fetchStatus = function() {
+      timelineService.status(tln)
+      .then(function(timeline) {
+        $scope.timeline = timeline;
       });
     };
-
-    $scope.fetchStatus();
+    fetchStatus();
 
     $scope.refresh = function() {
       $scope.articles = [];
       $scope.next = null;
       $scope.isEnded = false;
-      $scope.fetch($scope.fetchStatus);
+      $scope.fetch().then(fetchStatus);
     };
 
-    $scope.fetch = function(callback) {
+    $scope.fetch = function() {
       if ($scope.busy || $scope.isEnded) return;
-      console.log('Fetching articles...');
       $scope.busy = true;
-      var params = $.param({
-        next: $scope.next,
-        order: $scope.order,
-        show: $scope.show
-      });
-      var url = $scope.url + '?' + params;
-      initializing = false;
-      $http.get(url).success(function(data) {
+      $log.debug('Fetching articles...');
+      return timelineService.fetch(tln, $scope.next, $scope.order, $scope.show)
+      .then(function(data) {
+        initializing = false;
         $scope.isEnded = !data.next;
         if ($scope.isEnded) {
           var end = {
@@ -58,74 +56,71 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
           };
           data.articles.push(end);
         }
-        //$scope.articles = [];
         for (var i = 0; i < data.articles.length; i++) {
           var article = data.articles[i];
           article.keepUnRead = false;
           article.read = false;
           article.reading = false;
-          article.saved = $scope.timelineName == 'archive';
           $scope.articles.push(article);
         }
         $scope.next = data.next;
         $scope.busy = false;
         $rootScope.$broadcast('app.event.subscriptions.refresh');
-        if (callback) callback();
       });
     };
 
     $scope.markAllAsRead = function() {
       if ($scope.isReadable() && confirm('Do you really want to mark all items as read ?')) {
-        console.log('Marking all articles as read...');
-        $http.delete($scope.url).success(function (data) {
-          $scope.timeline = data;
+        timelineService.markAllAsRead(tln)
+        .then(function(timeline) {
+          $scope.timeline = timeline;
           $scope.articles = [];
           $scope.isEnded = true;
           $scope.next = null;
-          $rootScope.$broadcast('app.event.timeline.status', data);
+          $rootScope.$broadcast('app.event.timeline.status', timeline);
         });
       }
     };
 
     $scope.markAsRead = function(article) {
       if ($scope.isReadable()) {
-        console.log('Marking article ' + article.id + ' as read...');
-        $http.delete($scope.url + '/' + article.id).success(function (data) {
-          $scope.timeline = data;
-          $rootScope.$broadcast('app.event.timeline.status', data);
+        timelineService.markAsRead(tln, article.id)
+        .then(function(timeline) {
+          $scope.timeline = timeline;
           article.read = true;
           article.keepUnRead = false;
+          $rootScope.$broadcast('app.event.timeline.status', timeline);
         });
       }
     };
 
     $scope.keepUnRead = function(article) {
       if ($scope.isReadable()) {
-        console.log('Marking article ' + article.id + ' as unread...');
-        $http.put($scope.url + '/' + article.id).success(function (data) {
-          $scope.timeline = data;
-          $rootScope.$broadcast('app.event.timeline.status', data);
+        timelineService.keepUnRead(tln, article.id)
+        .then(function(timeline) {
+          $scope.timeline = timeline;
           article.read = false;
           article.keepUnRead = true;
+          $rootScope.$broadcast('app.event.timeline.status', timeline);
         });
       }
     };
 
     $scope.saveArticle = function(article) {
-      var url = '/api/timeline/archive/' + article.id;
-      $http.put(url).success(function(data) {
-        $rootScope.$broadcast('app.event.timeline.status', data);
-        humane.log('Article saved.');
-        article.saved = true;
+      var provider = $window.user.archiveProvider;
+      archiveService.get(provider)
+      .save(article).then(function(data) {
+        humane.log('Article saved in ' + provider);
+        article.archRef = data.ref;
       });
     };
 
     $scope.trashArticle = function(article) {
-      var url = '/api/timeline/archive/' + article.id;
-      $http.delete(url).success(function(data) {
-        $rootScope.$broadcast('app.event.timeline.status', data);
-        humane.log('Article trashed.');
-        article.saved = false;
+      var provider = $window.user.archiveProvider;
+      archiveService.get(provider)
+      .trash(article.archRef).then(function() {
+        humane.log('Article removed from ' + provider);
+        article.archRef = null;
       });
     };
 
@@ -211,32 +206,33 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     });
 
     $scope.$watch('order', function(newValue) {
-      if (!initializing) {
-        $scope.refresh();
-      }
+      if (!initializing) $scope.refresh();
     });
 
     $scope.$watch('show', function(newValue) {
-      if (!initializing) {
-        $scope.refresh();
-      }
+      if (!initializing) $scope.refresh();
     });
 
-    $scope.fetch();
-
     $scope.viewQrcode = function(article) {
-      $dialog({
-        id: 'qrDialog',
-        template:
-          '<div class="row-fluid">' +
-          '  <qrcode size="160" text="'+ article.link + '"></qrcode>' +
-          '</div>',
-        footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
-        title: 'View QR code',
-        backdrop: true,
-        success: {label: 'ok', fn: function() {}}
+      $modal.open({
+        templateUrl: 'templates/dialog/qrcode.html',
+        controller: 'QRCodeModalCtrl',
+        resolve: {
+          article: function () {
+            return article;
+          }
+        }
       });
     };
+
+    // Fetch timeline
+    $scope.fetch();
+  }
+])
+.controller('QRCodeModalCtrl', [
+  '$scope', '$modalInstance', 'article', function ($scope, $modalInstance, article) {
+    $scope.link = article.link;
+    $scope.ok = $modalInstance.close;
   }
 ])
 .directive('timelineArticle', ['$compile', function ($compile) {

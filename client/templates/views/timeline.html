@@ -8,13 +8,15 @@
     </button>
 
     <h1>
-      <a ng-show="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank" title="Go to source web site">{{ timeline.title }}</a>
-      <a ng-show="!timeline.feed" ng-click="refresh()" class="pointer" title="Click to refresh or press [r]">{{ timeline.title }}</a>
+      <a ng-if="timeline.feed" href="{{timeline.feed.htmlurl}}" target="_blank" title="Go to source web site">{{ timeline.title }}</a>
+      <a ng-if="!timeline.feed" ng-click="refresh()" class="pointer" title="Click to refresh or press [r]">{{ timeline.title }}</a>
     </h1>
 
     <span class="hint">
-      <b>{{ timeline.size }}</b> unread articles
-      <span ng-show="timeline.feed.status">
+      <ng-pluralize count="timeline.size"
+        when="{'0': 'No article', 'one': '1 article', 'other': '{} articles'}">
+      </ng-pluralize>
+      <span ng-if="timeline.feed.status">
         // {{ timeline.feed.status }}
         // {{ timeline.feed.updateDate | fromNow }}
       </span>
@@ -26,12 +28,12 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
-        <li ng-show="isReadable()" class="pointer">
+        <li ng-if="isReadable()" class="pointer">
         <a ng-click="markAllAsRead()">
           Mark all as read
         </a>
         </li>
-        <li ng-show="isReadable()" class="divider"></li>
+        <li ng-if="isReadable()" class="divider"></li>
 
         <li><a>Sort by: [o]</a></li>
         <li>
@@ -47,15 +49,15 @@
         </a>
         </li>
 
-        <li ng-show="timeline.feed" class="divider"></li>
-        <li ng-show="timeline.feed"><a>Show: [v]</a></li>
-        <li ng-show="timeline.feed">
+        <li ng-if="timeline.feed" class="divider"></li>
+        <li ng-if="timeline.feed"><a>Show: [v]</a></li>
+        <li ng-if="timeline.feed">
         <a ng-click="show = 'new'" class="pointer">
           <span class="glyphicon {{show == 'new' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
           new articles
         </a>
         </li>
-        <li ng-show="timeline.feed">
+        <li ng-if="timeline.feed">
         <a ng-click="show = 'all'" class="pointer">
           <span class="glyphicon {{show == 'all' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
           all articles
@@ -69,32 +71,32 @@
     <ul rn-carousel rn-carousel-buffered rn-carousel-watch rn-carousel-index="articleIndex">
       <li ng-repeat="article in articles">
       <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article" ui-lazy-scroll>
-        <header ng-show="!article.fake">
+        <header ng-if="!article.fake">
           <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="glyphicon glyphicon-plus"></span>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
-              <li ng-show="!article.saved" >
+              <li ng-if="!article.archRef" >
               <a ng-click="saveArticle(article)" class="pointer">
                 <span class="glyphicon glyphicon-floppy-disk"></span>
                 Save this article [s]
               </a>
               </li>
-              <li ng-show="article.saved" >
+              <li ng-if="article.archRef" >
               <a ng-click="trashArticle(article)" class="pointer">
                 <span class="glyphicon glyphicon-trash"></span>
                 Trash this article [s]
               </a>
               </li>
-              <li ng-show="isReadable() && article.read" >
+              <li ng-if="isReadable() && article.read" >
               <a ng-click="keepUnRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-close"></span>
                 Keep it as unread [m]
               </a>
               </li>
-              <li ng-show="isReadable() && !article.read" >
+              <li ng-if="isReadable() && !article.read" >
               <a ng-click="markAsRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-open"></span>
                 Mark it as read [m]
@@ -139,3 +141,18 @@
     </ul>
   </section>
 </div>
+
+<script type="text/ng-template" id="templates/dialog/qrcode.html">
+<div class="modal-header">
+  <h3>View QR code</h3>
+</div>
+<div class="modal-body">
+  <div style="text-align: center;">
+    <qrcode size="160" text="{{ link }}"></qrcode>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ok()">Ok</button>
+</div>
+</script>
+

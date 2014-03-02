@@ -2,7 +2,7 @@
 
 angular.module('ArchiveService', [])
 .factory('archiveService', [
-  '$q', '$http', '$log'
+  '$q', '$http', '$log',
   function ($q, $http, $log) {
     var keeperUrl = 'http://localhost:3000/api/document';
 

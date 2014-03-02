@@ -6575,18 +6575,6 @@ ul.rn-carousel-slides > li {
   text-transform: uppercase;
   white-space: nowrap;
 }
-/*********************************************************************************/
-/* Dialogs                                                                       */
-/*********************************************************************************/
-#keyBindingsDialog .modal-dialog {
-  width: 70%;
-}
-#keyBindingsDialog .modal-footer {
-  margin: 0;
-}
-#qrDialog .row-fluid {
-  text-align: center;
-}
 @media screen and (min-width: 992px) {
   /*********************************************************************************/
   /* Basic                                                                         */

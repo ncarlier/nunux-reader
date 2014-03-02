@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('ArticleService', ['ArchiveService'])
-.factory('articleService', [
-  '$q', '$http', '$log', 'archiveService',
-  function ($q, $http, $log, archiveProvider) {
+angular.module('TimelineService', [])
+.factory('timelineService', [
+  '$q', '$http', '$log',
+  function ($q, $http, $log) {
     var url = '/api/timeline';
 
-    var fetchArticles = function(timeline, next, order, show) {
+    var fetchTimeline = function(timeline, next, order, show) {
       var params = $.param({
         next: next,
         order: order,
@@ -20,14 +20,22 @@ angular.module('ArticleService', ['ArchiveService'])
       return deferred.promise;
     };
 
+    var getTimelineStatus = function(timeline) {
+      var deferred = $q.defer();
+      $http.get(url + '/' + timeline + '/status')
+      .success(deferred.resolve)
+      .error(deferred.reject);
+      return deferred.promise;
+    };
+
     var markAsRead = function(timeline, aid) {
       $log.debug('Marking article ' + aid + ' as read...');
       var deferred = $q.defer();
       $http.delete(url + '/' + timeline + '/' + aid)
       .success(function (data) {
-        $log.debug('Article ' + aid + ' marked as read...');
+        $log.debug('Article ' + aid + ' marked as read.');
         deferred.resolve(data);
-      });
+      })
       .error(deferred.reject);
 
       return deferred.promise;;
@@ -40,7 +48,7 @@ angular.module('ArticleService', ['ArchiveService'])
       .success(function (data) {
         $log.debug('All articles of timeline ' + timeline + ' marked as read.');
         deferred.resolve(data);
-      });
+      })
       .error(deferred.reject);
 
       return deferred.promise;;
@@ -51,31 +59,20 @@ angular.module('ArticleService', ['ArchiveService'])
       var deferred = $q.defer();
       $http.put(url + '/' + timeline + '/' + aid)
       .success(function (data) {
-        $log.debug('Article ' + aid + ' marked as unread...');
+        $log.debug('Article ' + aid + ' marked as unread.');
         deferred.resolve(data);
-      });
+      })
       .error(deferred.reject);
 
       return deferred.promise;;
     };
 
-    var saveArticle = function(article, provider) {
-      $log.debug('Saving article ' + article.id + ' to ' + provider);
-      return archiveService.get(provider).save(article);
-    };
-
-    var trashArticle = function(ref, provider) {
-      $log.debug('Trashing article ' + ref + ' from ' + provider);
-      return archiveService.get(provider).trash(article);
-    };
-
     return {
-      fetch: fetchArticles,
+      fetch: fetchTimeline,
+      status: getTimelineStatus,
       markAsRead: markAsRead,
       markAllAsRead: markAllAsRead,
-      keepUnRead:keepUnRead,
-      save: saveArticle,
-      trash: trashArticle
+      keepUnRead: keepUnRead
     };
   }
 ]);
