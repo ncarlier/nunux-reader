@@ -1,4 +1,4 @@
-APP_MAIN=/opt/node/reader/current/bin/feed-updater.js
+APP_MAIN=/opt/node/reader/current/server/bin/feed-updater.js
 APP_OPTS="-v"
 export NODE_ENV="production"
 export APP_DAYS_TO_KEEP=60

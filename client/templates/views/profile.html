@@ -1,0 +1,51 @@
+<div id="profile">
+  <nav class="navbar navbar-default" role="navigation" >
+    <button type="button" class="btn btn-default navbar-btn" title="Show main menu" ng-click="toggleMenu()">
+      <div class="glyphicon glyphicon-th-large" ></div>
+    </button>
+    <h1>Profile</h1>
+  </nav>
+
+  <div class="content">
+    <div class="alert" ng-if="message" ng-class="message.clazz">{{message.text}}</div>
+    <header>
+      <span class="avatar">
+        <img ng-src="{{user.uid | gravatar}}" alt="{{user.uid}}" title="{{user.uid}} on Gravatar" />
+      </span>
+      <span>
+        <h1>{{ user.username || user.uid }}</h1>
+        <p>Member since {{ date | fromNow }}</p>
+      </span>
+      <a href="/logout" class="btn btn-danger logout" title="Logout">
+        <span class="glyphicon glyphicon-off"></span>
+      </a>
+    </header>
+    <section>
+      <hr/>
+      <h2>Archiving provider</h2>
+      <p>Configure your archiving provider. Click <a href="/api/user/{{user.uid}}/dump" title="Download old articles" target="_blank">here</a> to download your old articles.</p>
+      <form name="configForm" ng-submit="configure()">
+        <div class="form-group">
+          <label for="providerType">Provider</label>
+          <select name="select" id="providerType" ng-model="configuration.provider.type">
+            <option value="keeper" selected>Nunux Keeper</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="providerUrl">Url</label>
+          <input type="url" class="form-control" id="providerUrl" required
+          placeholder="Enter provider URL" ng-model="configuration.provider.url">
+        </div>
+        <div class="form-group">
+          <label for="providerToken">Token</label>
+          <input type="text" class="form-control" id="providerToken" required
+          placeholder="Enter access token" ng-model="configuration.provider.token">
+        </div>
+        <button class="btn btn-default" type="submit" ng-disabled="!configForm.$valid">
+          <span class="glyphicon glyphicon-cog"></span>
+          Setup
+        </button>
+      </form>
+    </section>
+  </div>
+</div>

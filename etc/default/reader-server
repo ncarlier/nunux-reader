@@ -1,5 +1,5 @@
 # Application location
-APP_MAIN=/opt/node/reader/current/app.js
+APP_MAIN=/opt/node/reader/current/server/app.js
 
 # Env
 # Default: development
@@ -28,14 +28,6 @@ export APP_PSHB_ENABLED=false
 # Automatic grant access
 # Default: true
 export APP_AUTO_GRANT_ACCESS=false
-
-# Google Analytics domain
-# Default: nunux.org
-export APP_GA_DOMAIN="nunux.org"
-
-# Google Analytics ID
-# Default: nunux.org one
-export APP_GA_ID="UA-41864622-1"
 
 # Session secret key
 # Default: NuNUXReAdR_

@@ -5,14 +5,18 @@
   "dependencies": {
     "bootstrap": "~3.0.0",
     "html5shiv": "~3.6.2",
-    "angular": "PatternConsulting/bower-angular#1.1.5",
+    "angular": "~1.2.0",
+    "angular-route": "~1.2.7",
+    "angular-sanitize": "~1.2.10",
     "moment": "~2.0.0",
     "jquery": "~2.0.2",
     "humane-js": "~3.1.0",
-    "ngUpload": "~0.3.8",
+    "mousetrap": "~1.4.5",
+    "angular-md5": "~0.1.7",
+    "angular-ui-bootstrap-bower": "~0.10.0",
     "qrcode-generator": "git://github.com/monospaced/bower-qrcode-generator.git#0.0.0",
     "revolunet-angular-carousel": "*",
-    "mousetrap": "~1.4.5"
+    "ng-file-upload": "~1.2.7"
   },
   "exportsOverride": {
     "bootstrap": {
@@ -32,9 +36,6 @@
     },
     "humane-js": {
       "": "*.js"
-    },
-    "ngUpload": {
-      "": "ng-upload.*"
     },
     "mousetrap": {
       "": "*.js"
