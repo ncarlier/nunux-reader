@@ -9,6 +9,7 @@ module.exports = {
       'client/lib/moment/moment.min.js',
       'client/lib/humane-js/humane.min.js',
       'client/lib/mousetrap/mousetrap.min.js',
+      'client/lib/qrcode-generator/qrcode.min.js',
       'client/lib/angular/angular.min.js',
       'client/lib/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js',
       'client/lib/angular-sanitize/angular-sanitize.min.js',
@@ -16,9 +17,9 @@ module.exports = {
       'client/lib/angular-md5/angular-md5.min.js',
       'client/lib/ng-file-upload/angular-file-upload.min.js',
 
-      'build/javascripts/app.js',
-      'build/javascripts/**/*.js'
+      'dist/javascripts/app.js',
+      'dist/javascripts/**/*.js'
     ],
-    dest: 'build/javascripts/reader.min.js'
+    dest: 'dist/javascripts/reader.min.js'
   }
 };

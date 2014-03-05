@@ -4,8 +4,8 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
 .controller('TimelineCtrl', [
   '$window', '$rootScope', '$scope', '$q', '$timeout', '$routeParams',
   '$lazy', '$log', '$modal', 'timelineService', 'archiveProvider',
-  function ($window, $rootScope, $scope, $q, $timeout, $routeParams, $lazy,
-            $log, $modal, timelineService, archiveProvider) {
+  function ($window, $rootScope, $scope, $q, $timeout, $routeParams,
+            $lazy, $log, $modal, timelineService, archiveProvider) {
     var initializing = true,
         tln = $routeParams.timeline;
 

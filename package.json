@@ -1,7 +1,7 @@
 {
   "author": "Nicolas Carlier (https://github.com/ncarlier/)",
   "name": "reader",
-  "version": "0.9",
+  "version": "0.9.0",
   "description": "The super-fast-minimalist-nosql-opensource Google Reader revival.",
   "license": "gplv3",
   "homepage": "http://reader.nunux.org",

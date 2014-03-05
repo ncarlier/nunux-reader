@@ -2,7 +2,7 @@
 
 // Module to manage lazy loading of images.
 angular.module('ui.lazy', [])
-.service('$lazy', function($window) {
+.service('$lazy', ['$window', function($window) {
   // Maintain a list of images that lazy-loading
   // and have yet to be rendered.
   var images = [];
@@ -153,11 +153,11 @@ angular.module('ui.lazy', [])
     checkImages: checkImages,
     onScroll: onWindowChanged
   });
-}).directive('uiLazyScroll', function($lazy) {
+}]).directive('uiLazyScroll', ['$lazy', function($lazy) {
   return function ($scope, element, $attributes) {
     element.on('scroll.uiLazyLoad', $lazy.onScroll);
   };
-}).directive('uiLazyLoad', function($window, $lazy) {
+}]).directive('uiLazyLoad', ['$window', '$lazy', function($window, $lazy) {
   // I represent a single lazy-load image.
   function LazyImage(element) {
     // I am the interpolated LAZY SRC attribute of
@@ -269,4 +269,4 @@ angular.module('ui.lazy', [])
     link: link,
     restrict: "A"
   });
-});
+}]);
