@@ -37,6 +37,5 @@ var connect = function(str) {
  * Redis helper.
  * @module redis
  */
-module.exports = client;
 module.exports = connect(getRedisUri());
 
