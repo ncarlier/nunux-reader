@@ -535,7 +535,9 @@ User.exportArticles = function(uid, file, done) {
       function(aids, callback) {
         var writeArticle = function(aid, next) {
           Article.get(aid, function(err, article) {
-            if (err) return next(err);
+            if (err) {
+              return 'ENOTFOUND' === err ? next(null) : next(err);
+            }
             nb++;
             var obj = {
               id: article.id,
