@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  color: @r-fg-color;
+  color: @r-text-color;
   background: @r-bg-color;
 }
 
@@ -16,6 +16,16 @@ body {
   position: absolute;
   height: 100%;
   width: 100%;
+  max-width: 1280px;
+  background: @r-fg-color;
+}
+
+@media (min-width: 1280px) {
+  #wrapper {
+    margin-left: -moz-calc(50% - 640px);
+    margin-left: -webkit-calc(50% - 640px);
+    margin-left: calc(50% - 640px);
+  }
 }
 
 /*********************************************************************************/
