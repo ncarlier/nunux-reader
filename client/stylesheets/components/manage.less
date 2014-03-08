@@ -17,48 +17,41 @@
       margin: 0;
     }
     table {
-      text-align: center;
-      .feed {
-        text-align: left;
-      }
-      .date, .status {
-        text-align: center;
-      }
       a {
         word-break: break-all;
       }
-      a.delete {
-        color: #B92B2B;
-        display: none;
-      }
     }
-  }
-  tr:hover a.delete {
-      display: inline-block;
+    .glyphicon-ok-sign {
+      color: #5CB85C;
+    }
+    .glyphicon-remove-sign {
+      color: #D9534F;
+    }
+    .glyphicon-info-sign {
+      color: #999;
+    }
+    .glyphicon-warning-sign {
+      color: orange;
+      cursor: help;
+    }
   }
   td {
     border: none !important;
+    &.feed-status {
+      font-size: 22px;
+      text-align: center;
+      padding-top: 15px;
+      .glyphicon {
+        cursor: help;
+      }
+    }
   }
 }
 
 .flag {
-  color: #FFF;
   font-size: 0.8em;
-  text-decoration: none;
-  padding: 0 4px;
+  padding: 1px 4px;
   font-variant: small-caps;
   font-weight: bold;
-  &.rss {
-    background-color: #F0721E;
-  }
-  &.html {
-    background-color: #409AB6;
-  }
-  &.timeline {
-    background-color: #364050;
-  }
-  &.pshb {
-    background-color: #E46EE4;
-  }
 }
 

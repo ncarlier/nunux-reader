@@ -6074,7 +6074,7 @@ body {
   margin: 0;
   font-family: sans-serif;
   color: #000000;
-  background: #ffffff;
+  background: #808080;
 }
 /*********************************************************************************/
 /* Wrapper                                                                       */
@@ -6083,6 +6083,15 @@ body {
   position: absolute;
   height: 100%;
   width: 100%;
+  max-width: 1280px;
+  background: #ffffff;
+}
+@media (min-width: 1280px) {
+  #wrapper {
+    margin-left: -moz-calc(50% - 640px);
+    margin-left: -webkit-calc(50% - 640px);
+    margin-left: calc(50% - 640px);
+  }
 }
 /*********************************************************************************/
 /* Logo                                                                          */
@@ -6388,48 +6397,38 @@ article.article footer a:hover {
 #manage > section .row {
   margin: 0;
 }
-#manage > section table {
-  text-align: center;
-}
-#manage > section table .feed {
-  text-align: left;
-}
-#manage > section table .date,
-#manage > section table .status {
-  text-align: center;
-}
 #manage > section table a {
   word-break: break-all;
 }
-#manage > section table a.delete {
-  color: #B92B2B;
-  display: none;
+#manage > section .glyphicon-ok-sign {
+  color: #5CB85C;
 }
-#manage tr:hover a.delete {
-  display: inline-block;
+#manage > section .glyphicon-remove-sign {
+  color: #D9534F;
+}
+#manage > section .glyphicon-info-sign {
+  color: #999;
+}
+#manage > section .glyphicon-warning-sign {
+  color: orange;
+  cursor: help;
 }
 #manage td {
   border: none !important;
 }
+#manage td.feed-status {
+  font-size: 22px;
+  text-align: center;
+  padding-top: 15px;
+}
+#manage td.feed-status .glyphicon {
+  cursor: help;
+}
 .flag {
-  color: #FFF;
   font-size: 0.8em;
-  text-decoration: none;
-  padding: 0 4px;
+  padding: 1px 4px;
   font-variant: small-caps;
   font-weight: bold;
-}
-.flag.rss {
-  background-color: #F0721E;
-}
-.flag.html {
-  background-color: #409AB6;
-}
-.flag.timeline {
-  background-color: #364050;
-}
-.flag.pshb {
-  background-color: #E46EE4;
 }
 /*********************************************************************************/
 /* Profile                                                                       */

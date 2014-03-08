@@ -74,31 +74,19 @@ angular.module('ManageModule', ['angularFileUpload'])
 ])
 .filter('statusClass', function() {
   return function(feed) {
-    var result = 'default';
+    var result = 'info';
     if (feed.status) {
-      if (feed.status.match(/^error/g)) result = 'danger';
-      else if (feed.pshbStatus == 'subscribe') result = 'primary';
-      else result = 'success';
+      if (feed.status.match(/^error/g)) result = 'remove';
+      else result = 'ok';
     }
-    return result;
-  };
-})
-.filter('statusDesc', function() {
-  return function(feed) {
-    var result = 'This feed had not yet been parsed.';
-    if (feed.status) {
-      if (feed.status.match(/^error/g)) result = feed.status;
-      else if (feed.pshbStatus == 'subscribe') result = 'Feed subscribed to ' + feed.hub;
-      else result = 'Feed successfully parsed';
-    }
-    return result;
+    return result + '-sign';
   };
 })
 .filter('statusLabel', function() {
   return function(feed) {
-    var result = 'Not updated';
+    var result = 'Not yet updated';
     if (feed.status) {
-      result = feed.status.match(/^error/g) ? 'In error' : feed.status;
+      result = feed.status;
     }
     return result;
   };
