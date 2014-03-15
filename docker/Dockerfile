@@ -32,6 +32,11 @@ ENV APP_ADMIN foo@bar.com
 # Number of days to keep an article in the database
 ENV APP_DAYS_TO_KEEP 60
 
+# Archive provider
+ENV APP_KEEPER_URL http://localhost:3000
+ENV APP_KEEPER_KEY 1234
+ENV APP_KEEPER_SECRET 1234
+
 # Add supervisor conf
 ADD supervisord.conf  /etc/supervisor/conf.d/supervisord.conf
 

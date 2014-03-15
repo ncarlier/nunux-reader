@@ -1,13 +1,12 @@
-var db = require('../lib/db'),
-    User = require('../lib/user'),
-    Feed = require('../lib/feed'),
+var User  = require('../models/user'),
+    Feed  = require('../models/feed'),
     async = require('async');
 
-module.exports = function(app){
+module.exports = {
   /**
-   * GET statistics.
+   * Get statistics.
    */
-  app.get('/api/admin/stats', app.ensureAuthenticated, app.ensureIsAdmin, function(req, res, next) {
+  stats: function(req, res, next) {
     var stats = {};
     async.waterfall(
       [
@@ -60,36 +59,35 @@ module.exports = function(app){
         next(err);
       }
     );
-  });
+  },
 
   /**
-   * GET user.
+   * Get user.
    */
-  app.get('/api/admin/user/:email', app.ensureAuthenticated, app.ensureIsAdmin, function(req, res, next) {
+  getUser: function(req, res, next) {
     User.find(req.params.email, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
-  });
+  },
 
   /**
-   * POST new user.
+   * Create new user.
    */
-  app.post('/api/admin/user/:email', app.ensureAuthenticated, app.ensureIsAdmin, function(req, res, next) {
+  createUser: function(req, res, next) {
     User.create({uid: req.params.email}, function(err, result) {
       if (err) return next(err);
       res.status(201).json({msg: 'User ' + req.params.email + ' created.'});
     });
-  });
+  },
 
   /**
-   * DELETE user.
+   * Delete user.
    */
-  app.delete('/api/admin/user/:email', app.ensureAuthenticated, app.ensureIsAdmin, function(req, res, next) {
+  deleteUser: function(req, res, next) {
     User.del(req.params.email, function(err, result) {
       if (err) return next(err);
       res.status(205).json({msg: 'User ' + req.params.email + ' deleted.'});
     });
-  });
-
+  }
 };

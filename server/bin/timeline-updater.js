@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-var program = require('commander'),
-    db = require('../lib/db'),
-    logger = require('../lib/logger'),
-    Article = require('../lib/article'),
-    Feed = require('../lib/feed'),
-    User = require('../lib/user'),
-    async = require('async'),
-    EventEmitter = require('events').EventEmitter;
+var program      = require('commander'),
+    async        = require('async'),
+    EventEmitter = require('events').EventEmitter,
+    db           = require('../helpers').redis,
+    logger       = require('../helpers').logger,
+    Article      = require('../models/article'),
+    Feed         = require('../models/feed'),
+    User         = require('../models/user');
 
 var app = new EventEmitter();
 var stop = false;

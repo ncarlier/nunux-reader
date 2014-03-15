@@ -1,9 +1,9 @@
 require('date-utils');
-var should = require('should'),
-    path = require('path'),
-    db = require('../lib/db'),
-    logger = require('../lib/logger'),
-    Article = require('../lib/article');
+var should  = require('should'),
+    path    = require('path'),
+    db      = require('../helpers').redis,
+    logger  = require('../helpers').logger,
+    Article = require('../models/article');
 
 logger.setLevel('info');
 db.select(9);
@@ -51,25 +51,14 @@ describe('An new article', function() {
       done();
     });
   });
-  it('should be copied', function(done) {
-    var target = uid + ':' + aid;
-    Article.copy(aid, target, function(err, art) {
-      if (err) return done(err);
-      art.id.should.equal(target);
-      art.fid.should.equal(fid);
-      done();
-    });
-  });
-  it('should be deleted (the copy)', function(done) {
-    var target = uid + ':' + aid;
-    Article.del(target, function(err) {
+  it('should be deleted', function(done) {
+    Article.del(aid, function(err) {
       if (err) return done(err);
       done();
     });
   });
-  it('and should not be retrieve (the copy)', function(done) {
-    var target = uid + ':' + aid;
-    Article.get(target, function(err, art) {
+  it('and should not be retrieve', function(done) {
+    Article.get(aid, function(err, art) {
       err.should.equal('ENOTFOUND');
       should.not.exist(art);
       done();

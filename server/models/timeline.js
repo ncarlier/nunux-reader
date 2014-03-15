@@ -1,9 +1,9 @@
-var db = require('./db'),
-    logger = require('./logger'),
-    Feed = require('./feed'),
+var db      = require('../helpers').redis,
+    logger  = require('../helpers').logger,
+    Feed    = require('./feed'),
     Article = require('./article'),
-    async = require('async'),
-    crypto = require('crypto');
+    async   = require('async'),
+    crypto  = require('crypto');
 
 var Timeline = module.exports = function() {};
 
@@ -29,7 +29,6 @@ Timeline.getStatus = function(key, done) {
         } else {
           result.timeline = key.match(/:(\w+)$/)[1];
           if (result.timeline == 'global') result.title = 'All items';
-          else if (result.timeline == 'archive') result.title = 'Saved items';
           else result.title = result.timeline;
         }
         Timeline.getSize(key, callback);

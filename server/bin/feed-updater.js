@@ -4,15 +4,15 @@
  * Module dependencies.
  */
 require('date-utils');
-var program = require('commander'),
-    db = require('../lib/db'),
-    logger = require('../lib/logger'),
-    Feed = require('../lib/feed'),
-    Article = require('../lib/article'),
-    FeedParser = require('feedparser'),
-    request = require('request'),
-    async = require('async'),
-    EventEmitter = require('events').EventEmitter;
+var program      = require('commander'),
+    async        = require('async'),
+    request      = require('request'),
+    FeedParser   = require('feedparser'),
+    EventEmitter = require('events').EventEmitter,
+    db           = require('../helpers').redis,
+    logger       = require('../helpers').logger,
+    Feed         = require('../models/feed'),
+    Article      = require('../models/article');
 
 var app = new EventEmitter();
 var stop = false;

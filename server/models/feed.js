@@ -1,13 +1,13 @@
 require('date-utils');
-var db = require('./db'),
-    logger = require('./logger'),
-    crypto = require('crypto'),
-    FeedParser = require('feedparser'),
-    request = require('request'),
+var db          = require('../helpers').redis,
+    logger      = require('../helpers').logger,
+    Article     = require('./article'),
+    crypto      = require('crypto'),
+    FeedParser  = require('feedparser'),
+    request     = require('request'),
     querystring = require('querystring'),
-    urlParse = require('url').parse,
-    Article = require('./article'),
-    async = require('async');
+    urlParse    = require('url').parse,
+    async       = require('async');
 
 var Feed = module.exports = function() {};
 

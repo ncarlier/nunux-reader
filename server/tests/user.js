@@ -1,10 +1,10 @@
-var should = require('should'),
-    path = require('path'),
-    db = require('../lib/db'),
-    logger = require('../lib/logger'),
-    Article = require('../lib/article');
-    Feed = require('../lib/feed');
-    User = require('../lib/user');
+var should  = require('should'),
+    path    = require('path'),
+    db      = require('../helpers').redis,
+    logger  = require('../helpers').logger,
+    Article = require('../models/article');
+    Feed    = require('../models/feed');
+    User    = require('../models/user');
 
 logger.setLevel('info');
 db.select(9);
@@ -99,14 +99,6 @@ describe('A new user', function() {
       result.should.not.have.property('order');
       result.articles.should.not.be.empty;
       result.articles[0].link.should.equal(article.link);
-      done();
-    });
-  });
-  it('should save an article into the archive timeline', function(done) {
-    User.addArticleToTimeline(uid, 'archive', article.id, function(err, status) {
-      if (err) return done(err);
-      status.title.should.equal('Saved items');
-      status.size.should.equal(1);
       done();
     });
   });

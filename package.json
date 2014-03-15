@@ -11,25 +11,27 @@
   },
   "scripts": {
     "start": "node server/app",
+    "debug": "node-inspector --web-port=3009 & node --debug server/app",
     "test": "grunt",
     "postinstall": "grunt install"
   },
   "dependencies": {
-    "express": "3.3.x",
-    "redis": "0.8.x",
+    "redis": "0.10.x",
+    "hiredis": "0.1.x",
+    "express": "3.4.x",
+    "request": "2.27.x",
     "ejs": "*",
-    "less-middleware": "*",
+    "less-middleware": "0.1.x",
+    "underscore": "~1.5.2",
     "commander": "*",
+    "colors": "~0.6.2",
     "date-utils": "*",
     "opmlparser": "0.5.x",
     "feedparser": "0.15.x",
-    "request": "2.27.x",
     "async": "0.2.x",
     "passport": "0.1.x",
     "passport-google": "0.3.0",
-    "passport-browserid": "0.1.4",
-    "hiredis": "0.1.x",
-    "JSONStream": "0.7.x"
+    "passport-browserid": "0.1.4"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

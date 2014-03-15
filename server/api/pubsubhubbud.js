@@ -1,19 +1,13 @@
 require('date-utils');
-var db = require('../lib/db'),
-    Feed = require('../lib/feed'),
-    logger = require('../lib/logger'),
-    async = require('async');
+var Feed   = require('../models/feed'),
+    logger = require('../helpers').logger,
+    async  = require('async');
 
-module.exports = function(app){
-  app.ensurePubSubHubBud = function(req, res, next) {
-    if (app.get('pshb')) { return next(); }
-    res.status(403).send('PubSubHubBud disabled.');
-  };
-
+module.exports = {
   /**
    * Update PubSubHubBud feed status.
    */
-  app.get('/pubsubhubbud/callback', app.ensurePubSubHubBud,function(req, res, next) {
+  callback: function(req, res, next) {
     var mode = req.query['hub.mode'];
     var topic = req.query['hub.topic'];
     var challenge = req.query['hub.challenge'];
@@ -50,17 +44,17 @@ module.exports = function(app){
       logger.info('Bad PubSubHubBud callback received %j', req.query);
       res.send(400);
     }
-  });
+  },
 
   /**
    * Update PubSubHubBud feed status.
    */
-  app.post('/pubsubhubbud/callback', app.ensurePubSubHubBud, function(req, res, next) {
+  post: function(req, res, next) {
     Feed.updateArticles(req.rawBody, null, function(err) {
       if (err) {
         logger.error('PSHB REQUEST: %s', err);
       }
       res.send(200);
     });
-  });
+  }
 };

@@ -11,7 +11,7 @@ Features:
  * OPML import/export
  * Manage subscriptions
  * Auto read article on scroll
- * Save articles
+ * Save articles in Nunux Keeper
  * Keep article as not read
  * Powerfull reactive aggregator daemon
  * Support of PubSubHubbud

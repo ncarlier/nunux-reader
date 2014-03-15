@@ -1,7 +1,7 @@
 require('date-utils');
-var db = require('./db'),
-    logger = require('./logger'),
-    async = require('async'),
+var db     = require('../helpers').redis,
+    logger = require('../helpers').logger,
+    async  = require('async'),
     crypto = require('crypto');
 
 var Article = module.exports = function() {};
@@ -23,7 +23,6 @@ Article.assertKey = function(key) {
   var aid = key.match(/(feed:\w+:\w+)/gm);
   return aid ? aid[0] : null;
 };
-
 
 /**
  * Get an article.
@@ -140,39 +139,6 @@ Article.create = function(article, feed, done) {
       }
     ],
     done
-  );
-};
-
-/**
- * Create an article copy.
- * @param {String}   src Source artice ID.
- * @param {String}   dest     Destination article ID.
- * @param {Function} done    Callback with article in params.
- */
-Article.copy = function(src, dest, done) {
-  async.waterfall(
-    [
-      function(callback) {
-        Article.get(src, callback);
-      },
-      function(article, callback) {
-        if (src === dest) {
-          logger.debug('Source equals destination. Article %s will not be copied.', src);
-          done(null, article);
-        } else {
-          // do the copy
-          db.set(dest, JSON.stringify(article), callback);
-        }
-      },
-      function(reply, callback) {
-        logger.info('Article %s copied.', dest);
-        Article.get(dest, done);
-      }
-    ],
-    function(err) {
-      logger.error('Error will Article.copy: %s', err);
-      done(err);
-    }
   );
 };
 

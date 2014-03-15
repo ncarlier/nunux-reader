@@ -1,32 +1,30 @@
-var db = require('../lib/db'),
-    User = require('../lib/user'),
-    async = require('async');
+var User = require('../models/user');
 
-module.exports = function(app){
+module.exports = {
   /**
-   * GET user timelines.
+   * Get user timelines.
    */
-  app.get('/api/timeline', app.ensureAuthenticated, function(req, res, next) {
+  all: function(req, res, next) {
     User.getAllTimelinesStatus(req.user.uid, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
-  });
+  },
 
   /**
-   * GET user's timeline status.
+   * Get user's timeline status.
    */
-  app.get('/api/timeline/:timeline/status', app.ensureAuthenticated, function(req, res, next) {
+  status: function(req, res, next) {
     User.getTimelineStatus(req.user.uid, req.params.timeline, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
-  });
+  },
 
   /**
-   * GET user's timeline.
+   * Get user's timeline.
    */
-  app.get('/api/timeline/:timeline', app.ensureAuthenticated, function(req, res, next) {
+  get: function(req, res, next) {
     User.getTimeline(req.user.uid,
                      req.params.timeline,
                      req.query,
@@ -34,12 +32,12 @@ module.exports = function(app){
       if (err) return next(err);
       res.json(articles);
     });
-  });
+  },
 
   /**
-   * DELETE article from user's timeline.
+   * Remove article from user's timeline.
    */
-  app.delete('/api/timeline/:timeline/:aid', app.ensureAuthenticated, function(req, res, next) {
+  removeArticle: function(req, res, next) {
     User.removeArticleFromTimeline(req.user.uid,
                             req.params.timeline,
                             req.params.aid,
@@ -47,24 +45,24 @@ module.exports = function(app){
       if (err) return next(err);
       res.json(result);
     });
-  });
+  },
 
   /**
-   * DELETE all article from user's timeline.
+   * Remove all article from user's timeline.
    */
-  app.delete('/api/timeline/:timeline', app.ensureAuthenticated, function(req, res, next) {
+  removeAllArticles: function(req, res, next) {
     User.removeAllArticlesFromTimeline(req.user.uid,
                             req.params.timeline,
                             function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
-  });
+  },
 
   /**
-   * PUT article into user's timeline.
+   * Add article into user's timeline.
    */
-  app.put('/api/timeline/:timeline/:aid', app.ensureAuthenticated, function(req, res, next) {
+  addArticle: function(req, res, next) {
     User.addArticleToTimeline(req.user.uid,
                        req.params.timeline,
                        req.params.aid,
@@ -72,5 +70,5 @@ module.exports = function(app){
       if (err) return next(err);
       res.json(result);
     });
-  });
+  }
 };

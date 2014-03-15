@@ -1,13 +1,11 @@
-var db = require('./db'),
-    logger = require('./logger'),
-    Feed = require('./feed'),
-    Article = require('./article'),
-    Timeline = require('./timeline'),
-    crypto = require('crypto'),
+var db         = require('../helpers').redis,
+    logger     = require('../helpers').logger,
+    Feed       = require('./feed'),
+    Article    = require('./article'),
+    Timeline   = require('./timeline'),
     OpmlParser = require('opmlparser'),
-    JSONStream = require('JSONStream'),
-    fs = require('fs'),
-    async = require('async');
+    fs         = require('fs'),
+    async      = require('async');
 
 var User = module.exports = function() {};
 
@@ -135,6 +133,9 @@ User.updateConfig = function(user, config, done) {
 User.find = function(uid, done) {
   db.hgetall(User.getKey(uid), function(err, user) {
     if (err) return done(err);
+    if (user.configuration) {
+      user.configuration = JSON.parse(user.configuration);
+    }
     done(null, user);
   });
 };
@@ -182,7 +183,6 @@ User.create = function(user, done) {
 
 /**
  * Delete an user.
- * Also delete archived articles.
  * @param {String}   uid  User ID.
  * @param {Function} done Callback with no params.
  */
@@ -217,22 +217,6 @@ User.del = function(uid, done) {
       },
       function(reply, callback) {
         logger.debug('User\'s subscriptions deleted.');
-        // Get archives...
-        db.zrange(User.getTimelineKey(uid, 'archive'), '0', '-1', callback);
-      },
-      function(replies, callback) {
-        logger.debug('Deleting %d articles...', replies.length);
-        // Delete archives...
-        var removeArticle = function(aid, next) {
-          db.del(aid, next);
-        };
-        async.map(replies, removeArticle, callback);
-      },
-      function(reply, callback) {
-        logger.debug('User\'s archives deleted.');
-        db.del(User.getTimelineKey(uid, 'archive'), callback);
-      },
-      function(reply, callback) {
         db.srem('users', User.getKey(uid), callback);
       },
       function(reply, callback) {
@@ -430,156 +414,6 @@ User.importSubscriptions = function(uid, file, done) {
 };
 
 /**
- * Import articles from JSON to user's archive timeline.
- * @param {String}   uid  User ID.
- * @param {Object}   file Dump file of articles (Google Reader format).
- * @param {Function} done Callback with archive timeline status in params.
- */
-User.importArticles = function(uid, file, done) {
-  var parser = JSONStream.parse('items.*');
-  User.exists(uid, function(err, exists) {
-    if (err || !exists) {
-      done(err || 'Error: USER NOT FOUND');
-    }
-    // Parse file...
-    var parser = JSONStream.parse('items.*');
-    parser.on('end', function() {
-      User.getTimelineStatus(uid, 'archive', done);
-    });
-    parser.on('data', function(data) {
-      // Create article.
-      var article = {
-        title: data.title,
-        description: data.content ? data.content.content : data.summary ? data.summary.content : '',
-        author: data.author,
-        date: data.updated * 1000,
-        pubdate: data.published * 1000,
-        link: data.canonical ? data.canonical[0].href : data.alternate ? data.alternate[0].href : null,
-        meta: {
-          link: data.origin.htmlUrl,
-          title: data.origin.title,
-          xmlurl: data.origin.streamId.substring(5)
-        }
-      };
-      // Compute article id.
-      var hash = crypto.createHash('md5').update(article.meta.xmlurl).digest("hex");
-      article.id = User.getKey(uid) + ':feed:' + hash;
-      hash = crypto.createHash('md5').update(article.link).digest("hex");
-      article.id = article.id + ':' + hash;
-
-      // Store article in DB...
-      async.waterfall(
-        [
-          function(callback) {
-            // Save article
-            Article.save(article, callback);
-          },
-          function(reply, callback) {
-            // Add article to arhive timeline
-            var key = User.getTimelineKey(uid, 'archive');
-            Timeline.addArticle(key, article, callback);
-          },
-          function() {
-            logger.debug('Article %s saved in user\'s archive timeline.', article.id);
-          }
-        ],
-        function(err) {
-          logger.error('ERROR: Unable to import article: %s', err);
-        }
-      );
-    });
-
-    fs.createReadStream(file, {'bufferSize': 4 * 1024}).pipe(parser);
-  });
-};
-
-/**
- * Export articles of user's archive timeline to JSON file.
- * @param {String}   uid  User ID.
- * @param {Object}   file Dump file of articles (Google Reader format).
- * @param {Function} done Callback with nb of exported articles in params.
- */
-User.exportArticles = function(uid, file, done) {
-  var ws = null;
-  try {
-    ws = fs.createWriteStream(file);
-  } catch (e) {
-    return done(e);
-  }
-
-  var nb = 0;
-
-  async.waterfall(
-    [
-      function(callback) {
-        User.exists(uid, callback);
-      },
-      function(exist, callback) {
-        if (!exist) return callback('Error: USER NOT FOUND');
-        var now = new Date();
-
-        ws.write('{');
-
-        var header = {
-          id: uid,
-          title: 'List of archived items on Nunux Reader',
-          updated: Math.floor(now.getTime() * 1e-3)
-        };
-        for (var attr in header) {
-          ws.write('\t"' + attr + '":' + JSON.stringify(header[attr]) + ',\n');
-        }
-        ws.write('\t"items" : [\n');
-        var key = User.getTimelineKey(uid, 'archive');
-        db.zrange(key, '0', '-1', callback);
-      },
-      function(aids, callback) {
-        var writeArticle = function(aid, next) {
-          Article.get(aid, function(err, article) {
-            if (err) {
-              return 'ENOTFOUND' === err ? next(null) : next(err);
-            }
-            nb++;
-            var obj = {
-              id: article.id,
-              title: article.title,
-              content: {
-                direction: 'ltr',
-                content: article.description
-              },
-              author: article.author,
-              canonical: [
-                {href: article.link}
-              ],
-              origin: {
-                title: article.meta.title,
-                htmlUrl: article.meta.link,
-                streamId: 'feed/' + article.meta.xmlurl
-              }
-            };
-            var date = new Date(article.date);
-            obj.updated = Math.floor(date.getTime() * 1e-3);
-            date = new Date(article.pubdate);
-            obj.published = Math.floor(date.getTime() * 1e-3);
-
-            ws.write(JSON.stringify(obj) + ', \n');
-            next(null);
-          });
-        };
-        async.map(aids, writeArticle, callback);
-      },
-      function() {
-        ws.write('\t]\n}\n');
-        done(null, nb);
-      }
-    ],
-    function(err) {
-      logger.error('Error will User.exportArticles: %s', err);
-      done(err);
-    }
-  );
-};
-
-/**
  * Get user's timeline status.
  * @param {String}   uid      User ID.
  * @param {String}   timeline Timeline name.
@@ -623,8 +457,7 @@ User.getAllTimelinesStatus = function(uid, done) {
  */
 User.getTimeline = function(uid, timeline, options, done) {
   var key = null;
-  if (timeline !== 'archive' &&
-      timeline !== 'global'  &&
+  if (timeline !== 'global'  &&
       options.show && options.show === 'all') {
     key = Feed.getArticlesKey(timeline);
   } else {
@@ -643,9 +476,8 @@ User.getAllTimelines = function(uid, done) {
   async.waterfall(
     [
       function(callback) {
-        // First add global and archive timelines
+        // First add global timeline
         result.push(User.getTimelineKey(uid, 'global'));
-        result.push(User.getTimelineKey(uid, 'archive'));
         // Get all user subscriptions
         db.smembers(User.getSubscriptionsKey(uid), callback);
       },
@@ -675,7 +507,6 @@ User.getAllTimelines = function(uid, done) {
  * @param {Function} done  Callback with no params.
  */
 User.cleanTimelines = function(uid, after, done) {
-  var archiveTimeline = User.getTimelineKey(uid, 'archive');
   async.waterfall(
     [
       function(callback) {
@@ -683,10 +514,6 @@ User.cleanTimelines = function(uid, after, done) {
       },
       function(timelines) {
         var cleanTimeline = function(timeline, next) {
-          if (timeline === archiveTimeline) {
-            logger.debug('IGNORED - Cleaning timeline.', timeline);
-            return next(null);
-          }
           logger.debug('Cleaning timeline %s.', timeline);
           Timeline.removeArticlesAfter(timeline, after, next);
         };
@@ -714,10 +541,6 @@ User.removeArticleFromTimeline = function(uid, timeline, aid, done) {
   async.waterfall(
     [
       function (callback) {
-        // Fix article id if remove from archive timeline
-        if (timeline == 'archive') {
-          aid = User.getKey(uid) + ':' + Article.assertKey(aid);
-        }
         var key = User.getTimelineKey(uid, timeline);
         // Remove article from user's timeline.
         Timeline.removeArticle(key, {id: aid}, callback);
@@ -729,10 +552,7 @@ User.removeArticleFromTimeline = function(uid, timeline, aid, done) {
           var fid = Feed.assertKey(aid);
           key = User.getTimelineKey(uid, fid);
           Timeline.removeArticle(key, {id: aid}, callback);
-        } else if (timeline == 'archive') {
-          // archive timeline: add TTL on saved article
-          db.expire(aid, 86400, callback);
-        }else {
+        } else {
           // Update also global timeline
           key = User.getTimelineKey(uid, 'global');
           Timeline.removeArticle(key, {id: aid}, callback);
@@ -759,7 +579,6 @@ User.removeArticleFromTimeline = function(uid, timeline, aid, done) {
  * @param {Function}      done     Callback with user's timeline size in params.
  */
 User.removeAllArticlesFromTimeline = function(uid, timeline, done) {
-  if (timeline === 'archive') return done('Not implemented!');
   async.waterfall(
     [
       function (callback) {
@@ -776,15 +595,8 @@ User.removeAllArticlesFromTimeline = function(uid, timeline, done) {
         }
       },
       function (timelines, callback) {
-        var removeArticles = function(key, next) {
-          if (key === User.getTimelineKey(uid, 'archive')) {
-            // ignore...
-            return next(null);
-          }
-          Timeline.removeAllArticles(key, next);
-        };
         // Remove all articles from user's timeline.
-        async.each(timelines, removeArticles, callback);
+        async.each(timelines, Timeline.removeAllArticles, callback);
       },
       function () {
         var key = User.getTimelineKey(uid, timeline);
@@ -797,7 +609,6 @@ User.removeAllArticlesFromTimeline = function(uid, timeline, done) {
     }
   );
 };
-
 
 /**
  * Add article into the user's timeline.
@@ -812,14 +623,8 @@ User.addArticleToTimeline = function(uid, timeline, aid, done) {
   async.waterfall(
     [
       function (callback) {
-        // Make a copy if it is the archive timeline
-        if (timeline == 'archive') {
-          var target = User.getKey(uid) + ':' + Article.assertKey(aid);
-          Article.copy(aid, target, callback);
-        } else {
-          // Retrieve the article
-          Article.get(aid, callback);
-        }
+        // Retrieve the article
+        Article.get(aid, callback);
       },
       function (article, callback) {
         var key = User.getTimelineKey(uid, timeline);
@@ -835,9 +640,6 @@ User.addArticleToTimeline = function(uid, timeline, aid, done) {
           var fid = Feed.assertKey(article.id);
           key = User.getTimelineKey(uid, fid);
           Timeline.addArticle(key, article, callback);
-        } else if (timeline == 'archive') {
-          // archive timeline : remove ttl
-          db.persist(article.id, callback);
         } else {
           // Update also global timeline
           key = User.getTimelineKey(uid, 'global');
@@ -851,6 +653,45 @@ User.addArticleToTimeline = function(uid, timeline, aid, done) {
     ],
     function(err) {
       logger.error('Error will User.addArticleToTimeline: %s', err);
+      done(err);
+    }
+  );
+};
+
+/**
+ * Save article into the archive provider.
+ * @param {Object}   user User.
+ * @param {String}   aid  Article ID.
+ * @param {Function} done Callback with result in params.
+ */
+User.saveArticle = function(user, aid, done) {
+  if (!user.configuration || !user.configuration.provider) {
+   return done('Archive provider not configured.');
+  }
+  var provider = user.configuration.provider,
+      archiver = archiveProvider[provider];
+
+  if (!archiver) {
+    return done('Unknown archive provider: ' + provider);
+  }
+
+  async.waterfall(
+    [
+      function (callback) {
+        // Retrieve the article
+        Article.get(aid, callback);
+      },
+      function (article, callback) {
+        // Save article
+        archiver().save(user, article, callback);
+      },
+      function () {
+        logger.error('Article #%s saved into archive provider %s', aid, provider);
+        done();
+      }
+    ],
+    function(err) {
+      logger.error('Error will User.saveArticle: %s', err);
       done(err);
     }
   );

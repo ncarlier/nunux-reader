@@ -39,3 +39,4 @@ var connect = function(str) {
  */
 module.exports = connect(getRedisUri());
 
+

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 require('date-utils');
-var program = require('commander'),
-    db = require('../lib/db'),
-    logger = require('../lib/logger'),
-    User = require('../lib/user'),
-    Timeline = require('../lib/timeline'),
-    Feed = require('../lib/feed'),
-    async = require('async');
+var program  = require('commander'),
+    async    = require('async'),
+    db       = require('../helpers').redis,
+    logger   = require('../helpers').logger,
+    User     = require('../models/user'),
+    Timeline = require('../models/timeline'),
+    Feed     = require('../models/feed');
 
 program
   .version('0.0.1')
