@@ -6300,11 +6300,7 @@ article.article header a {
 article.article header h1 {
   font-weight: bold;
   font-size: 120%;
-  margin: 5px 0;
-  max-width: 650px;
-  line-height: 16px;
-  height: 16px;
-  display: inline;
+  margin: 0 55px 0 0;
 }
 article.article header h1 a {
   color: black;
@@ -6476,6 +6472,10 @@ article.article footer a:hover {
   margin-top: 52px;
   width: 100%;
   overflow: auto;
+}
+#profile .providers {
+  list-style-type: none;
+  padding: 0;
 }
 /*********************************************************************************/
 /* Misc                                                                          */

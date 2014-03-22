@@ -3,17 +3,19 @@ var User   = require('../models/user'),
 
 module.exports = {
   /**
-   * Update user configuration.
+   * Get curent user infos.
    */
-  updateConfig: function(req, res, next) {
-    if (req.params.uid !== req.user.uid) {
-      return next(new errors.Forbidden());
+  get: function(req, res, next) {
+    var providers = {};
+    for (p in req.user.providers) {
+      var provider = req.user.providers[p];
+      providers[p] = {access: provider.access_token != null, expires_in: provider.expires_in};
     }
-    User.updateConfig(req.user,
-                      req.body,
-                      function(err, result) {
-      if (err) return next(err);
-      res.json(result);
+    return res.json({
+      uid: req.user.uid,
+      username: req.user.username,
+      registrationDate: req.user.registrationDate,
+      providers: providers
     });
   }
 };

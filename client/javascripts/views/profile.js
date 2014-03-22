@@ -2,23 +2,30 @@
 
 angular.module('ProfileModule', [])
 .controller('ProfileCtrl', [
-  '$scope', '$window', '$http',
-  function ($scope, $window, $http) {
-    $scope.user = $window.user;
-    $scope.date = new Date(parseInt($scope.user.registrationDate));
+  '$scope', '$window', '$http', '$routeParams', 'userService', 'archiveService',
+  function ($scope, $window, $http, $routeParams ,userService, archiveService) {
+    if ($routeParams.error) {
+      $scope.message = {clazz: 'alert-danger', text: $routeParams.error};
+    } else if ($routeParams.info) {
+      $scope.message = {clazz: 'alert-success', text: $routeParams.info};
+    }
+    userService.get().then(function(user) {
+      $scope.user = user;
+    });
+    archiveService.getProviders().then(function(providers) {
+      $scope.providers = providers;
+    });
 
-    $scope.configuration = $window.user.configuration;
-    $scope.configure = function() {
-      if (!this.configForm.$valid) return;
-      $http.put('/api/user/' + $scope.user.uid + '/config', $scope.configuration)
-      .success(function(config) {
-        $scope.configuration = config;
-        $window.user.config = config;
-        $scope.message = {clazz: 'alert-success', text: 'Configuration saved.'};
-      })
-      .error(function() {
-        $scope.message = {clazz: 'alert-danger', text: 'Unable to save configuration !'};
-      });
+    $scope.userAsAccessTo = function(providerName) {
+      var provider = $scope.user.providers[providerName];
+      return provider && provider.access;
     };
   }
-]);
+])
+.filter('archiveRegistrationUrl', ['$location', function($location) {
+  var realm = $location.protocol() + '://' + $location.host() + ($location.port() === 80 ? '' : ':' + $location.port());
+  return function(provider) {
+    return provider ? provider.url + '/oauth/authorize?response_type=code&client_id=' +
+      provider.key + '&redirect_uri=' + realm + '/api/archive/' + provider.name + '/register' : null;
+  };
+}]);

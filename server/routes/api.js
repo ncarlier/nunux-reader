@@ -9,7 +9,7 @@ module.exports = function(app) {
   // API info:
   app.get('/api', contextHandler, api.info);
   // User API:
-  app.put('/api/user/:uid/config', api.user.updateConfig);
+  app.get('/api/user', api.user.get);
   // Subscription API:
   app.get('/api/subscription', api.subscription.get);
   app.get('/api/subscription/export', contextHandler, api.subscription.download);
@@ -24,7 +24,9 @@ module.exports = function(app) {
   app.put('/api/timeline/:timeline/:aid', api.timeline.addArticle);
   // Archive API:
   app.get('/api/archive', api.archive.all);
-  app.post('/api/archive/:aid', api.archive.save);
+  app.post('/api/archive/:provider/:aid', api.archive.saveArticle);
+  app.delete('/api/archive/:provider/:aid', api.archive.removeArticle);
+  app.get('/api/archive/:provider/register', contextHandler, api.archive.register);
   // Admin API:
   app.get('/api/admin/stats', api.admin.stats);
   app.get('/api/admin/user/:email', api.admin.getUser);

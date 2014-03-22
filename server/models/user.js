@@ -98,12 +98,12 @@ User.findOrCreate = function(user, done) {
 };
 
 /**
- * Update user configuration.
+ * Registering archive provider to an user.
  * @param {Object}   user User.
- * @param {Object}   config New user configuration.
- * @param {Function} done Callback with user configuration in params.
+ * @param {Object}   provider Archive provider infos.
+ * @param {Function} done Callback with user in params.
  */
-User.updateConfig = function(user, config, done) {
+User.registerProvider = function(user, provider, done) {
   var uid = user.uid;
   async.waterfall(
     [
@@ -111,15 +111,21 @@ User.updateConfig = function(user, config, done) {
         User.find(uid, callback);
       },
       function(user, callback) {
-        db.hset(User.getKey(uid), 'configuration', JSON.stringify(config), callback);
+        if (!user.providers) user.providers = {};
+        user.providers[provider.name] = {
+          access_token: provider.access_token,
+          token_type: provider.token_type,
+          expires_in: provider.expires_in
+        };
+        db.hset(User.getKey(uid), 'providers', JSON.stringify(user.providers), callback);
       },
       function() {
-        logger.info('User %s updated.', uid);
-        done(null, config);
+        logger.info('Provider %s updated for user %s.', provider.name, uid);
+        User.find(uid, done);
       }
     ],
     function(err) {
-      logger.error('Error will User.updateConfig: %s', err);
+      logger.error('Error will User.registerProvider: %s', err);
       done(err);
     }
   );
@@ -133,8 +139,8 @@ User.updateConfig = function(user, config, done) {
 User.find = function(uid, done) {
   db.hgetall(User.getKey(uid), function(err, user) {
     if (err) return done(err);
-    if (user.configuration) {
-      user.configuration = JSON.parse(user.configuration);
+    if (user.providers) {
+      user.providers = JSON.parse(user.providers);
     }
     done(null, user);
   });
@@ -657,43 +663,3 @@ User.addArticleToTimeline = function(uid, timeline, aid, done) {
     }
   );
 };
-
-/**
- * Save article into the archive provider.
- * @param {Object}   user User.
- * @param {String}   aid  Article ID.
- * @param {Function} done Callback with result in params.
- */
-User.saveArticle = function(user, aid, done) {
-  if (!user.configuration || !user.configuration.provider) {
-   return done('Archive provider not configured.');
-  }
-  var provider = user.configuration.provider,
-      archiver = archiveProvider[provider];
-
-  if (!archiver) {
-    return done('Unknown archive provider: ' + provider);
-  }
-
-  async.waterfall(
-    [
-      function (callback) {
-        // Retrieve the article
-        Article.get(aid, callback);
-      },
-      function (article, callback) {
-        // Save article
-        archiver().save(user, article, callback);
-      },
-      function () {
-        logger.error('Article #%s saved into archive provider %s', aid, provider);
-        done();
-      }
-    ],
-    function(err) {
-      logger.error('Error will User.saveArticle: %s', err);
-      done(err);
-    }
-  );
-};
-

@@ -18,7 +18,7 @@ ENV NODE_ENV development
 ENV APP_PORT 3001
 
 # Server base URL (Realm)
-ENV APP_REALM http://localhost:3001
+ENV APP_REALM http://reader.lan
 
 # Automatic grant access
 ENV APP_AUTO_GRANT_ACCESS true
@@ -33,7 +33,7 @@ ENV APP_ADMIN foo@bar.com
 ENV APP_DAYS_TO_KEEP 60
 
 # Archive provider
-ENV APP_KEEPER_URL http://localhost:3000
+ENV APP_KEEPER_URL http://keeper.lan
 ENV APP_KEEPER_KEY 1234
 ENV APP_KEEPER_SECRET 1234
 

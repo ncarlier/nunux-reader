@@ -1,5 +1,8 @@
-var User   = require('../models/user'),
-    archiveProvider = require('../archive');
+var User    = require('../models/user'),
+    errors  = require('../helpers').errors;
+    logger  = require('../helpers').logger,
+    request = require('request'),
+    archive = require('../archive');
 
 module.exports = {
   /**
@@ -7,20 +10,58 @@ module.exports = {
    */
   all: function(req, res, next) {
     var providers = [];
-    for (p in archiveProvider) {
-      providers.push(archiveProvider[p]().info());
+    for (p in archive.providers) {
+      var provider = archive.providers[p];
+      providers.push(provider.info());
     };
     res.json(providers);
   },
+
   /**
    * Save article to archive provider.
    */
-  save: function(req, res, next) {
-    User.saveArticle(req.user,
-                     req.params.aid,
-                     function(err, result) {
-      if (err) return next(err);
+  saveArticle: function(req, res, next) {
+    var provider = archive.providers[req.params.provider];
+    if (!provider) {
+      return next('Archive provider not found: ' + req.params.provider);
+    }
+
+    provider.saveArticle(req.user, req.params.aid)
+    .then(function(result) {
       res.json(result);
-    });
+    }, next);
+  },
+
+  /**
+   * Remove article from archive provider.
+   */
+  removeArticle: function(req, res, next) {
+    var provider = archive.providers[req.params.provider];
+    if (!provider) {
+      return next('Archive provider not found: ' + req.params.provider);
+    }
+
+    provider.removeArticle(req.user, req.params.aid)
+    .then(function(result) {
+      res.json(result);
+    }, next);
+  },
+
+  /**
+   * Register OAuth code.
+   */
+  register: function(req, res, next) {
+    if (!req.query.code && !req.query.error) {
+      return next(new errors.BadRequest());
+    }
+    if (req.query.error) {
+      return res.redirect('/#/profile?error=' + req.query.error);
+    }
+    var redirectURI = req.context.realm + '/api/archive/' + req.params.provider + '/register';
+    archive.registerUserWithProvider(req.user, req.params.provider, req.query.code, redirectURI)
+    .then(function(result) {
+      var message = 'Registration with ' + req.params.provider + ' successfully completed.';
+      res.redirect('/#/profile?info=' + encodeURIComponent(message));
+    }, next);
   }
 };

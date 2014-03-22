@@ -44,7 +44,10 @@ app.configure(function() {
   app.use(express.logger('dev'));
   app.use(express.compress());
   app.use(express.cookieParser());
-  app.use(express.cookieSession({secret: process.env.APP_SESSION_SECRET || 'NuNUXReAdR_'}));
+  app.use(express.cookieSession({
+    key: 'reader.sess',
+    secret: process.env.APP_SESSION_SECRET || 'NuNUXReAdR_'
+  }));
   app.use(express.bodyParser({ uploadDir: process.env.APP_VAR_DIR ? path.join(process.env.APP_VAR_DIR, 'upload') : '/tmp' }));
   app.use(middleware.rawbodyHandler());
   app.use(passport.initialize());

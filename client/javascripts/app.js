@@ -15,7 +15,6 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  odule dependencies.
 */
 
 'use strict';
@@ -27,7 +26,8 @@ angular.module('ReaderApp', [
   'ManageModule',
   'ProfileModule',
   'TimelineService',
-  'ArchiveProvider',
+  'ArchiveService',
+  'UserService',
   'ui.bootstrap',
   'angular-md5'
 ])
@@ -46,7 +46,7 @@ angular.module('ReaderApp', [
     .when('/profile', {
       templateUrl: 'templates/views/profile.html',
       controller: 'ProfileCtrl'
-    })
+     })
     .otherwise({
       redirectTo: '/timeline/global'
     });
@@ -72,7 +72,7 @@ angular.module('ReaderApp', [
 }])
 .filter('gravatar', ['md5', function(md5) {
   return function(val) {
-    return 'http://www.gravatar.com/avatar/' + md5.createHash(val.toLowerCase());
+    return val ? 'http://www.gravatar.com/avatar/' + md5.createHash(val.toLowerCase()) : null;
   };
 }])
 .filter('prefix', function() {

@@ -3,9 +3,9 @@
 angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
 .controller('TimelineCtrl', [
   '$window', '$rootScope', '$scope', '$q', '$timeout', '$routeParams',
-  '$lazy', '$log', '$modal', 'timelineService', 'archiveProvider',
+  '$lazy', '$log', '$modal', 'timelineService', 'archiveService',
   function ($window, $rootScope, $scope, $q, $timeout, $routeParams,
-            $lazy, $log, $modal, timelineService, archiveProvider) {
+            $lazy, $log, $modal, timelineService, archiveService) {
     var initializing = true,
         tln = $routeParams.timeline;
 
@@ -107,26 +107,23 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     };
 
     $scope.saveArticle = function(article) {
-      var provider = $window.user.configuration.provider.type;
-      archiveProvider.get()
-      .save(article).then(function(data) {
-        humane.log('Article saved in ' + provider);
+      archiveService.save(article).then(function(data) {
+        humane.log('Article saved in ' + data.provider);
+        $log.debug('Article saved in ' + data.provider + ': ' + data.ref);
         article.archRef = data.ref;
       }, function(err) {
         var error = err && err.error ? err.error : err;
-        alert('Unable to save article in ' + provider + ' : ' + error);
+        alert('Unable to save article: ' + error);
       });
     };
 
     $scope.trashArticle = function(article) {
-      var provider = $window.user.configuration.provider.type;
-      archiveProvider.get()
-      .remove(article).then(function() {
-        humane.log('Article removed from ' + provider);
+      archiveService.remove(article).then(function(data) {
+        humane.log('Article removed from ' + data.provider);
         article.archRef = null;
       }, function(err) {
         var error = err && err.error ? err.error : err;
-        alert('Unable to remove article from ' + provider + ' : ' + error);
+        alert('Unable to remove article: ' + error);
       });
     };
 

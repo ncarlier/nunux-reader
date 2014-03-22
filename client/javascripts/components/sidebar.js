@@ -29,9 +29,12 @@ angular.module('SidebarModule', [])
   };
 }])
 .controller('SidebarCtrl', [
-  '$window', '$rootScope', '$scope', '$http', '$location', '$modal', '$log',
-  function ($window, $rootScope, $scope, $http, $location, $modal, $log) {
-    $scope.user = $window.user;
+  '$window', '$rootScope', '$scope', '$http', '$location', '$modal', '$log', 'userService',
+  function ($window, $rootScope, $scope, $http, $location, $modal, $log, userService) {
+    userService.get().then(function(user) {
+      $scope.user = user;
+    });
+
     $scope.order = '-size';
 
     $rootScope.toggleMenu = function() {
