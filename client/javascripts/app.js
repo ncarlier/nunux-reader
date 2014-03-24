@@ -54,11 +54,13 @@ angular.module('ReaderApp', [
 ])
 .filter('fromNow', function() {
   return function(dateString) {
+    if (!dateString) return 'n/a';
     return moment(new Date(dateString)).fromNow();
   };
 })
 .filter('date', function() {
   return function(dateString) {
+    if (!dateString) return 'n/a';
     return moment(new Date(dateString)).format('MMMM Do YYYY, h:mm:ss a');
   };
 })

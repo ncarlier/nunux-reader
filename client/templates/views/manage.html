@@ -48,8 +48,11 @@
           <th class="feed-title">
             <a href="" ng-click="predicate = 'title'; reverse=!reverse">Feed</a>
           </th>
-          <th class="feed-date">
-            <a href="" ng-click="predicate = 'updateDate'; reverse=!reverse">Update date</a>
+          <th class="feed-mod-date">
+            <a href="" ng-click="predicate = 'lastModified'; reverse=!reverse">Update date</a>
+          </th>
+          <th class="feed-status-date">
+            <a href="" ng-click="predicate = 'updateDate'; reverse=!reverse">Status update date</a>
           </th>
           <th class="feed-action">&nbsp;</th>
         </tr>
@@ -73,6 +76,9 @@
           </div>
         </td>
         <td>
+          {{ feed.lastModified | fromNow }}
+        </td>
+        <td>
           {{ feed.updateDate | fromNow }}
         </td>
         <td>
@@ -82,7 +88,7 @@
         </td>
       </tr>
       <tr class="no-subs" ng-show="!subscriptions.length">
-        <td colspan="4">
+        <td colspan="5">
           <strong>No subscription.</strong> Maybe is the time to add some.
         </td>
       </tr>

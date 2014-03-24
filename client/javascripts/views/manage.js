@@ -87,6 +87,7 @@ angular.module('ManageModule', ['angularFileUpload'])
     var result = 'Not yet updated';
     if (feed.status) {
       result = feed.status;
+      if (feed.status.match(/^error/g)) result += ' (nb: ' + feed.errCount + ')';
     }
     return result;
   };
