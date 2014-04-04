@@ -2,10 +2,9 @@
 #
 # VERSION 0.0.1
 #
-# VOLUME: docker run -v ~/src/reader:/opt/reader -name READER_VOLUMES busybox true
+# VOLUME: docker run -v ~/src/reader:/opt/reader -v ~/var/reader:/var/opt/reader -name READER_VOLUMES busybox true
 # BUILD:  docker build -rm -t nunux/reader .
-# RUN:    docker run -rm -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 nunux/reader bash
-# RUN:    docker run -rm -link redis:db -volumes-from READER_VOLUMES -p 3001:3001 nunux/reader /usr/bin/supervisord
+# RUN     docker run -rm -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 --entrypoint="/usr/bin/supervisord" nunux/reader -n
 
 FROM nunux/nodejs
 
@@ -42,4 +41,11 @@ ADD supervisord.conf  /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 3001
 
-#ENTRYPOINT ["/usr/bin/supervisord"]
+USER node
+ENV HOME /home/node
+
+WORKDIR /opt/reader
+
+ENTRYPOINT ["/usr/bin/npm"]
+
+CMD ["start"]
