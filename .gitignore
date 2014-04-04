@@ -1,4 +1,3 @@
-public/components/
 node_modules/
-public/stylesheets/*.css
+client/stylesheets/*.css
 dist/
