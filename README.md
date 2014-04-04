@@ -10,13 +10,12 @@ Features:
  * Login with Google OpenID or Mozilla Persona
  * OPML import/export
  * Manage subscriptions
- * Auto read article on scroll
  * Save articles in Nunux Keeper
  * Keep article as not read
  * Powerfull reactive aggregator daemon
  * Support of PubSubHubbud
  * RESTFul JSON API
- * 99% Javascript!
+ * 100% Javascript!
 
 ## Installation guide
 ### Prerequisites
