@@ -1,10 +1,20 @@
 /**!
  * AngularJS file upload shim for HTML5 FormData
  * @author  Danial  <danial.farid@gmail.com>
- * @version 1.2.8
+ * @version 1.2.11
  */
 (function() {
 
+var hasFlash = function() {
+	try {
+	  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+	  if (fo) return true;
+	} catch(e) {
+	  if (navigator.mimeTypes["application/x-shockwave-flash"] != undefined) return true;
+	}
+	return false;
+}
+	
 if (window.XMLHttpRequest) {
 	if (window.FormData) {
 		// allow access to Angular XHR private field: https://github.com/angular/angular.js/issues/1934
@@ -28,13 +38,6 @@ if (window.XMLHttpRequest) {
 			}
 		})(window.XMLHttpRequest);
 	} else {
-		var hasFlash = false;
-		try {
-		  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
-		  if (fo) hasFlash = true;
-		} catch(e) {
-		  if (navigator.mimeTypes["application/x-shockwave-flash"] != undefined) hasFlash = true;
-		}
 		window.XMLHttpRequest = (function(origXHR) {
 			return function() {
 				var xhr = new origXHR();
@@ -42,13 +45,9 @@ if (window.XMLHttpRequest) {
 				xhr.__requestHeaders = [];
 				xhr.open = (function(orig) {
 					if (!xhr.upload) xhr.upload = {};
+					xhr.__listeners = [];
 					xhr.upload.addEventListener = function(t, fn, b) {
-						if (t === 'progress') {
-							xhr.__progress = fn;
-						}
-						if (t === 'load') {
-							xhr.__load = fn;
-						}
+						xhr.__listeners[t] = fn;
 					};
 					return function(m, url, b) {
 						orig.apply(xhr, [m, url, b]);
@@ -90,7 +89,12 @@ if (window.XMLHttpRequest) {
 						var config = {
 							url: xhr.__url,
 							complete: function(err, fileApiXHR) {
-								if (!err) xhr.__load({type: 'load', loaded: xhr.__total, total: xhr.__total, target: xhr, lengthComputable: true});
+								if (!err && xhr.__listeners['load']) 
+									xhr.__listeners['load']({type: 'load', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
+								if (!err && xhr.__listeners['loadend']) 
+									xhr.__listeners['loadend']({type: 'loadend', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
+								if (err === 'abort' && xhr.__listeners['abort']) 
+									xhr.__listeners['abort']({type: 'abort', loaded: xhr.__loaded, total: xhr.__total, target: xhr, lengthComputable: true});
 								if (fileApiXHR.status !== undefined) Object.defineProperty(xhr, 'status', {get: function() {return fileApiXHR.status}});
 								if (fileApiXHR.statusText !== undefined) Object.defineProperty(xhr, 'statusText', {get: function() {return fileApiXHR.statusText}});
 								Object.defineProperty(xhr, 'readyState', {get: function() {return 4}});
@@ -101,8 +105,9 @@ if (window.XMLHttpRequest) {
 							},
 							progress: function(e) {
 								e.target = xhr;
-								xhr.__progress(e);
+								xhr.__listeners['progress'] && xhr.__listeners['progress'](e);
 								xhr.__total = e.total;
+								xhr.__loaded = e.loaded;
 							},
 							headers: xhr.__requestHeaders
 						}
@@ -118,8 +123,8 @@ if (window.XMLHttpRequest) {
 						}
 
 						setTimeout(function() {
-							if (!hasFlash) {
-								alert('Please install Adode Flash Player to upload files.');
+							if (!hasFlash()) {
+								throw 'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';
 							}
 							xhr.__fileApiXHR = FileAPI.upload(config);
 						}, 1);
@@ -130,13 +135,16 @@ if (window.XMLHttpRequest) {
 				return xhr;
 			}
 		})(window.XMLHttpRequest);
-		window.XMLHttpRequest.__hasFlash = hasFlash;
+		window.XMLHttpRequest.__hasFlash = hasFlash();
 	}
 	window.XMLHttpRequest.__isShim = true;
 }
 
 if (!window.FormData) {
 	var wrapFileApi = function(elem) {
+		if (!hasFlash()) {
+			throw 'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';
+		}
 		if (!elem.__isWrapped && (elem.getAttribute('ng-file-select') != null || elem.getAttribute('data-ng-file-select') != null)) {
 			var wrap = document.createElement('div');
 			wrap.innerHTML = '<div class="js-fileapi-wrapper" style="position:relative; overflow:hidden"></div>';
@@ -231,6 +239,7 @@ if (!window.FormData) {
 			if (FileAPI.staticPath == null) FileAPI.staticPath = basePath;
 			script.setAttribute('src', jsUrl || basePath + "FileAPI.min.js");
 			document.getElementsByTagName('head')[0].appendChild(script);
+			FileAPI.hasFlash = hasFlash();
 		}
 	})();
 }

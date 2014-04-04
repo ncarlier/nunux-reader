@@ -16,7 +16,8 @@
     "angular-ui-bootstrap-bower": "~0.10.0",
     "qrcode-generator": "git://github.com/monospaced/bower-qrcode-generator.git#0.0.0",
     "revolunet-angular-carousel": "*",
-    "ng-file-upload": "~1.2.7"
+    "ng-file-upload": "~1.2.7",
+    "font-awesome": "~4.0.3"
   },
   "exportsOverride": {
     "bootstrap": {
@@ -44,8 +45,5 @@
   "ignore": [
     "**/.*",
     "node_modules"
-  ],
-  "resolutions": {
-    "jquery": ">= 1.9.0"
-  }
+  ]
 }
