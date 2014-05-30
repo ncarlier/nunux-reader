@@ -24,9 +24,10 @@ module.exports = function(app) {
   app.put('/api/timeline/:timeline/:aid', api.timeline.addArticle);
   // Archive API:
   app.get('/api/archive', api.archive.all);
-  app.post('/api/archive/:provider/:aid', api.archive.saveArticle);
-  app.delete('/api/archive/:provider/:aid', api.archive.removeArticle);
-  app.get('/api/archive/:provider/register', contextHandler, api.archive.register);
+  app.post('/api/archive/:provider/:aid', api.archive.assertProvider, api.archive.saveArticle);
+  app.delete('/api/archive/:provider/:aid', api.archive.assertProvider, api.archive.removeArticle);
+  app.get('/api/archive/:provider/registration/request', contextHandler, api.archive.assertProvider, api.archive.registrationRequest);
+  app.get('/api/archive/:provider/registration/callback', contextHandler, api.archive.assertProvider, api.archive.registrationCallback);
   // Admin API:
   app.get('/api/admin/stats', api.admin.stats);
   app.get('/api/admin/user/:email', api.admin.getUser);

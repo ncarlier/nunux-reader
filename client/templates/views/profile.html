@@ -27,12 +27,12 @@
       <span class="loading" ng-show="loading">Loading...</span>
       <ul ng-show="!loading" class="providers">
         <li ng-repeat="provider in providers">
-        <a href="{{ provider.url }}" title="Goto {{ provider.description }}" target="_blank">
+        <a href="{{ provider.url }}" title="Goto {{ provider.description }}" target="_blank" class="provider-logo">
           <img ng-src="/images/providers/{{provider.name}}.png" />
         </a>
         {{ provider.description }}
         <span class="glyphicon glyphicon-ok" ng-if="userAsAccessTo(provider.name)"></span>
-        <a href="{{ provider | archiveRegistrationUrl }}">[{{userAsAccessTo(provider.name) ? 'refresh' : 'choose'}}]</a>
+        <a href="/api/archive/{{ provider.name }}/registration/request">[{{userAsAccessTo(provider.name) ? 'refresh' : 'choose'}}]</a>
         </li>
       </ul>
     </section>

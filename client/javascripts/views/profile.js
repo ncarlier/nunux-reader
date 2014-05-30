@@ -21,11 +21,4 @@ angular.module('ProfileModule', [])
       return provider && provider.access;
     };
   }
-])
-.filter('archiveRegistrationUrl', ['$location', function($location) {
-  var realm = $location.protocol() + '://' + $location.host() + ($location.port() === 80 ? '' : ':' + $location.port());
-  return function(provider) {
-    return provider ? provider.url + '/oauth/authorize?response_type=code&client_id=' +
-      provider.key + '&redirect_uri=' + realm + '/api/archive/' + provider.name + '/register' : null;
-  };
-}]);
+]);

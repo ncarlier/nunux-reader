@@ -3,9 +3,9 @@
 angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
 .controller('TimelineCtrl', [
   '$window', '$rootScope', '$scope', '$q', '$timeout', '$routeParams',
-  '$lazy', '$log', '$modal', 'timelineService', 'archiveService',
+  '$lazy', '$log', '$modal', 'timelineService', 'archiveService', 'userService',
   function ($window, $rootScope, $scope, $q, $timeout, $routeParams,
-            $lazy, $log, $modal, timelineService, archiveService) {
+            $lazy, $log, $modal, timelineService, archiveService, userService) {
     var initializing = true,
         tln = $routeParams.timeline;
 
@@ -107,24 +107,57 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     };
 
     $scope.saveArticle = function(article) {
-      archiveService.save(article).then(function(data) {
-        humane.log('Article saved in ' + data.provider);
-        $log.debug('Article saved in ' + data.provider + ': ' + data.ref);
-        article.archRef = data.ref;
-      }, function(err) {
-        var error = err && err.error ? err.error : err;
-        alert('Unable to save article: ' + error);
+      var _save = function(_art, _providerName) {
+        return archiveService.save(_art, _providerName).then(function(data) {
+          humane.log('Article saved in ' + data.provider);
+          $log.debug('Article saved in ' + data.provider + ': ' + data.ref);
+          return data.ref;
+        }, function(err) {
+          var error = err && err.error ? err.error : err;
+          alert('Unable to save article: ' + error);
+        });
+      };
+
+      userService.getProviders().then(function(providers) {
+        if (!providers || !providers.length) {
+          return alert('Unable to save article. No archive provider found.');
+        }
+        if (providers.length > 1) {
+          // More than one provider. Choose...
+          var modalInstance = $modal.open({
+            templateUrl: 'templates/dialog/archive-provider.html',
+            controller: 'ArchiveProviderModalCtrl',
+            resolve: {
+              providers: function () {
+                return providers;
+              }
+            }
+          });
+          modalInstance.result.then(function(providerName) {
+            _save(article, providerName).then(function(ref) {
+              article.archRef = ref;
+            });
+          }, function(reason) {
+            $log.info('Archive provider modal dismissed: ' + reason);
+          });
+        } else {
+          // Only one provider.
+          _save(article, providers[0]).then(function(ref) {
+            article.archRef = ref;
+          });
+        }
       });
     };
 
     $scope.trashArticle = function(article) {
-      archiveService.remove(article).then(function(data) {
+      return alert('Feature disabled.');
+      /*archiveService.remove(article).then(function(data) {
         humane.log('Article removed from ' + data.provider);
         article.archRef = null;
       }, function(err) {
         var error = err && err.error ? err.error : err;
         alert('Unable to remove article: ' + error);
-      });
+      });*/
     };
 
     $scope.nextArticle = function() {
@@ -179,13 +212,13 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     });
     Mousetrap.bind(['o'], function() {
       $scope.$apply(function() {
-        $scope.order = $scope.order == 'ASC' ? 'DESC' : 'ASC';
+        $scope.toggleOrder();
       });
     });
     Mousetrap.bind(['v'], function() {
       if ($scope.timeline.feed) {
         $scope.$apply(function() {
-          $scope.show = $scope.show == 'new' ? 'all' : 'new';
+          $scope.toggleShow();
         });
       }
     });
@@ -207,6 +240,16 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
         }, 500);
       }
     });
+
+    $scope.toggleOrder = function(order) {
+      if (order) $scope.order = order;
+      else $scope.order = $scope.order == 'ASC' ? 'DESC' : 'ASC';
+    };
+
+    $scope.toggleShow = function(show) {
+      if (show) $scope.show = show;
+      else $scope.show = $scope.show == 'new' ? 'all' : 'new';
+    };
 
     $scope.$watch('order', function(newValue) {
       if (!initializing) $scope.refresh();
@@ -236,6 +279,15 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
   '$scope', '$modalInstance', 'article', function ($scope, $modalInstance, article) {
     $scope.link = article.link;
     $scope.ok = $modalInstance.close;
+  }
+])
+.controller('ArchiveProviderModalCtrl', [
+  '$scope', '$modalInstance', 'providers', function ($scope, $modalInstance, providers) {
+    $scope.providers = providers;
+    $scope.choose = $modalInstance.close;
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
   }
 ])
 .directive('timelineArticle', ['$compile', function ($compile) {

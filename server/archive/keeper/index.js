@@ -1,23 +1,95 @@
-var when    = require('when'),
+var _       = require('underscore'),
+    qs      = require('querystring'),
+    when    = require('when'),
     nodefn  = require('when/node/function'),
     request = require('request'),
-    logger  = require('../../helpers/logger'),
+    errors  = require('../../helpers').errors,
+    logger  = require('../../helpers').logger,
+    User    = require('../../models/user'),
     Article = require('../../models/article');
 
 /**
  * Keeper archive provider.
  */
 var KeeperProvider = function() {
-  this.name = 'keeper';
-  this.description = 'Nunux Keeper';
-  this.url = process.env.APP_KEEPER_URL;
-  this.key = process.env.APP_KEEPER_KEY;
-  this.secret = process.env.APP_KEEPER_SECRET;
-  if (!this.key || !this.secret || !this.url) {
+  this.config = {
+    name:        'keeper',
+    description: 'Nunux Keeper',
+    url:         process.env.APP_KEEPER_URL,
+    key:         process.env.APP_KEEPER_KEY,
+    secret:      process.env.APP_KEEPER_SECRET
+  };
+
+  if (!this.config.key || !this.config.secret || !this.config.url) {
     logger.error('Unable to create Keeper archive provider. Configuration not set.');
     return null;
   }
   return this;
+};
+
+/**
+ * Keeper registration request.
+ * (Just a simple redirect)
+ * @param {Object} req HTTP request
+ * @param {Object} res HTTP response
+ * @param {Function} next callback
+ */
+KeeperProvider.prototype.registrationRequest = function(req, res, next) {
+  var redirectURI = req.context.realm + '/api/archive/keeper/registration/callback';
+  res.redirect(this.config.url + '/oauth/authorize?' + qs.stringify({
+    response_type: 'code',
+    client_id:     this.config.key,
+    redirect_uri:  redirectURI
+  }));
+  res.end();
+};
+
+/**
+ * Keeper registration callback.
+ * @param {Object} req HTTP request
+ * @param {Object} res HTTP response
+ * @param {Function} next callback
+ */
+KeeperProvider.prototype.registrationCallback = function(req, res, next) {
+  if (!req.query.code && !req.query.error) {
+    return next(new errors.BadRequest());
+  }
+  if (req.query.error) {
+    return res.redirect('/#/profile?error=' + req.query.error);
+  }
+  var redirectURI = req.context.realm + '/api/archive/keeper/register',
+      code = req.query.code;
+  // Get access token
+  request.post({
+    url: this.config.url + '/oauth/token',
+    auth: {
+      user: this.config.key,
+      pass: this.config.secret,
+      sendImmediately: false
+    },
+    form: {
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: redirectURI
+    }
+  }, function(err, resp, body) {
+    if (err) return next(err);
+    if (resp.statusCode >= 400) return next(body);
+    var data = JSON.parse(body);
+    var access = {
+      name: 'keeper',
+      access_token: data.access_token,
+      token_type: data.token_type,
+      expires_in: data.expires_in
+    };
+    var registration = when.defered;
+    User.registerProvider(user, access, function(_err, user) {
+      if (_err) return next(_err);
+      logger.info('User (%s) Pocket infos updated: %j', user.uid, user.pocket);
+      var message = 'Registration with Keeper successfully completed.';
+      res.redirect('/#/profile?info=' + encodeURIComponent(message));
+    });
+  });
 };
 
 /**
@@ -29,13 +101,13 @@ var KeeperProvider = function() {
 KeeperProvider.prototype.saveArticle = function(user, aid) {
   logger.info('Saving article %s for user %s to Keeper...', aid, user.uid);
   if (!user.providers || !user.providers.keeper) {
-    return when.reject('Keeper provider registred.');
+    return when.reject('Keeper provider not registred.');
   }
   var provider = user.providers.keeper,
-      url = this.url;
+      config = this.config;
   return nodefn.call(Article.get, aid).then(function(article) {
     return nodefn.call(request.post, {
-      url: url + '/api/document',
+      url: config.url + '/api/document',
       headers: {
         Authorization: provider.token_type + ' ' + provider.access_token,
         'Content-Type': 'text/html'
@@ -63,6 +135,7 @@ KeeperProvider.prototype.saveArticle = function(user, aid) {
  */
 KeeperProvider.prototype.removeArticle = function(user, aid) {
   logger.info('Removing article %s for user %s from Keeper...', aid, user.uid);
+  // TODO
   return when.resolve(article);
 };
 
@@ -72,12 +145,7 @@ KeeperProvider.prototype.removeArticle = function(user, aid) {
  * @return {Object} the provider infos
  */
 KeeperProvider.prototype.info = function() {
-  return {
-    name: this.name,
-    description: this.description,
-    url: this.url,
-    key: this.key
-  };
+  return _.omit(this.config, 'secret');
 };
 
 

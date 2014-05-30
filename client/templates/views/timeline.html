@@ -37,13 +37,13 @@
 
         <li><a>Sort by: [o]</a></li>
         <li>
-        <a ng-click="order = 'ASC'" class="pointer">
+        <a ng-click="toggleOrder('ASC')" class="pointer">
           <span class="glyphicon {{order == 'ASC' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
           oldest
         </a>
         </li>
         <li>
-        <a ng-click="order = 'DESC'" class="pointer">
+        <a ng-click="toggleOrder('DESC')" class="pointer">
           <span class="glyphicon {{order == 'DESC' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
           newest
         </a>
@@ -52,13 +52,13 @@
         <li ng-if="timeline.feed" class="divider"></li>
         <li ng-if="timeline.feed"><a>Show: [v]</a></li>
         <li ng-if="timeline.feed">
-        <a ng-click="show = 'new'" class="pointer">
+        <a ng-click="toggleShow('new')" class="pointer">
           <span class="glyphicon {{show == 'new' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
           new articles
         </a>
         </li>
         <li ng-if="timeline.feed">
-        <a ng-click="show = 'all'" class="pointer">
+        <a ng-click="toggleShow('all')" class="pointer">
           <span class="glyphicon {{show == 'all' && 'glyphicon-check' || 'glyphicon-unchecked'}}"></span>
           all articles
         </a>
@@ -153,6 +153,24 @@
 </div>
 <div class="modal-footer">
   <button class="btn btn-primary" ng-click="ok()">Ok</button>
+</div>
+</script>
+
+<script type="text/ng-template" id="templates/dialog/archive-provider.html">
+<div class="modal-header">
+  <h3>Choose the archive provider</h3>
+</div>
+<div class="modal-body">
+  <ul class="provider-chooser">
+    <li ng-repeat="provider in providers">
+      <a class="pointer" title="Save with {{provider}}" ng-click="choose(provider)">
+        <img ng-src="/images/providers/{{provider}}.png" >
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
 </div>
 </script>
 

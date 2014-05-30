@@ -30,8 +30,21 @@ angular.module('UserService', [])
       return deferred.promise;
     };
 
+    var getUserProviders = function() {
+      return getUser().then(function(user) {
+        var providers = [];
+        for (var key in user.providers) {
+          if (user.providers[key].access) {
+            providers.push(key);
+          }
+        }
+        return providers;
+      });
+    };
+
     return {
-      get: getUser
+      get: getUser,
+      getProviders: getUserProviders
     };
   }
 ]);
