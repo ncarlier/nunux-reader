@@ -50,9 +50,8 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
         $scope.isEnded = !data.next;
         if ($scope.isEnded) {
           var end = {
-            fake: true,
-            link: 'foo/bar',
-            description: '<h1>You reach ground 0</h1>'
+            isTheLast: true,
+            link: 'foo/bar'
           };
           data.articles.push(end);
         }

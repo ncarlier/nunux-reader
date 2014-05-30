@@ -48,8 +48,9 @@
 }
 
 article.article {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow: auto;
   position: relative;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -61,8 +62,11 @@ article.article {
   &.not-seen, &.kept-not-seen {
     border-left-color: #4d90f0;
   }
-  header {
-    position: relative;
+  &:hover a.next, &:hover a.prev {
+    display: inline-block;
+  }
+  > header {
+    flex-shrink: 0;
     padding: 10px;
     margin: 0;
     background-color: #FAFAFA;
@@ -88,34 +92,32 @@ article.article {
       }
     }
   }
-  &:hover a.next, &:hover a.prev {
-    display: block;
+  > a.next, > a.prev {
+    position: absolute;
+    bottom: 0;
+    display: none;
+    background: rgba(111, 111, 111, 0.8);
+    color: #fff;
+    font-size: 50px;
+    border-radius: 0;
+    height: 75px;
+    width: 75px;
+    cursor: pointer;
+    padding-top: 10px;
+    text-align: center;
+  }
+  > a.next {
+    right: 10px;
+    border-top-left-radius: 60px;
+  }
+  > a.prev {
+    left: 0;
+    border-top-right-radius: 60px;
   }
   > div.content {
+    overflow: auto;
     padding: 10px;
     text-align: justify;
-    > a {
-      display: none;
-      position: absolute;
-      background: rgba(0, 0, 0, 0.15);
-      font-size: 75px;
-      color: #FFF;
-      top: 120px;
-      border-radius: 10px;
-      line-height: 75px;
-      cursor: pointer;
-    }
-    > a.next {
-      right: 0;
-      border-top-right-radius: 0px;
-      border-bottom-right-radius: 0px;
-    }
-    > a.prev {
-      left: 0;
-      border-top-left-radius: 0px;
-      border-bottom-left-radius: 0px;
-    }
-
     img {
       max-width: 100%;
     }
@@ -137,21 +139,31 @@ article.article {
     top: 0;
     bottom: 0;
     padding-top: 15%;
-  }
-  footer {
-    line-height: 10px;
-    padding: 5px;
-    background-color: #fafafa;
-    color: #666;
-    border-top: 1px solid #ebebeb;
-    a {
-      cursor: pointer;
-      opacity: 0.25;
-      margin: 0 10px;
-    }
-    a:hover {
-      opacity: 1;
+    h1 {
+      background-color: #565656;
+      color: transparent;
+      text-shadow: 0px 2px 3px rgba(255, 255, 255, 0.5);
+      -webkit-background-clip: text;
+      -moz-background-clip: text;
+      background-clip: text;
+      font-weight: bold;
+      font-size: 40px;
     }
   }
+  /*footer {
+  line-height: 10px;
+  padding: 5px;
+  background-color: #fafafa;
+  color: #666;
+  border-top: 1px solid #ebebeb;
+  a {
+  cursor: pointer;
+  opacity: 0.25;
+  margin: 0 10px;
+  }
+  a:hover {
+  opacity: 1;
+  }
+  }*/
 }
 
