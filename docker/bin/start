@@ -1,4 +1,4 @@
 #!/bin/bash
 
 #docker run -rm -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 --entrypoint="/usr/bin/supervisord" nunux/reader -n
-docker run -rm -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 nunux/reader
+docker run -rm -name reader -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 nunux/reader
