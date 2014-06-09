@@ -14,13 +14,11 @@
     left: 0;
     z-index: 1000;
     text-align: center;
-    font-size: 85px;
+    font-size: 50px;
     .glyphicon {
-      color: #000;
+      color: #777;
       margin-top: 25%;
-      height: 100px;
-      width: 100px;
-      //.animation(spin, 4000ms, infinite, linear);
+      .animation(spin, 1000ms, infinite, ease);
       p {
         display: none;
       }
@@ -107,7 +105,7 @@ article.article {
     text-align: center;
   }
   > a.next {
-    right: 10px;
+    right: 0;
     border-top-left-radius: 60px;
   }
   > a.prev {
@@ -118,7 +116,7 @@ article.article {
     overflow: auto;
     padding: 10px;
     text-align: justify;
-    img {
+    img, figure, iframe {
       max-width: 100%;
     }
     pre {

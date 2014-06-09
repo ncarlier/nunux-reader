@@ -1,4 +1,7 @@
 <div id="timeline">
+  <div class="loading" ng-show="busy">
+    <span class="glyphicon glyphicon-refresh"><p>LOADING...</p></span>
+  </div>
   <nav class="navbar navbar-default" role="navigation" >
     <button type="button" class="btn btn-default navbar-btn" title="Show main menu" ng-click="toggleMenu()">
       <div class="glyphicon glyphicon-th-large" ></div>
@@ -67,7 +70,7 @@
   <section class="content">
     <ul rn-carousel rn-carousel-buffered rn-carousel-watch rn-carousel-index="articleIndex">
       <li ng-repeat="article in articles">
-      <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article" ui-lazy-scroll>
+      <article id="{{ article.id }}" ng-class="{'not-seen':isReadable() && !article.read}" class="article">
         <header ng-if="!article.isTheLast">
           <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -123,7 +126,7 @@
             <time title="{{article.date | date}}">{{ article.date | fromNow }}</time>
           </span>
         </header>
-        <div class="content {{article.isTheLast && 'ending'}}">
+        <div class="content {{article.isTheLast && 'ending'}}" ui-lazy-scroll>
           <h1 ng-if="article.isTheLast">You reach ground 0</h1>
           <div timeline-article="article.description" ng-if="!article.isTheLast"></div>
         </div>
