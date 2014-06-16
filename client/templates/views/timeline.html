@@ -90,13 +90,13 @@
                 Trash this article [s]
               </a>
               </li>
-              <li ng-if="isReadable() && article.read" >
+              <li ng-if="isReadable() && !article.keepUnRead" >
               <a ng-click="keepUnRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-close"></span>
                 Keep it as unread [m]
               </a>
               </li>
-              <li ng-if="isReadable() && !article.read" >
+              <li ng-if="isReadable() && article.keepUnRead" >
               <a ng-click="markAsRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-open"></span>
                 Mark it as read [m]

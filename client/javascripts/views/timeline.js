@@ -192,9 +192,9 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     Mousetrap.bind(['m'], function() {
       var art = $scope.getCurrent();
       $scope.$apply(function() {
-        if (art && art.read) {
+        if (art && $scope.isReadable() && !art.keepUnRead) {
           $scope.keepUnRead(art);
-        } else if (art && !art.read) {
+        } else if (art && $scope.isReadable() && art.keepUnRead) {
           $scope.markAsRead(art);
         }
       });
