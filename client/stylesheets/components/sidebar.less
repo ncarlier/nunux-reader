@@ -16,12 +16,19 @@
   .list-group-item {
     font-size: 1.2em;
     border: none;
+    border-radius: 0;
     background: none;
     text-overflow: ellipsis;
     overflow: hidden;
+    padding-right: 30px;
     &:hover, &.active {
       background: @r-panel-fg-color;
       color: @r-panel-text-color;
+    }
+    > .badge {
+      position: absolute;
+      right: 10px;
+      float: none;
     }
   }
   a {
