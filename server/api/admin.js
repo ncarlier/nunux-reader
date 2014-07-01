@@ -25,10 +25,8 @@ module.exports = {
               userStats[uid] = {
                 timelines: result.length
               };
+              // Get global timeline size
               userStats[uid][result[0].timeline] = result[0].size;
-              if (result[1]) {
-                userStats[uid][result[1].timeline] = result[1].size;
-              }
               stats.users.push(userStats);
               next(null);
             });
