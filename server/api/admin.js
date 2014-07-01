@@ -26,7 +26,9 @@ module.exports = {
                 timelines: result.length
               };
               userStats[uid][result[0].timeline] = result[0].size;
-              userStats[uid][result[1].timeline] = result[1].size;
+              if (result[1]) {
+                userStats[uid][result[1].timeline] = result[1].size;
+              }
               stats.users.push(userStats);
               next(null);
             });
