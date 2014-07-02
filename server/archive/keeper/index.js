@@ -128,19 +128,6 @@ KeeperProvider.prototype.saveArticle = function(user, aid) {
 };
 
 /**
- * Remove article from Keeper.
- * @param {Object} user User
- * @param {String} aid Article ID to remove
- * @return {Promise} the promise of saving
- */
-KeeperProvider.prototype.removeArticle = function(user, aid) {
-  logger.info('Removing article %s for user %s from Keeper...', aid, user.uid);
-  // TODO
-  return when.resolve(article);
-};
-
-
-/**
  * Get provider infos.
  * @return {Object} the provider infos
  */

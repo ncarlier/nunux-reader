@@ -148,17 +148,6 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
       });
     };
 
-    $scope.trashArticle = function(article) {
-      return alert('Feature disabled.');
-      /*archiveService.remove(article).then(function(data) {
-        humane.log('Article removed from ' + data.provider);
-        article.archRef = null;
-      }, function(err) {
-        var error = err && err.error ? err.error : err;
-        alert('Unable to remove article: ' + error);
-      });*/
-    };
-
     $scope.nextArticle = function() {
       if ($scope.articleIndex < $scope.articles.length - 1) {
         $scope.articleIndex++;
@@ -202,9 +191,7 @@ angular.module('TimelineModule', ['angular-carousel', 'ui.qrcode', 'ui.lazy'])
     Mousetrap.bind(['s'], function() {
       var art = $scope.getCurrent();
       $scope.$apply(function() {
-        if (art && art.saved) {
-          $scope.trashArticle(art);
-        } else if (art && !art.saved) {
+        if (art && !art.saved) {
           $scope.saveArticle(art);
         }
       });

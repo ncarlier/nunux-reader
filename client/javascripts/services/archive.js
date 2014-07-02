@@ -49,19 +49,10 @@ angular.module('ArchiveService', [])
       return deferred.promise;
     };
 
-    var removeArticle = function(article, providerName) {
-      var deferred = $q.defer();
-      $http.delete(url + '/' + providerName + '/' + article.id)
-      .success(deferred.resolve)
-      .error(deferred.reject);
-      return deferred.promise;
-    };
-
     return {
       getProviders: getProviders,
       getProvider: getProvider,
-      save: saveArticle,
-      remove: removeArticle
+      save: saveArticle
     };
   }
 ]);

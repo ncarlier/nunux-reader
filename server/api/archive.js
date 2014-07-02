@@ -40,17 +40,6 @@ module.exports = {
   },
 
   /**
-   * Remove article from archive provider.
-   */
-  removeArticle: function(req, res, next) {
-    var provider = archive.providers[req.params.provider];
-    provider.removeArticle(req.user, req.params.aid)
-    .then(function(result) {
-      res.json(result);
-    }, next);
-  },
-
-  /**
    * Registration callback.
    */
   registrationRequest: function(req, res, next) {

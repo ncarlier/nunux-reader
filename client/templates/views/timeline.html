@@ -84,12 +84,6 @@
                 Save this article [s]
               </a>
               </li>
-              <li ng-if="article.archRef" >
-              <a ng-click="trashArticle(article)" class="pointer">
-                <span class="glyphicon glyphicon-trash"></span>
-                Trash this article [s]
-              </a>
-              </li>
               <li ng-if="isReadable() && !article.keepUnRead" >
               <a ng-click="keepUnRead(article)" class="pointer">
                 <span class="glyphicon glyphicon-eye-close"></span>
