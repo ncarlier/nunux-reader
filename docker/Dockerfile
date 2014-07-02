@@ -4,17 +4,21 @@
 #
 # VOLUME: docker run -v ~/src/reader:/opt/reader -v ~/var/reader:/var/opt/reader -name READER_VOLUMES busybox true
 # BUILD:  docker build -rm -t nunux/reader .
-# RUN     docker run -rm -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 --entrypoint="/usr/bin/supervisord" nunux/reader -n
+# RUN:    docker run -rm -name reader -link redis:db -volumes-from READER_VOLUMES -i -t -p 3001:3001 nunux/reader
 
 FROM nunux/nodejs
 
 MAINTAINER Nicolas Carlier <https://github.com/ncarlier>
 
+# Virtual host (for reverse proxy container)
+ENV VIRTUAL_HOST reader.lan
+ENV VIRTUAL_PORT 3001
+
 # Env
 ENV NODE_ENV development
 
 # Server port
-ENV APP_PORT 3001
+ENV APP_PORT 3000
 
 # Server base URL (Realm)
 ENV APP_REALM http://reader.lan
@@ -36,10 +40,7 @@ ENV APP_KEEPER_URL http://keeper.lan
 ENV APP_KEEPER_KEY 1234
 ENV APP_KEEPER_SECRET 1234
 
-# Add supervisor conf
-ADD supervisord.conf  /etc/supervisor/conf.d/supervisord.conf
-
-EXPOSE 3001
+EXPOSE 3000
 
 USER node
 ENV HOME /home/node
