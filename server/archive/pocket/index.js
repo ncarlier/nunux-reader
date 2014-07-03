@@ -126,7 +126,11 @@ PocketProvider.prototype.saveArticle = function(user, aid) {
         access_token: provider.access_token
       }
     }).then(function(args) {
-      var body = JSON.parse(args[1]);
+      var resp = JSON.parse(args[1]);
+      if (resp.error) {
+        logger.error('Unable to savec article %s in Pocket: %s', article.id, resp.error);
+        return when.reject(new errors.BadGateway(resp.error));
+      }
       return body.item ? when.resolve({
         ref: body.item,
         provider: 'pocket'

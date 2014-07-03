@@ -22,5 +22,12 @@ module.exports = {
     this.message = msg || 'Not found';
     Error.call(this, this.message);
     Error.captureStackTrace(this, arguments.callee);
-  }
+  },
+  BadGateway: function(msg) {
+    this.status = 502;
+    this.message = msg || 'Bad Gateway';
+    Error.call(this, this.message);
+    Error.captureStackTrace(this, arguments.callee);
+  },
+
 };

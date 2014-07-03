@@ -83,7 +83,7 @@ KeeperProvider.prototype.registrationCallback = function(req, res, next) {
       expires_in: data.expires_in
     };
     var registration = when.defered;
-    User.registerProvider(user, access, function(_err, user) {
+    User.registerProvider(req.user, access, function(_err, user) {
       if (_err) return next(_err);
       logger.info('User (%s) Pocket infos updated: %j', user.uid, user.pocket);
       var message = 'Registration with Keeper successfully completed.';
@@ -118,9 +118,13 @@ KeeperProvider.prototype.saveArticle = function(user, aid) {
       },
       body : article.description
     }).then(function(args) {
-      var doc = JSON.parse(args[1]);
+      var resp = JSON.parse(args[1]);
+      if (resp.error) {
+        logger.error('Unable to savec article %s in Keeper: %s', article.id, resp.error);
+        return when.reject(new errors.BadGateway(resp.error));
+      }
       return when.resolve({
-        ref: doc._id,
+        ref: resp._id,
         provider: 'keeper'
       });
     });
