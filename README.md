@@ -10,7 +10,7 @@ Features:
  * Login with Google OpenID or Mozilla Persona
  * OPML import/export
  * Manage subscriptions
- * Save articles in Nunux Keeper
+ * Save articles in Nunux Keeper, Pocket or Dropbox
  * Keep article as not read
  * Powerfull reactive aggregator daemon
  * Support of PubSubHubbud
