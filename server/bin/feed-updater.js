@@ -30,7 +30,7 @@ logger.info('Starting Feed Updater...');
 
 async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
   process.on(signal, function() {
-    console.log('Stopping Feed Updater...');
+    logger.info('Stopping Feed Updater...');
     stop = true;
     if (timeout) {
       clearTimeout(timeout);

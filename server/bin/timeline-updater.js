@@ -20,11 +20,11 @@ program
 
 logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
-console.log('Starting Timeline Updater...');
+logger.info('Starting Timeline Updater...');
 
 async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
   process.on(signal, function() {
-    console.log('Stopping Timeline Updater...');
+    logger.info('Stopping Timeline Updater...');
     stop = true;
   });
 });
@@ -35,7 +35,7 @@ db.on('connect', function() {
 
 app.on('stop', function() {
   db.quit(function (err, res) {
-    console.log(err || 'Stopping Timeline Updater: done.');
+    logger.error(err || 'Stopping Timeline Updater: done.');
     process.exit();
   });
 });
@@ -73,7 +73,7 @@ app.on('nextarticle', function() {
       }
     ],
     function(err) {
-      console.log('Error: %s', err);
+      logger.error('Error: %s', err);
       app.emit('nextarticle');
     }
   );
