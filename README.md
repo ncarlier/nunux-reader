@@ -17,52 +17,100 @@ Features:
  * RESTFul JSON API
  * 100% Javascript!
 
-## Installation guide
+## Installation guide with Docker (the recommended way)
+
+### Prerequisites
+
+* [docker](http://www.docker.com/)
+
+### Start the Redis server
+
+    docker run --name redis -d redis
+
+### Start the Web Site
+
+Configure the application according your needs by editing "./etc/reader.conf" file.
+(see ./etc/reader.conf in this repository for more details)
+
+Then start the Web Server:
+
+    docker run \
+        --rm \
+        --name reader-server \
+        --link redis:db \
+        --env-file ./etc/reader.conf \
+        -p 3000:3000
+        -i -t \
+        ncarlier/reader
+
+Go to http://localhost:3000 and the magic happens.
+
+### Start the feed updater daemon
+
+This daemon is responsible to fetch articles of  the registered subscriptions.
+
+    docker run \
+        --rm \
+        --name reader-feed-updater \
+        --link redis:db \
+        --env-file ./etc/reader.conf \
+        -i -t \
+        ncarlier/reader run feed-updater
+
+### Start the timeline updater daemon
+
+This daemon is responsible to update user's timelines.
+
+    docker run \
+        --rm \
+        --name reader-timeline-updater \
+        --link redis:db \
+        --env-file ./etc/reader.conf \
+        -i -t \
+        ncarlier/reader run timeline-updater
+
+## Installation guide from scratch (the -not so- hard way)
+
 ### Prerequisites
 
 * [git](http://git-scm.com/)
-* [nodejs](http://nodejs.org/) v0.8.x
+* [nodejs](http://nodejs.org/) v0.10.x
 * [redis](http://redis.io/) v2.2
 
-#### Install Git and Redis (on Debian Wheezy)
+#### Install Git, Node.JS and Redis (on Debian)
 
-        sudo aptitude install git redis-server
-
-#### Install Node.JS
-
-See following installation procedure : [https://github.com/joyent/node/wiki/Installation](https://github.com/joyent/node/wiki/Installation)
+    sudo aptitude install git nodejs redis-server
 
 #### Install Grunt
 
-        sudo npm install -g grunt-cli
+    sudo npm install -g grunt-cli
 
 ### Install Web Site
 
-    cd ~/local/var/lib
+    cd /opt_
     git clone git@github.com:ncarlier/nunux-reader.git
-    cd reader
+    cd nunux-reader
     npm install
 
 ### Run Web Site
 
     #!/bin/sh
-    # See etc/default/reader-server for environment configuration.
-    node app.js 2>&1 >> app.log
+    # See etc/reader.conf for environment configuration.
+    npm start 2>&1 >> app.log
 
 ### Jobs
 
 * **clean-db.js**: Clean database (aka remove old articles). Usage:
 
-        ./bin/clean-db.js -v --days 30
+        ./server/bin/clean-db.js -v --days 30
 
 * **feed-updater.js**: Update feeds content. It's a daemon. Use CTRL+C to stop. Usage:
 
-        ./bin/feed-updater.js -v
+        ./server/bin/feed-updater.js -v
 
 * **timeline-updater.js**: Update users timelines. It's a daemon. Use CTRL+C to stop. Usage:
 
-        ./bin/timeline-updater.js -v
-
+        ./server/bin/timeline-updater.js -v
 
 ## API
 
