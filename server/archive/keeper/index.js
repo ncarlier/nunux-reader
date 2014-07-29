@@ -85,7 +85,7 @@ KeeperProvider.prototype.registrationCallback = function(req, res, next) {
     var registration = when.defered;
     User.registerProvider(req.user, access, function(_err, user) {
       if (_err) return next(_err);
-      logger.info('User (%s) Pocket infos updated: %j', user.uid, user.pocket);
+      logger.info('User (%s) Keeper infos updated: %j', user.uid, user.pocket);
       var message = 'Registration with Keeper successfully completed.';
       res.redirect('/#/profile?info=' + encodeURIComponent(message));
     });
