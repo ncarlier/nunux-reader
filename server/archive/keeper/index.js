@@ -1,5 +1,6 @@
 var _       = require('underscore'),
     qs      = require('querystring'),
+    url     = require('url'),
     when    = require('when'),
     nodefn  = require('when/node/function'),
     request = require('request'),
@@ -106,6 +107,12 @@ KeeperProvider.prototype.saveArticle = function(user, aid) {
   var provider = user.providers.keeper,
       config = this.config;
   return nodefn.call(Article.get, aid).then(function(article) {
+    // filter link if exist
+    var link = article.link;
+    if (link && article.meta.link && !/^https?|file|ftps?/i.test(link)) {
+      link = url.resolve(article.meta.link, link);
+    }
+
     return nodefn.call(request.post, {
       url: config.url + '/api/document',
       headers: {
@@ -114,7 +121,7 @@ KeeperProvider.prototype.saveArticle = function(user, aid) {
       },
       qs: {
         title: article.title,
-        link: article.link
+        link: link
       },
       body : article.description
     }).then(function(args) {
