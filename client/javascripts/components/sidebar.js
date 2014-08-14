@@ -45,7 +45,6 @@ angular.module('SidebarModule', [])
       $http.get('/api/timeline').success(function (data) {
         $scope.timelines = data;
         $scope.globalSize = data[0].size;
-        $scope.archiveSize = data[1].size;
       });
     };
 
@@ -60,10 +59,13 @@ angular.module('SidebarModule', [])
     $scope.$on('app.event.timeline.status', function(event, data) {
       if (data.timeline == 'global') {
         $scope.globalSize = data.size;
-      } else if (data.timeline == 'archive') {
-        $scope.archiveSize = data.size;
+        if (data.size === 0) {
+          for (var i = 0 ; i < $scope.timelines.length ; i++) {
+            $scope.timelines[i].size = 0;
+          }
+        }
       } else {
-        for (var i=0 ; i < $scope.timelines.length ; i++) {
+        for (var i = 0 ; i < $scope.timelines.length ; i++) {
           if ($scope.timelines[i].timeline == data.timeline) {
             $scope.timelines[i].size = data.size;
             break;
