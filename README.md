@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ncarlier/nunux-reader.svg)](https://travis-ci.org/ncarlier/nunux-reader)
+
 # NUNUX Reader
 
 The super-fast-minimalist-nosql-opensource Google Reader revival.
