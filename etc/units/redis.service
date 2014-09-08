@@ -1,0 +1,15 @@
+[Unit]
+Description=Redis Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill redis
+ExecStartPre=-/usr/bin/docker rm redis
+ExecStartPre=/usr/bin/docker pull redis
+ExecStart=/usr/bin/docker run --name redis redis
+ExecStop=/usr/bin/docker stop redis
+
+[X-Fleet]
+X-Conflicts=redis.service

@@ -1,5 +1,0 @@
-APP_MAIN=/opt/node/reader/current/server/bin/timeline-updater.js
-APP_OPTS="-v"
-export NODE_ENV="production"
-export APP_DAYS_TO_KEEP=60
-export APP_REDIS_URI="redis://localhost:6379/5"

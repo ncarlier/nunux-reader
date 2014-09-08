@@ -1,0 +1,11 @@
+[Unit]
+Description=Nunux Reader cleaning job
+
+[Service]
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
+ExecStart=/usr/bin/docker run --rm --name reader-cleandb --env-file /media/data/reader/env.conf ncarlier/reader run clean-db
+
+[X-Fleet]
+X-Conflicts=reader-cleandb.service
