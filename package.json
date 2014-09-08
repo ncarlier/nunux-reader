@@ -13,7 +13,10 @@
     "start": "node server/app",
     "debug": "node-inspector --web-port=3009 & node --debug server/app",
     "test": "grunt",
-    "postinstall": "grunt install"
+    "postinstall": "grunt install",
+    "feed-updater": "node server/bin/feed-updater.js -v",
+    "timeline-updater": "node server/bin/timeline-updater.js -v",
+    "clean-db": "node server/bin/clean-db.js -v"
   },
   "dependencies": {
     "redis": "0.10.x",
