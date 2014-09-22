@@ -4,10 +4,10 @@ After=docker.service
 Requires=docker.service redis.service
 
 [Service]
-ExecStartPre=-/usr/bin/docker kill reader-feed-updater-%i
-ExecStartPre=-/usr/bin/docker rm reader-feed-updater-%i
-ExecStart=/usr/bin/docker run --rm --name reader-feed-updater-%i --env-file /media/data/reader/env.conf ncarlier/reader run feed-updater
-ExecStop=/usr/bin/docker stop reader-feed-updater-%i
+ExecStartPre=-/usr/bin/docker kill reader-feed-updater
+ExecStartPre=-/usr/bin/docker rm reader-feed-updater
+ExecStart=/usr/bin/docker run --rm --name reader-feed-updater --env-file /media/data/reader/env.conf ncarlier/reader run feed-updater
+ExecStop=/usr/bin/docker stop reader-feed-updater
 
 [X-Fleet]
 X-Conflicts=reader-feed-updater@*.service

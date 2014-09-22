@@ -4,10 +4,10 @@ After=docker.service
 Requires=docker.service redis.service
 
 [Service]
-ExecStartPre=-/usr/bin/docker kill reader-timeline-updater-%i
-ExecStartPre=-/usr/bin/docker rm reader-timeline-updater-%i
-ExecStart=/usr/bin/docker run --rm --name reader-timeline-updater-%i --env-file /media/data/reader/env.conf ncarlier/reader run timeline-updater
-ExecStop=/usr/bin/docker stop reader-timeline-updater-%i
+ExecStartPre=-/usr/bin/docker kill reader-timeline-updater
+ExecStartPre=-/usr/bin/docker rm reader-timeline-updater
+ExecStart=/usr/bin/docker run --rm --name reader-timeline-updater --env-file /media/data/reader/env.conf ncarlier/reader run timeline-updater
+ExecStop=/usr/bin/docker stop reader-timeline-updater
 
 [X-Fleet]
 X-Conflicts=reader-timeline-updater@*.service

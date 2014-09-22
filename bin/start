@@ -16,6 +16,7 @@ docker run \
     --name reader \
     --link redis:db \
     --env-file ./etc/reader.conf \
+    -P \
     -i -t \
     ncarlier/reader $@
 
