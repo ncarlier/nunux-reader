@@ -8,9 +8,6 @@ var getRedisUri = function() {
   var uri = 'redis://localhost:6379/0';
   if (process.env.APP_REDIS_URI) {
     uri = process.env.APP_REDIS_URI;
-  } else if (process.env.DB_PORT) { // Docker
-    uri = process.env.DB_PORT.replace(/^tcp/, 'redis');
-    uri = uri + '/0';
   }
   return uri;
 };
