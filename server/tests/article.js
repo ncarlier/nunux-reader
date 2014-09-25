@@ -5,7 +5,7 @@ var should  = require('should'),
     logger  = require('../helpers').logger,
     Article = require('../models/article');
 
-logger.setLevel('info');
+logger.level('info');
 db.select(9);
 
 describe('An new article', function() {

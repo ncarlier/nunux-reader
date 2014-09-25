@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.title = 'reader-clean-db';
+
 require('date-utils');
 var program  = require('commander'),
     async    = require('async'),
@@ -16,7 +18,7 @@ program
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
+logger.level(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
 var after = new Date();
 

@@ -6,7 +6,7 @@ var should  = require('should'),
     Feed    = require('../models/feed');
     User    = require('../models/user');
 
-logger.setLevel('info');
+logger.level('info');
 db.select(9);
 
 describe('A new user', function() {

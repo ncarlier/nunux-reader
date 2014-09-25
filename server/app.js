@@ -17,6 +17,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+process.title = 'reader-server';
+
 var express    = require('express'),
     http       = require('http'),
     path       = require('path'),
@@ -41,7 +43,7 @@ app.configure(function() {
   app.set('pshb', process.env.APP_PSHB_ENABLED === 'true');
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.use(express.logger('dev'));
+  app.use(logger.requestLogger);
   app.use(express.compress());
   app.use(express.cookieParser());
   app.use(express.cookieSession({
@@ -76,6 +78,9 @@ require('./security')(app, passport);
 
 // Register routes...
 require('./routes')(app);
+
+// Start metrics logger
+require('./helpers/metrics');
 
 http.createServer(app).listen(app.get('port'), function() {
   logger.info('%s web server listening on port %s (%s mode)',

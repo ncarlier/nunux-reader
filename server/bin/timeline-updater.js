@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.title = 'reader-timeline-updater';
+
 var program      = require('commander'),
     async        = require('async'),
     EventEmitter = require('events').EventEmitter,
@@ -18,7 +20,7 @@ program
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
+logger.level(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
 
 logger.info('Starting Timeline Updater...');
 

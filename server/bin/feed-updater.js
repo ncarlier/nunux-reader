@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.title = 'reader-feed-updater';
+
 /**
  * Module dependencies.
  */
@@ -24,7 +26,7 @@ program
   .option('-d, --debug', 'Debug flag')
   .parse(process.argv);
 
-logger.setLevel(program.debug ? 'debug' : program.verbose ? 'info' : 'warn');
+logger.level(program.debug ? 'debug' : program.verbose ? 'info' : 'warn');
 
 logger.info('Starting Feed Updater...');
 
