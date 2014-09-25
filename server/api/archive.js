@@ -1,6 +1,5 @@
 var User    = require('../models/user'),
     errors  = require('../helpers').errors,
-    logger  = require('../helpers').logger,
     request = require('request'),
     archive = require('../archive');
 
