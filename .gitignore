@@ -1,6 +1,6 @@
 node_modules/
 client/stylesheets/*.css
 dist/
-etc/reader_dev.conf
-etc/reader.conf
+etc/env_dev.conf
+etc/env.conf
 tmp/
