@@ -1,4 +1,4 @@
-var GoogleStrategy = require('passport-google').Strategy,
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
     User = require('../models/user');
 
 /**
@@ -10,9 +10,10 @@ module.exports = function(app, passport) {
    * Configure passport with Google strategy.
    */
   passport.use(new GoogleStrategy({
-    returnURL: app.get('realm') + '/auth/google/return',
-    realm: app.get('realm') + '/'
-  }, function(identifier, profile, done) {
+    clientID: process.env.APP_GOOGLE_KEY,
+    clientSecret: process.env.APP_GOOGLE_SECRET,
+    callbackURL: app.get('realm') + '/auth/google/callback',
+  }, function(accessToken, refreshToken, profile, done) {
     var user = {
       uid: profile.emails[0].value,
       username: profile.displayName
@@ -23,12 +24,12 @@ module.exports = function(app, passport) {
   /**
    * Google auth entry point.
    */
-  app.get('/auth/google', passport.authenticate('google'));
+  app.get('/auth/google', passport.authenticate('google', {scope: 'profile email'}));
 
   /**
    * Google auth return URL.
    */
-  app.get('/auth/google/return', passport.authenticate('google', {
+  app.get('/auth/google/callback', passport.authenticate('google', {
     successRedirect: '/', failureRedirect: '/welcome?error=unauthorized'
   }));
 };

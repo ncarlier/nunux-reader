@@ -9,7 +9,7 @@ Features:
  * Faster than light thanks to Redis and Node.js
  * Dynamic GUI thanks to AngularJS
  * Responsive Web Design
- * Login with Google OpenID or Mozilla Persona
+ * Login with Google OAuth2 or Mozilla Persona
  * OPML import/export
  * Manage subscriptions
  * Save articles in Nunux Keeper, Pocket or Dropbox
@@ -32,7 +32,7 @@ Features:
 ### Start the Web Site
 
 Configure the application according your needs by editing "./etc/reader.conf" file.
-(see ./etc/reader.conf in this repository for more details)
+(see ./etc/env.conf in this repository for more details)
 
 Then start the Web Server:
 
@@ -40,7 +40,7 @@ Then start the Web Server:
         --rm \
         --name reader-server \
         --link redis:db \
-        --env-file ./etc/reader.conf \
+        --env-file ./etc/env.conf \
         -p 3000:3000
         -i -t \
         ncarlier/reader
@@ -55,7 +55,7 @@ This daemon is responsible to fetch articles of  the registered subscriptions.
         --rm \
         --name reader-feed-updater \
         --link redis:db \
-        --env-file ./etc/reader.conf \
+        --env-file ./etc/env.conf \
         -i -t \
         ncarlier/reader run feed-updater
 
@@ -67,7 +67,7 @@ This daemon is responsible to update user's timelines.
         --rm \
         --name reader-timeline-updater \
         --link redis:db \
-        --env-file ./etc/reader.conf \
+        --env-file ./etc/env.conf \
         -i -t \
         ncarlier/reader run timeline-updater
 
@@ -97,7 +97,7 @@ This daemon is responsible to update user's timelines.
 ### Run Web Site
 
     #!/bin/sh
-    # See etc/reader.conf for environment configuration.
+    # See etc/env.conf for environment configuration.
     npm start 2>&1 >> app.log
 
 ### Jobs

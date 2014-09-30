@@ -33,7 +33,7 @@
     "feedparser": "0.15.x",
     "async": "0.2.x",
     "passport": "0.1.x",
-    "passport-google": "0.3.0",
+    "passport-google-oauth": "0.1.5",
     "passport-browserid": "0.1.4",
     "when": "~3.0.0",
     "bunyan": "1.1.x"
