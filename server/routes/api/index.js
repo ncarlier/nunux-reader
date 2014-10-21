@@ -17,7 +17,7 @@ module.exports = function(app) {
   // Timeline API
   require('./timeline')(app);
   // User API
-  require('./admin')(app);
+  require('./user')(app);
   // PubSubHubbud API
   require('./pshb')(app);
 };
