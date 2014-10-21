@@ -5,6 +5,13 @@
   "description": "The super-fast-minimalist-nosql-opensource Google Reader revival.",
   "license": "gplv3",
   "homepage": "http://reader.nunux.org",
+  "apidoc": {
+    "title": "Nunux Reader API documentation",
+    "url" : "http://reader.nunux.org",
+    "template": {
+        "withCompare": false
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ncarlier/nunux-reader.git"
@@ -50,6 +57,7 @@
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-less": "~0.9.0"
+    "grunt-contrib-less": "~0.9.0",
+    "grunt-apidoc": "~0.7.0"
   }
 }

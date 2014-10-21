@@ -8,6 +8,7 @@ module.exports = function(grunt) {
     jshint:    require('./jshint'),
     less:      require('./less'),
     mochaTest: require('./mocha'),
-    uglify:    require('./uglify')
+    uglify:    require('./uglify'),
+    apidoc:    require('./apidoc')
   };
 };

@@ -7,7 +7,7 @@ module.exports = function(grunt) {
   grunt.initConfig(conf);
 
   // Register tasks
-  grunt.registerTask('build', ['less', 'uglify:dist', 'concat', 'copy']);
+  grunt.registerTask('build', ['less', 'uglify:dist', 'concat', 'copy', 'apidoc']);
   grunt.registerTask('install', ['clean', 'build']);
   grunt.registerTask('hint', 'jshint');
   grunt.registerTask('dep', ['bower', 'uglify:dep']);
