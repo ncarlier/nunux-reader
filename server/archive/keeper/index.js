@@ -58,7 +58,7 @@ KeeperProvider.prototype.registrationCallback = function(req, res, next) {
   if (req.query.error) {
     return res.redirect('/#/profile?error=' + req.query.error);
   }
-  var redirectURI = req.context.realm + '/api/archive/keeper/register',
+  var redirectURI = req.context.realm + '/api/archive/keeper/registration/callback',
       code = req.query.code;
   // Get access token
   request.post({
