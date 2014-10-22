@@ -5,7 +5,7 @@ var should  = require('should'),
     logger  = require('../helpers').logger,
     Article = require('../models/article');
 
-logger.level('info');
+logger.level('debug');
 db.select(9);
 
 describe('An new article', function() {
@@ -24,7 +24,8 @@ describe('An new article', function() {
   };
 
   before(function(done) {
-    db.on('connect', function() {
+    db.on('ready', function() {
+      logger.info("Redis connected. Flushing DB...");
       db.flushdb(done);
     });
   });

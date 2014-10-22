@@ -1,4 +1,5 @@
-var redis   = require('redis');
+var redis  = require('redis'),
+    logger = require('./logger');
 
 /**
  * Get Redis URI.
@@ -30,10 +31,20 @@ var connect = function(str) {
   return redisClient;
 };
 
+var client = connect(getRedisUri());
+
+client.on("error", function (err) {
+  logger.error("Redis error encountered", err);
+});
+
+client.on("end", function() {
+  logger.info("Redis connection closed");
+});
+
 /**
  * Redis helper.
  * @module redis
  */
-module.exports = connect(getRedisUri());
+module.exports = client;
 
 
