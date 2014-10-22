@@ -8,7 +8,7 @@ IMAGE:=$(USERNAME)/$(APPNAME)
 define docker_run_flags
 --rm \
 --link redis:db \
---env-file $(PWD)/etc/env.conf \
+--env-file etc/env.conf \
 --dns 172.17.42.1 \
 -P \
 -t
