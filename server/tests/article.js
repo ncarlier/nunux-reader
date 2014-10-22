@@ -24,7 +24,9 @@ describe('An new article', function() {
   };
 
   before(function(done) {
-    db.flushdb(done);
+    db.on('connect', function() {
+      db.flushdb(done);
+    });
   });
 
   it('should be created and clean', function(done) {
