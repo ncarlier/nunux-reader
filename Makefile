@@ -11,7 +11,7 @@ define docker_run_flags
 --env-file $(PWD)/etc/env.conf \
 --dns 172.17.42.1 \
 -P \
--i -t
+-t
 endef
 
 ifdef DEVMODE
@@ -38,11 +38,11 @@ cleanup:
 
 run:
 	echo "Running $(IMAGE) docker image..."
-	sudo docker run $(docker_run_flags) --name $(APPNAME) $(IMAGE)
+	sudo docker run $(docker_run_flags) -i --name $(APPNAME) $(IMAGE)
 
 shell:
 	echo "Running $(IMAGE) docker image with shell access..."
-	sudo docker run $(docker_run_flags) --entrypoint="/bin/bash" $(IMAGE) -c /bin/bash
+	sudo docker run $(docker_run_flags) -i --entrypoint="/bin/bash" $(IMAGE) -c /bin/bash
 
 test:
 	echo "Running tests..."
