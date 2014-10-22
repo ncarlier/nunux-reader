@@ -1,5 +1,5 @@
 .SILENT :
-.PHONY : volume build clean run shell test
+.PHONY : volume build clean cleanup run shell test
 
 USERNAME:=ncarlier
 APPNAME:=reader
@@ -9,6 +9,7 @@ define docker_run_flags
 --rm \
 --link redis:db \
 --env-file $(PWD)/etc/env.conf \
+--dns 172.17.42.1 \
 -P \
 -i -t
 endef
@@ -17,7 +18,7 @@ ifdef DEVMODE
 	docker_run_flags += --volumes-from $(APPNAME)_volumes
 endif
 
-all: build
+all: build cleanup
 
 volume:
 	echo "Building $(APPNAME) volumes..."
@@ -30,6 +31,10 @@ build:
 clean:
 	echo "Removing $(IMAGE) docker image..."
 	sudo docker rmi $(IMAGE)
+
+cleanup:
+	echo "Removing dangling docker images..."
+	-sudo docker images -q --filter 'dangling=true' | xargs sudo docker rmi
 
 run:
 	echo "Running $(IMAGE) docker image..."
