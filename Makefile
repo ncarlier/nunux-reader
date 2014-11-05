@@ -30,7 +30,7 @@ build:
 
 clean:
 	echo "Removing $(IMAGE) docker image..."
-	sudo docker rmi $(IMAGE)
+	-sudo docker rmi $(IMAGE)
 
 cleanup:
 	echo "Removing dangling docker images..."
