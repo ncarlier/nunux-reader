@@ -1,5 +1,5 @@
 .SILENT :
-.PHONY : volume build clean cleanup run shell test
+.PHONY : volume dev build clean cleanup run shell test publish
 
 USERNAME:=ncarlier
 APPNAME:=reader
@@ -14,15 +14,15 @@ define docker_run_flags
 -t
 endef
 
-ifdef DEVMODE
-	docker_run_flags += --volumes-from $(APPNAME)_volumes
-endif
-
 all: build cleanup
 
 volume:
 	echo "Building $(APPNAME) volumes..."
 	sudo docker run -v $(PWD):/opt/$(APPNAME) -v ~/var/$(APPNAME):/var/opt/$(APPNAME) --name $(APPNAME)_volumes busybox true
+
+dev:
+	$(eval docker_run_flags += --volumes-from $(APPNAME)_volumes)
+	echo "DEVMODE: Using volumes from $(APPNAME)_volumes"
 
 build:
 	echo "Building $(IMAGE) docker image..."
@@ -48,3 +48,11 @@ test:
 	echo "Running tests..."
 	sudo docker run $(docker_run_flags) $(IMAGE) test
 
+publish:
+ifndef REGISTRY
+    $(error REGISTRY is undefined)
+else
+	echo "Publish image into the registry..."
+	sudo docker tag $(IMAGE) $(REGISTRY)/$(IMAGE)
+	sudo docker push $(REGISTRY)/$(IMAGE)
+endif
