@@ -6,11 +6,9 @@ var redis  = require('redis'),
  * @return {String} Redis string URI
  */
 var getRedisUri = function() {
-  var uri = 'redis://localhost:6379/0';
-  if (process.env.APP_REDIS_URI) {
-    uri = process.env.APP_REDIS_URI;
-  }
-  return uri;
+  return process.env.APP_REDIS_URI ?
+    process.env.APP_REDIS_URI :
+    'redis://localhost:6379/0';
 };
 
 /**
