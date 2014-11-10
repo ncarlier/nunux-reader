@@ -1,5 +1,5 @@
 .SILENT :
-.PHONY : volume dev build clean cleanup run shell test publish
+.PHONY : volume dev build clean cleanup run stop rm shell test publish
 
 USERNAME:=ncarlier
 APPNAME:=reader
@@ -28,7 +28,7 @@ build:
 	echo "Building $(IMAGE) docker image..."
 	sudo docker build --rm -t $(IMAGE) .
 
-clean:
+clean: stop rm
 	echo "Removing $(IMAGE) docker image..."
 	-sudo docker rmi $(IMAGE)
 
@@ -40,6 +40,14 @@ run:
 	echo "Running $(IMAGE) docker image..."
 	sudo docker run $(docker_run_flags) -i --name $(APPNAME) $(IMAGE)
 
+stop:
+	echo "Stopping container $(APPNAME) ..."
+	-sudo docker stop $(APPNAME)
+
+rm:
+	echo "Deleting container $(APPNAME) ..."
+	-sudo docker rm $(APPNAME)
+
 shell:
 	echo "Running $(IMAGE) docker image with shell access..."
 	sudo docker run $(docker_run_flags) -i --entrypoint="/bin/bash" $(IMAGE) -c /bin/bash
@@ -49,10 +57,10 @@ test:
 	sudo docker run $(docker_run_flags) $(IMAGE) test
 
 publish:
-ifndef REGISTRY
-    $(error REGISTRY is undefined)
-else
-	echo "Publish image into the registry..."
-	sudo docker tag $(IMAGE) $(REGISTRY)/$(IMAGE)
-	sudo docker push $(REGISTRY)/$(IMAGE)
-endif
+	ifndef REGISTRY
+		$(error REGISTRY is undefined)
+	else
+		echo "Publish image into the registry..."
+		sudo docker tag $(IMAGE) $(REGISTRY)/$(IMAGE)
+		sudo docker push $(REGISTRY)/$(IMAGE)
+	endif
