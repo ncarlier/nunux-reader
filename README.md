@@ -114,10 +114,6 @@ This daemon is responsible to update user's timelines.
 
         ./server/bin/timeline-updater.js -v
 
-## API
-
-See *API.md*.
-
 
 ------------------------------------------------------------------------------
 
