@@ -2,6 +2,7 @@
 Description=Nunux Reader feed updater daemon
 After=docker.service
 Requires=docker.service redis.service
+PartOf=reader-server@*.service
 
 [Service]
 ExecStartPre=-/usr/bin/docker kill %p
