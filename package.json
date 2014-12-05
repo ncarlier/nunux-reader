@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "node server/app",
-    "debug": "node-inspector --web-port=3009 & node --debug server/app",
+    "debug": "node-inspector & node --debug server/app",
     "test": "grunt",
     "postinstall": "grunt install",
     "feed-updater": "node server/bin/feed-updater.js -v",
