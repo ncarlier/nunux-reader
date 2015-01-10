@@ -1,0 +1,22 @@
+{
+    "name": "Nunux Reader",
+    "description": "The super-fast-minimalist-nosql-opensource Google Reader revival.",
+    "keywords": [
+        "rss",
+        "reader",
+        "nunux"
+    ],
+    "website": "http://reader.nunux.org/",
+    "repository": "https://github.com/ncarlier/nunux-reader",
+    "logo": "http://reader.nunux.org/icons/icon_152.png",
+    "success_url": "/",
+    "scripts": {
+        "postdeploy": "npm install"
+    },
+    "env": {
+        "BUILDPACK_URL": "https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt"
+    },
+    "addons": [
+        "openredis"
+    ]
+}

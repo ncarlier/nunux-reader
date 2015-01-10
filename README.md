@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ncarlier/nunux-reader.svg)](https://travis-ci.org/ncarlier/nunux-reader)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ncarlier/nunux-reader)
 
 # NUNUX Reader
 
@@ -12,11 +13,11 @@ Features:
  * Login with Google OAuth2 or Mozilla Persona
  * OPML import/export
  * Manage subscriptions
- * Save articles in Nunux Keeper, Pocket or Dropbox
+ * Save articles in [Nunux Keeper](http://keeper.nunux.org), Pocket or Dropbox
  * Keep article as not read
  * Powerfull reactive aggregator daemon
  * Support of PubSubHubbud
- * RESTFul JSON API
+ * RESTFul JSON [API](http://reader.nunux.org/doc/)
  * 100% Javascript!
 
 ## Installation guide with Docker (the recommended way)
