@@ -1,4 +1,5 @@
 var redis  = require('redis'),
+    url    = require('url'),
     logger = require('./logger');
 
 /**
@@ -6,9 +7,14 @@ var redis  = require('redis'),
  * @return {String} Redis string URI
  */
 var getRedisUri = function() {
-  return process.env.APP_REDIS_URI ?
-    process.env.APP_REDIS_URI :
-    'redis://localhost:6379/0';
+  switch(true) {
+    case process.env.APP_REDIS_URI !== undefined:
+      return process.env.APP_REDIS_URI;
+    case process.env.OPENREDIS_URL !== undefined:
+      return process.env.OPENREDIS_URL;
+    default:
+      return 'redis://localhost:6379/0';
+  }
 };
 
 /**
@@ -16,16 +22,20 @@ var getRedisUri = function() {
  * @param {String} str Redis string URI
  */
 var connect = function(str) {
-  var match = /^redis:\/\/([a-z0-9\.]+):(\d+)\/(\d)$/.exec(str);
-  if (!match) {
-    throw new Error('Invalid redis uri: ' + str);
-  }
-  var host = match[1],
-      port = parseInt(match[2]),
-      db   = parseInt(match[3]);
+  var u = url.parse(str);
 
-  var redisClient = redis.createClient(port, host);
-  redisClient.select(db);
+  var redisClient = redis.createClient(u.port, u.hostname);
+  if (u.auth) {
+    redisClient.auth(u.auth.split(':')[1], function(err) {
+      if (err) {
+        logger.error('Unable to connect to redis host: ' + str);
+        throw new Error(err);
+      }
+      redisClient.select(u.pathname);
+    });
+  } else {
+    redisClient.select(u.pathname);
+  }
   return redisClient;
 };
 
