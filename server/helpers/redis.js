@@ -12,6 +12,8 @@ var getRedisUri = function() {
       return process.env.APP_REDIS_URI;
     case process.env.OPENREDIS_URL !== undefined:
       return process.env.OPENREDIS_URL;
+    case process.env.REDISCLOUD_URL !== undefined:
+      return process.env.REDISCLOUD_URL;
     default:
       return 'redis://localhost:6379/0';
   }
@@ -31,10 +33,10 @@ var connect = function(str) {
         logger.error('Unable to connect to redis host: ' + str);
         throw new Error(err);
       }
-      redisClient.select(u.pathname);
+      if (u.pathname) redisClient.select(u.pathname);
     });
   } else {
-    redisClient.select(u.pathname);
+    if (u.pathname) redisClient.select(u.pathname);
   }
   return redisClient;
 };

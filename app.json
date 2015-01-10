@@ -17,6 +17,6 @@
         "BUILDPACK_URL": "https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt"
     },
     "addons": [
-        "openredis"
+        "rediscloud"
     ]
 }
