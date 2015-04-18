@@ -33,10 +33,10 @@ var connect = function(str) {
         logger.error('Unable to connect to redis host: ' + str);
         throw new Error(err);
       }
-      if (u.pathname) redisClient.select(u.pathname);
+      if (u.pathname) redisClient.select(u.pathname.substring(1));
     });
   } else {
-    if (u.pathname) redisClient.select(u.pathname);
+    if (u.pathname) redisClient.select(u.pathname.substring(1));
   }
   return redisClient;
 };
