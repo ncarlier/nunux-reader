@@ -125,9 +125,14 @@ KeeperProvider.prototype.saveArticle = function(user, aid) {
       },
       body : article.description
     }).then(function(args) {
-      var resp = JSON.parse(args[1]);
+      var resp = args[0];
+      if (resp.statusCode >= 400) {
+        logger.error('Unable to save article %s in Keeper: %s', article.id, resp.body);
+        return when.reject(new errors.BadGateway('Keeper bad status: ' + resp.statusCode));
+      }
+      var resp = JSON.parse(resp.body);
       if (resp.error) {
-        logger.error('Unable to savec article %s in Keeper: %s', article.id, resp.error);
+        logger.error('Unable to save article %s in Keeper: %s', article.id, resp.error);
         return when.reject(new errors.BadGateway(resp.error));
       }
       return when.resolve({
