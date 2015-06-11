@@ -43,7 +43,8 @@
     "passport-google-oauth": "0.1.5",
     "passport-browserid": "0.1.4",
     "when": "~3.0.0",
-    "bunyan": "1.1.x"
+    "bunyan": "1.1.x",
+    "newrelic": "*"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
