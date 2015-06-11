@@ -1,5 +1,5 @@
 .SILENT :
-.PHONY : help volume dev build clean cleanup run debug shell test publish
+.PHONY : help volume dev build clean cleanup start debug stop rm logs shell test publish
 
 USERNAME:=ncarlier
 APPNAME:=reader
@@ -7,7 +7,7 @@ IMAGE:=$(USERNAME)/$(APPNAME)
 
 define docker_run_flags
 --rm \
---link redis:db \
+--link redis:redis \
 --env-file etc/env.conf \
 --dns 172.17.42.1 \
 -P \
@@ -54,15 +54,30 @@ cleanup:
 	echo "Removing dangling docker images..."
 	-sudo docker images -q --filter 'dangling=true' | xargs sudo docker rmi
 
-## Run the container
-run:
-	echo "Running $(IMAGE) docker image..."
+## Start the container
+start:
+	echo "Starting $(IMAGE) docker image..."
 	sudo docker run $(docker_run_flags) -i --name $(APPNAME) $(IMAGE)
 
 ## Run the container in debug mode
 debug:
 	echo "Running $(IMAGE) docker image in DEBUG mode..."
 	sudo docker run $(docker_run_flags) -p 3333:8080 --name $(APPNAME) $(IMAGE) run debug
+
+## Stop the container
+stop:
+	echo "Stopping container $(APPNAME) ..."
+	-sudo docker stop $(APPNAME)
+
+## Delete the container
+rm:
+	echo "Deleting container $(APPNAME) ..."
+	-sudo docker rm $(APPNAME)
+
+## Show container logs
+logs:
+	echo "Logs of the $(APPNAME) container..."
+	sudo docker logs -f $(APPNAME)
 
 ## Run the container with shell access
 shell:
