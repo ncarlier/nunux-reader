@@ -32,19 +32,27 @@ Features:
 
 ### Start the Web Site
 
-Configure the application according your needs by editing "./etc/reader.conf" file.
-(see ./etc/env.conf in this repository for more details)
+Configure the application according your needs by editing "./etc/default/dev.ev" file.
+(see ./etc/default/dev.env in this repository for more details)
 
 Then start the Web Server:
 
-    docker run \
-        --rm \
-        --name reader-server \
-        --link redis:db \
-        --env-file ./etc/env.conf \
-        -p 3000:3000
-        -i -t \
-        ncarlier/reader
+```
+make start
+```
+
+OR
+
+```
+docker run \
+    --rm \
+    --name reader-server \
+    --link redis:db \
+    --env-file ./etc/default/dev.env \
+    -p 3000:3000
+    -i -t \
+    ncarlier/reader
+```
 
 Go to http://localhost:3000 and the magic happens.
 
@@ -52,25 +60,29 @@ Go to http://localhost:3000 and the magic happens.
 
 This daemon is responsible to fetch articles of  the registered subscriptions.
 
-    docker run \
-        --rm \
-        --name reader-feed-updater \
-        --link redis:db \
-        --env-file ./etc/env.conf \
-        -i -t \
-        ncarlier/reader run feed-updater
+```
+docker run \
+    --rm \
+    --name reader-feed-updater \
+    --link redis:db \
+    --env-file ./etc/default/dev.env \
+    -i -t \
+    ncarlier/reader run feed-updater
+```
 
 ### Start the timeline updater daemon
 
 This daemon is responsible to update user's timelines.
 
-    docker run \
-        --rm \
-        --name reader-timeline-updater \
-        --link redis:db \
-        --env-file ./etc/env.conf \
-        -i -t \
-        ncarlier/reader run timeline-updater
+```
+docker run \
+    --rm \
+    --name reader-timeline-updater \
+    --link redis:db \
+    --env-file ./etc/default/dev.env \
+    -i -t \
+    ncarlier/reader run timeline-updater
+```
 
 ## Installation guide from scratch (the -not so- hard way)
 
@@ -82,38 +94,53 @@ This daemon is responsible to update user's timelines.
 
 #### Install Git, Node.JS and Redis (on Debian)
 
-    sudo aptitude install git nodejs redis-server
+```
+sudo aptitude install git nodejs redis-server
+```
 
 #### Install Grunt
 
-    sudo npm install -g grunt-cli
+```
+sudo npm install -g grunt-cli
+```
 
 ### Install Web Site
 
-    cd /opt_
-    git clone git@github.com:ncarlier/nunux-reader.git
-    cd nunux-reader
-    npm install
+```
+cd /opt_
+git clone git@github.com:ncarlier/nunux-reader.git
+cd nunux-reader
+npm install
+```
 
 ### Run Web Site
 
-    #!/bin/sh
-    # See etc/env.conf for environment configuration.
-    npm start 2>&1 >> app.log
+```
+#!/bin/sh
+# See etc/default/dev.env for environment configuration.
+source ./etc/default/dev.env
+npm start 2>&1 >> app.log
+```
 
 ### Jobs
 
 * **clean-db.js**: Clean database (aka remove old articles). Usage:
 
-        ./server/bin/clean-db.js -v --days 30
+```
+./server/bin/clean-db.js -v --days 30
+```
 
 * **feed-updater.js**: Update feeds content. It's a daemon. Use CTRL+C to stop. Usage:
 
-        ./server/bin/feed-updater.js -v
+```
+./server/bin/feed-updater.js -v
+```
 
 * **timeline-updater.js**: Update users timelines. It's a daemon. Use CTRL+C to stop. Usage:
 
-        ./server/bin/timeline-updater.js -v
+```
+./server/bin/timeline-updater.js -v
+```
 
 
 ------------------------------------------------------------------------------

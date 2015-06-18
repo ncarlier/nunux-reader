@@ -1,0 +1,16 @@
+[Unit]
+Description=Nunux Reader server
+After=docker.service
+Requires=docker.service redis.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStart=/usr/bin/docker run --rm --name %p \
+    --env-file /etc/environment \
+    --env-file /etc/default/reader \
+    --env-file /etc/default/reader_custom \
+    --link redis:redis \
+    ncarlier/reader
+ExecStop=/usr/bin/docker stop %p
+

@@ -4,3 +4,4 @@ dist/
 etc/env_dev.conf
 etc/env.conf
 tmp/
+etc/default/custom.env
