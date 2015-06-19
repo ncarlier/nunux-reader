@@ -103,6 +103,6 @@ install: build
 	cp etc/systemd/system/* /etc/systemd/system/
 	cp etc/default/$(env).env /etc/default/$(APPNAME)
 	systemctl daemon-reload
-	systemctl restart $(APPNAME)
+	systemctl restart $(APPNAME)-server
 	$(MAKE) cleanup
 
