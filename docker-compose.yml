@@ -1,0 +1,16 @@
+web:
+  build: .
+  ports:
+    - "80:3000"
+  links:
+    - redis
+  environment:
+    - NODE_ENV=production
+    - APP_REDIS_URI=redis://redis:6379/5
+    - APP_EMBEDDED_DAEMONS=feed-updater,timeline-updater,db-cleaner
+#    - APP_REALM=http://reader.nunux.org
+#    - APP_GOOGLE_KEY=###
+#    - APP_GOOGLE_SECRET=###
+
+redis:
+  image: redis
