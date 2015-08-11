@@ -110,7 +110,7 @@ function FeedUpdaterDaemon() {
             logger.info('Make feed updater daemon sleeping for 60s ...');
             this.sleeping = setTimeout(function() {
               this.listener.emit('next');
-            }, 60000);
+            }.bind(this), 60000);
             break;
           default:
             logger.error('Feed updater daemon: Error during iterate over feeds.', err);
