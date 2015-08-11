@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+
+'use strict';
+
 /**
 
   NUNUX Reader
@@ -86,6 +90,9 @@ require('./routes')(app);
 
 // Start metrics logger
 require('./helpers/metrics');
+
+// Start embedded deamons.
+require('./daemon').start();
 
 http.createServer(app).listen(app.get('port'), function() {
   logger.info('%s web server listening on port %s (%s mode)',

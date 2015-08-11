@@ -7,9 +7,9 @@
   "homepage": "http://reader.nunux.org",
   "apidoc": {
     "title": "Nunux Reader API documentation",
-    "url" : "http://reader.nunux.org",
+    "url": "http://reader.nunux.org",
     "template": {
-        "withCompare": false
+      "withCompare": false
     }
   },
   "repository": {
@@ -21,30 +21,31 @@
     "debug": "node-inspector & node --debug server/app",
     "test": "grunt",
     "postinstall": "grunt install",
-    "feed-updater": "node server/bin/feed-updater.js -v",
-    "timeline-updater": "node server/bin/timeline-updater.js -v",
-    "clean-db": "node server/bin/clean-db.js -v"
+    "feed-updater": "node server/daemon/feed-updater.js -v",
+    "timeline-updater": "node server/daemon/timeline-updater.js -v",
+    "db-cleaner": "node server/daemon/db-cleaner.js -v"
   },
   "dependencies": {
-    "redis": "0.10.x",
-    "hiredis": "0.1.x",
-    "express": "3.4.x",
-    "request": "2.27.x",
-    "ejs": "*",
-    "less-middleware": "0.1.x",
-    "underscore": "~1.5.2",
-    "commander": "*",
-    "colors": "~0.6.2",
-    "date-utils": "*",
-    "opmlparser": "0.5.x",
-    "feedparser": "0.15.x",
     "async": "0.2.x",
-    "passport": "0.1.x",
-    "passport-google-oauth": "0.1.5",
-    "passport-browserid": "0.1.4",
-    "when": "~3.0.0",
     "bunyan": "1.1.x",
-    "newrelic": "*"
+    "colors": "~0.6.2",
+    "commander": "*",
+    "cron": "^1.0.9",
+    "date-utils": "*",
+    "ejs": "*",
+    "express": "3.4.x",
+    "feedparser": "0.15.x",
+    "hiredis": "0.1.x",
+    "less-middleware": "0.1.x",
+    "newrelic": "*",
+    "opmlparser": "0.5.x",
+    "passport": "0.1.x",
+    "passport-browserid": "0.1.4",
+    "passport-google-oauth": "0.1.5",
+    "redis": "0.10.x",
+    "request": "2.27.x",
+    "underscore": "~1.5.2",
+    "when": "~3.0.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

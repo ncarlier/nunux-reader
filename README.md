@@ -127,19 +127,19 @@ npm start 2>&1 >> app.log
 * **clean-db.js**: Clean database (aka remove old articles). Usage:
 
 ```
-./server/bin/clean-db.js -v --days 30
+./server/daemon/db-cleaner.js -v --days 30
 ```
 
 * **feed-updater.js**: Update feeds content. It's a daemon. Use CTRL+C to stop. Usage:
 
 ```
-./server/bin/feed-updater.js -v
+./server/daemon/feed-updater.js -v
 ```
 
 * **timeline-updater.js**: Update users timelines. It's a daemon. Use CTRL+C to stop. Usage:
 
 ```
-./server/bin/timeline-updater.js -v
+./server/daemon/timeline-updater.js -v
 ```
 
 

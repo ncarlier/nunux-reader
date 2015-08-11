@@ -1,56 +1,22 @@
 #!/usr/bin/env node
 
-process.title = 'reader-feed-updater';
+'use strict';
 
-/**
- * Module dependencies.
- */
-require('date-utils');
-var program      = require('commander'),
+var STANDALONE = module.parent ? false : true;
+
+if (STANDALONE) {
+  process.title = 'reader-feed-updater';
+}
+
+var _            = require('underscore'),
+    appInfo      = require('../../package.json'),
+    program      = require('commander'),
+    EventEmitter = require('events').EventEmitter,
     async        = require('async'),
     request      = require('request'),
-    FeedParser   = require('feedparser'),
-    EventEmitter = require('events').EventEmitter,
     db           = require('../helpers').redis,
     logger       = require('../helpers').logger,
-    Feed         = require('../models/feed'),
-    Article      = require('../models/article');
-
-var app = new EventEmitter();
-var stop = false;
-var timeout = null;
-
-program
-  .version('0.0.1')
-  .option('-v, --verbose', 'Verbose flag')
-  .option('-d, --debug', 'Debug flag')
-  .parse(process.argv);
-
-logger.level(program.debug ? 'debug' : program.verbose ? 'info' : 'warn');
-
-logger.info('Starting Feed Updater...');
-
-async.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
-  process.on(signal, function() {
-    logger.info('Stopping Feed Updater...');
-    stop = true;
-    if (timeout) {
-      clearTimeout(timeout);
-      app.emit('nextfeed');
-    }
-  });
-});
-
-db.on('connect', function() {
-  app.emit('nextfeed');
-});
-
-app.on('stop', function() {
-  db.quit(function (err, res) {
-    logger.info(err || 'Stopping Feed Updater: done.');
-    process.exit();
-  });
-});
+    Feed         = require('../models/feed');
 
 if (process.env.HTTP_PROXY) {
   request = request.defaults({proxy: process.env.HTTP_PROXY, timeout: 5000});
@@ -58,26 +24,26 @@ if (process.env.HTTP_PROXY) {
   request = request.defaults({timeout: 5000});
 }
 
-var defaultMaxAge = 300,    // 5 minutes
-    maxExpirationHours = 2, // 2 hours
-    samples = {};
+// Constants
+var MAX_AGE = 300,    // 5 minutes
+    MAX_EXPIRATION_HOURS = 2; // 2 hours
 
-var jobIsTooCrazy = function(fid) {
-  var isCrazy = false;
-  if (samples[fid]) {
-    var d = samples[fid];
-    isCrazy = Math.abs(d.getSecondsBetween(new Date())) < defaultMaxAge;
-  }
-  samples[fid] = new Date();
-  return isCrazy;
-};
-
-var isParsableDate = function(date) {
+/**
+ * Test if date is parsable.
+ * @param Date date date to parse
+ * @return Boolean result of the test
+ */
+function isParsableDate(date) {
   var timestamp = Date.parse(date);
   return isNaN(timestamp) === false;
-};
+}
 
-var extractExpiresFromHeader = function(headers) {
+/**
+ * Extract expiration date form the headers.
+ * @param Object headers HTTP headers
+ * @return Date expiration date
+ */
+function extractExpiresFromHeader(headers) {
   var expires = headers.expires;
 
   if (expires && isParsableDate(expires)) {
@@ -94,7 +60,7 @@ var extractExpiresFromHeader = function(headers) {
       logger.debug('Warning: HEADER: %j', headers);
       lastModified = new Date();
     }
-    var maxAge = defaultMaxAge;
+    var maxAge = MAX_AGE;
     var cacheControl = headers['cache-control'];
     if (!cacheControl) {
       logger.debug('Warning: No cache-control directive (use default).');
@@ -112,21 +78,74 @@ var extractExpiresFromHeader = function(headers) {
   }
   // Check validity
   var then = new Date();
-  then.addHours(maxExpirationHours);
+  then.addHours(MAX_EXPIRATION_HOURS);
   if (!expires.between(new Date(), then)) {
       logger.debug('Warning: Expiration date out of bound (use default): %s', expires.toISOString());
       expires = new Date();
-      expires.addSeconds(defaultMaxAge);
+      expires.addSeconds(MAX_AGE);
   }
   return expires.toISOString();
+}
+
+/**
+ * Feed updater daemon.
+ */
+function FeedUpdaterDaemon() {
+  this.stopped = false;
+  this.sleeping = null;
+  this.samples = {};
+  this.listener = new EventEmitter();
+  this.listener.on('next', function() {
+    this.sleeping = null;
+    this.updateFeed(function(err) {
+      if (this.stopped) {
+        return;
+      }
+      if (err) {
+        switch (err) {
+          case 'NOT_EXPIRED':
+            this.listener.emit('next');
+            break;
+          case 'SLEEP':
+            logger.info('Make feed updater daemon sleeping for 60s ...');
+            this.sleeping = setTimeout(function() {
+              this.listener.emit('next');
+            }, 60000);
+            break;
+          default:
+            logger.error('Feed updater daemon: Error during iterate over feeds.', err);
+            this.listener.emit('next');
+        }
+      } else {
+        this.listener.emit('next');
+      }
+    }.bind(this));
+  }.bind(this));
+}
+
+/**
+ * Test if the job is too crazy.
+ * @param {String} fid Feed ID
+ * @return Boolean result of the test.
+ */
+FeedUpdaterDaemon.prototype.jobIsTooCrazy = function(fid) {
+  var isCrazy = false;
+  if (this.samples[fid]) {
+    var d = this.samples[fid];
+    isCrazy = Math.abs(d.getSecondsBetween(new Date())) < MAX_AGE;
+  }
+  this.samples[fid] = new Date();
+  return isCrazy;
 };
 
-app.on('nextfeed', function() {
-  timeout = null;
-  if (stop) {
-    return app.emit('stop');
-  }
-  var feed = null;
+
+/**
+ * Update feeds.
+ * @param {Function} next Next callback
+ */
+FeedUpdaterDaemon.prototype.updateFeed = function(next) {
+  var feed = null,
+      self = this;
   async.waterfall(
     [
       function(callback) {
@@ -134,8 +153,9 @@ app.on('nextfeed', function() {
         db.rpoplpush('feeds', 'feeds', callback);
       },
       function(fid, callback) {
-        if (fid === null) return callback('NO_FEED');
-        if (jobIsTooCrazy(fid)) return callback('TOO_CRAZY');
+        if (fid === null || self.jobIsTooCrazy(fid)) {
+          return callback('SLEEP');
+        }
         // Get feed from db...
         Feed.get(fid, callback);
       },
@@ -188,7 +208,7 @@ app.on('nextfeed', function() {
             }, function(e) {
               callback(e || err);
             });
-          } else if (res.statusCode == 200) {
+          } else if (res.statusCode === 200) {
             // Update feed status and cache infos.
             // logger.debug('200: Headers: %j', res.headers);
             logger.debug('Feed %s: Updating...', feed.id);
@@ -200,7 +220,7 @@ app.on('nextfeed', function() {
             }, function(e, f) {
               callback(e, f, body);
             });
-          } else if (res.statusCode == 304) {
+          } else if (res.statusCode === 304) {
             // Update feed status and cache infos.
             // logger.debug('304: Headers: %j', res.headers);
             logger.debug('Feed %s: Not modified. Skiping.', feed.id);
@@ -218,8 +238,10 @@ app.on('nextfeed', function() {
             Feed.update(feed, {
               status: 'error: Bad status code: ' + res.statusCode,
               expires: expires.toISOString()
-            }, function(e, f) {
-              if (e) return callback(e);
+            }, function(e) {
+              if (e) {
+                return callback(e);
+              }
               callback('statusCode: ' + res.statusCode);
             });
           }
@@ -228,35 +250,77 @@ app.on('nextfeed', function() {
       function(_feed, content, callback) {
         feed = _feed;
         // Skip if not changed (no content)
-        if (!content) return callback();
+        if (!content) {
+          return callback();
+        }
         Feed.updateArticles(content, feed, callback);
       },
       function() {
-        app.emit('nextfeed');
+        next();
       }
     ],
-    function(err) {
-      switch (err) {
-        case 'NOT_EXPIRED':
-          app.emit('nextfeed');
-          break;
-        case 'NO_FEED':
-          logger.info('No feed to parse. Waiting for 120s ...');
-          timeout = setTimeout(function(){
-            app.emit('nextfeed');
-          }, 120000);
-          break;
-        case 'TOO_CRAZY':
-          logger.info('Ok. Job is running too fast. Slow down a bit. Waiting for %s s ...', defaultMaxAge);
-          timeout = setTimeout(function(){
-            app.emit('nextfeed');
-          }, defaultMaxAge * 1000);
-          break;
-        default:
-          logger.error(err);
-          app.emit('nextfeed');
-      }
-    }
+    next
   );
-});
+};
+
+
+/**
+ * Start daemon.
+ */
+FeedUpdaterDaemon.prototype.start = function() {
+  logger.info('Starting feed updater daemon...');
+  if (STANDALONE) {
+    db.on('connect', function() {
+      this.listener.emit('next');
+    }.bind(this));
+  } else {
+    this.listener.emit('next');
+  }
+};
+
+/**
+ * Stop daemon.
+ * @param {Integer} returnCode code to return
+ */
+FeedUpdaterDaemon.prototype.stop = function(returnCode) {
+  logger.info('Stopping feed updater daemon...');
+  if (this.sleeping) {
+    clearTimeout(this.sleeping);
+  }
+  if (STANDALONE) {
+    db.quit(function (err) {
+      logger.error(err || 'Stopping feed updater daemon: done.');
+      process.exit(err ? 1 : returnCode);
+    });
+  } else {
+    this.stopped = true;
+    logger.error('Stopping feed updater daemon: done.');
+  }
+};
+
+if (STANDALONE) {
+  // Create standalone daemon. Aka self executable.
+  program.version(appInfo.version)
+  .option('-v, --verbose', 'Verbose flag')
+  .option('-d, --debug', 'Debug flag')
+  .parse(process.argv);
+
+  logger.level(program.debug ? 'debug' : program.verbose ? 'info' : 'error');
+
+  var app = new FeedUpdaterDaemon();
+  // Start the daemon
+  app.start();
+
+  // Graceful shutdown.
+  _.each(['SIGINT', 'SIGTERM', 'SIGQUIT'], function(signal) {
+    process.on(signal, function() {
+      app.stop((signal === 'SIGINT') ? 1 : 0);
+    });
+  });
+}
+else {
+  // Export daemon instance
+  module.exports = new FeedUpdaterDaemon();
+}
+
 

@@ -186,6 +186,7 @@ Feed.create = function(feed, done) {
         }
       },
       function(newFeed, callback) {
+        logger.debug('Creating feed %j ...', newFeed);
         fid = Feed.getKey(newFeed.xmlurl);
         for (var i in newFeed) {
           if (newFeed[i] === null || newFeed[i] === undefined) {

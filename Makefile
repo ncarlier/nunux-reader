@@ -11,7 +11,7 @@ define docker_run_flags
 --link redis:redis \
 --env-file="./etc/default/$(env).env" \
 --env-file="./etc/default/custom.env" \
---dns 172.17.42.1 \
+--dns 10.0.42.1 \
 -P \
 -it
 endef
