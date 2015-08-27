@@ -2,4 +2,5 @@ test:
   script:
   - apt-get update -qy
   - apt-get install -y nodejs npm
+  - npm install
   - npm test
