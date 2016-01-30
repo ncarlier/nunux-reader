@@ -35,7 +35,7 @@
     "ejs": "*",
     "express": "3.4.x",
     "feedparser": "0.15.x",
-    "hiredis": "0.1.x",
+    "hiredis": "0.4.x",
     "less-middleware": "0.1.x",
     "newrelic": "*",
     "opmlparser": "0.5.x",

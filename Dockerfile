@@ -2,25 +2,31 @@
 #
 # VERSION 0.0.1
 
-FROM ncarlier/nodejs
+FROM node:4
 
 MAINTAINER Nicolas Carlier <https://github.com/ncarlier>
 
-# Port
-EXPOSE 3000
+# Install packages
+RUN apt-get update && apt-get install -y imagemagick
 
-# Add files
-ADD . /opt/reader
-WORKDIR /opt/reader
-RUN chown node.node -R /opt/reader
+# Create app directories
+RUN mkdir -p /usr/src/reader /var/opt/reader
 
-# Def. user
-USER node
-ENV HOME /home/node
+# Setup working directory
+WORKDIR /usr/src/reader
 
-# Install App
+# Add package definition
+COPY package.json /usr/src/reader/
+
+# Install
 RUN npm install
 
-ENTRYPOINT ["/usr/bin/npm"]
+# Ports
+EXPOSE 3000
+
+# Copy sources
+COPY . /usr/src/reader
+
+ENTRYPOINT ["/usr/local/bin/npm"]
 
 CMD ["start"]
