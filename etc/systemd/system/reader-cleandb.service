@@ -1,8 +1,11 @@
 [Unit]
 Description=Nunux Reader cleaning job
-After=docker.service
+After=redis.service
 Requires=docker.service redis.service
 PartOf=reader-server.service
+
+[Install]
+WantedBy=multi-user.target
 
 [Service]
 Nice=19

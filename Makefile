@@ -102,6 +102,13 @@ install: build
 	cp etc/systemd/system/* /etc/systemd/system/
 	cp etc/default/$(env).env /etc/default/$(APPNAME)
 	systemctl daemon-reload
+	systemctl enable $(APPNAME)-server
 	systemctl restart $(APPNAME)-server
+	systemctl enable $(APPNAME)-feed-updater
+	systemctl restart $(APPNAME)-feed-updater
+	systemctl enable $(APPNAME)-timeline-updater
+	systemctl restart $(APPNAME)-timeline-updater
+	systemctl enable $(APPNAME)-cleandb
+	systemctl restart $(APPNAME)-cleandb
 	$(MAKE) cleanup
 

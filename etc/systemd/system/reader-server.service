@@ -1,12 +1,17 @@
 [Unit]
 Description=Nunux Reader server
-After=docker.service
+After=redis.service
 Requires=docker.service redis.service
+
+[Install]
+WantedBy=multi-user.target
 
 [Service]
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm --name %p \
+    --env DOMAIN_NAME=reader.nunux.org \
+    --env MAIN_PORT=3000 \
     --env-file /etc/environment \
     --env-file /etc/default/reader \
     --env-file /etc/default/reader_custom \
