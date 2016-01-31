@@ -28,7 +28,7 @@ EXPOSE 3000
 COPY . /usr/src/reader
 
 # Install app
-RUN npm install
+RUN npm install --unsafe-perm
 
 ENTRYPOINT ["/usr/local/bin/npm"]
 
