@@ -18,7 +18,7 @@ WORKDIR /usr/src/reader
 # Add package definition
 COPY package.json /usr/src/reader/
 
-# Install
+# Install dependencies
 RUN npm install
 
 # Ports
@@ -26,6 +26,9 @@ EXPOSE 3000
 
 # Copy sources
 COPY . /usr/src/reader
+
+# Install app
+RUN npm install
 
 ENTRYPOINT ["/usr/local/bin/npm"]
 
