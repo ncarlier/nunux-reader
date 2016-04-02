@@ -39,7 +39,7 @@ help:
 ## Make the volume image
 volume:
 	echo "Building $(APPNAME) volumes..."
-	$(DOCKER) run -v $(PWD):/opt/$(APPNAME) -v ~/var/$(APPNAME):/var/opt/$(APPNAME) --name $(APPNAME)_volumes busybox true
+	$(DOCKER) run -v $(PWD):/usr/src/$(APPNAME) -v ~/var/$(APPNAME):/var/opt/$(APPNAME) --name $(APPNAME)_volumes busybox true
 
 ## Mount volumes
 mount:
