@@ -113,6 +113,9 @@ Feed.get = function(fid, done) {
  * @param {Function} done Callback with feed in params.
  */
 Feed.getByUrl = function(url, done) {
+  if (typeof url !== 'string') {
+    return done('Feed URL is not valid: ' + url);
+  }
   var fid = Feed.getKey(url);
   logger.debug('Retrieve feed %s with url %s', fid, url);
   db.hgetall(fid, function(err, feed) {
