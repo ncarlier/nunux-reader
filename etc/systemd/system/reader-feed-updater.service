@@ -15,6 +15,7 @@ ExecStart=/usr/bin/docker run --rm --name %p \
     --env-file /etc/default/reader \
     --env-file /etc/default/reader_custom \
     --link redis:redis \
+    --label traefik.enable=false \
     ncarlier/reader run feed-updater
 ExecStop=/usr/bin/docker stop %p
 
