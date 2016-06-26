@@ -11,8 +11,6 @@ ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm --name %p \
     --add-host keeper.nunux.org:172.17.0.1 \
-    --env DOMAIN_NAME=reader.nunux.org \
-    --env MAIN_PORT=3000 \
     --env-file /etc/environment \
     --env-file /etc/default/reader \
     --env-file /etc/default/reader_custom \
