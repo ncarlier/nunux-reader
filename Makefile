@@ -12,7 +12,7 @@ LINK_FLAGS?=--link redis:redis
 ENV_FLAGS?=--env-file="./etc/default/$(env).env" --env-file="./etc/default/custom.env"
 
 # Custom run flags
-RUN_CUSTOM_FLAGS?=-P $(ENV_FLAGS) $(LINK_FLAGS)
+RUN_CUSTOM_FLAGS?=-p 3000:3000 $(ENV_FLAGS) $(LINK_FLAGS)
 
 # Docker configuartion regarding the system architecture
 BASEIMAGE=node:4
