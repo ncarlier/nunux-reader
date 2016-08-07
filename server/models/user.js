@@ -115,7 +115,8 @@ User.registerProvider = function(user, provider, done) {
         user.providers[provider.name] = {
           access_token: provider.access_token,
           token_type: provider.token_type,
-          expires_in: provider.expires_in
+          expires_in: provider.expires_in,
+          refresh_token: provider.refresh_token
         };
         db.hset(User.getKey(uid), 'providers', JSON.stringify(user.providers), callback);
       },

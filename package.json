@@ -1,7 +1,7 @@
 {
   "author": "Nicolas Carlier (https://github.com/ncarlier/)",
-  "name": "reader",
-  "version": "0.9.0",
+  "name": "nunux-reader",
+  "version": "1.0.0",
   "description": "The super-fast-minimalist-nosql-opensource Google Reader revival.",
   "license": "gplv3",
   "homepage": "http://reader.nunux.org",
@@ -17,7 +17,7 @@
     "url": "https://github.com/ncarlier/nunux-reader.git"
   },
   "scripts": {
-    "start": "node server/app",
+    "start": "node server/app | bunyan",
     "debug": "node-inspector & node --debug server/app",
     "test": "grunt",
     "postinstall": "grunt install",
@@ -37,6 +37,7 @@
     "feedparser": "0.15.x",
     "less-middleware": "0.1.x",
     "newrelic": "*",
+    "node-keeper": "0.0.1",
     "opmlparser": "0.5.x",
     "passport": "0.1.x",
     "passport-browserid": "0.1.4",
