@@ -1,8 +1,15 @@
 image: node:4
 
+services:
+  - redis:latest
+
 before_script:
   - npm install --unsafe-perm
+
+variables:
+  APP_REDIS_URI: "redis://redis:6379/1"
 
 test:
   script:
   - npm test
+
