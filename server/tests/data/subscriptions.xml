@@ -11,6 +11,6 @@
       xmlUrl="http://martinfowler.com/feed.atom"
       htmlUrl="http://martinfowler.com/"/>
     <outline text="Korben" title="Korben" type="rss"
-      xmlUrl="http://feeds.feedburner.com/KorbensBlog-UpgradeYourMind" htmlUrl="http://korben.info"/>
+      xmlUrl="http://korben.info/feed" htmlUrl="http://korben.info"/>
   </body>
 </opml>

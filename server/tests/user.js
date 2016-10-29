@@ -12,7 +12,7 @@ db.select(9);
 describe('A new user', function() {
   var uid = 'foo@bar.com',
       feed = {
-        xmlurl: 'http://feeds.feedburner.com/KorbensBlog-UpgradeYourMind'
+        xmlurl: 'http://korben.info/feed'
       },
       article = {
         date: new Date(),
