@@ -5,6 +5,8 @@
 
 The super-fast-minimalist-nosql-opensource Google Reader revival.
 
+![Screenshot](screenshot.png)
+
 Features:
 
  * Faster than light thanks to Redis and Node.js
