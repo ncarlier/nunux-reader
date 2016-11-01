@@ -74,7 +74,7 @@ angular.module('ReaderApp', [
 }])
 .filter('gravatar', ['md5', function(md5) {
   return function(val) {
-    return val ? 'http://www.gravatar.com/avatar/' + md5.createHash(val.toLowerCase()) : null;
+    return val ? 'https://www.gravatar.com/avatar/' + md5.createHash(val.toLowerCase()) : null;
   };
 }])
 .filter('prefix', function() {
