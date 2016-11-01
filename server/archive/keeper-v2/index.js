@@ -4,11 +4,11 @@ var _       = require('underscore'),
     when    = require('when'),
     nodefn  = require('when/node/function'),
     request = require('request'),
-    KeeperClient = require('node-keeper'),
     errors  = require('../../helpers').errors,
     logger  = require('../../helpers').logger,
     User    = require('../../models/user'),
-    Article = require('../../models/article');
+    Article = require('../../models/article'),
+    KeeperSDK = require('node-keeper');
 
 /**
  * Keeper V2 archive provider.
@@ -17,15 +17,19 @@ var KeeperV2Provider = function() {
   this.config = {
     name:         'keeper-v2',
     description:  'Nunux Keeper V2',
-    url:          process.env.APP_KEEPER_V2_URL,
+    endpoint:     process.env.APP_KEEPER_V2_URL,
     clientId:     process.env.APP_KEEPER_V2_KEY,
     clientSecret: process.env.APP_KEEPER_V2_SECRET
   };
 
-  if (!this.config.key || !this.config.secret || !this.config.url) {
+  if (!this.config.clientId || !this.config.clientSecret || !this.config.endpoint) {
     logger.error('Unable to create Keeper V2 archive provider. Configuration not set.');
     return null;
   }
+  this.sdk = new KeeperSDK({debug: true})
+  this.getClient = function(creds) {
+    return this.sdk.createClient(this.config, creds)
+  }.bind(this)
   return this;
 };
 
@@ -38,8 +42,9 @@ var KeeperV2Provider = function() {
  */
 KeeperV2Provider.prototype.registrationRequest = function(req, res, next) {
   var callback_url = req.context.realm + '/api/archive/keeper-v2/registration/callback';
-  var keeperClient = new KeeperClient(this.config, {debug: true});
-  res.redirect(keeperClient.authorizeURL(callback_url))
+  this.getClient().then(function(client) {
+    res.redirect(client.getAuthorizeURL(callback_url))
+  })
 };
 
 /**
@@ -56,8 +61,9 @@ KeeperV2Provider.prototype.registrationCallback = function(req, res, next) {
     return res.redirect('/#/profile?error=' + req.query.error);
   }
   var callback_url = req.context.realm + '/api/archive/keeper-v2/registration/callback';
-  var keeperClient = new KeeperClient(this.config, {debug: true});
-  keeperClient.token(callback_url, req.query.code)
+  this.getClient().then(function(client) {
+    return client.getTokens(callback_url, req.query.code)
+  })
   .then(function(creds) {
     var access = {
       name: 'keeper-v2',
@@ -73,7 +79,7 @@ KeeperV2Provider.prototype.registrationCallback = function(req, res, next) {
       var message = 'Registration with Keeper V2 successfully completed.';
       res.redirect('/#/profile?info=' + encodeURIComponent(message));
     });
-  }.bind(this))
+  })
   .catch(next);
 };
 
@@ -90,34 +96,36 @@ KeeperV2Provider.prototype.saveArticle = function(user, aid) {
   }
   var provider = user.providers['keeper-v2'];
   var config = {
-    clientId: this.config.clientId,
-    clientSecret: this.config.clientSecret,
     accessToken: provider.access_token,
     expiresIn: provider.expires_in,
     tokenType: provider.token_type,
     refreshToken: provider.refresh_token
   };
-  var keeperClient = new KeeperClient(config, {debug: true});
-  return nodefn.call(Article.get, aid).then(function(article) {
-    // filter link if exist
-    var link = article.link;
-    if (link && article.meta.link && !/^https?|file|ftps?/i.test(link)) {
-      link = url.resolve(article.meta.link, link);
-    }
 
-    return keeperClient.api.postDocument({
-      title: article.title,
-      origin: article.link,
-      content: article.description,
-      contentType: 'text/html'
-    }).then(function(data) {
-      return when.resolve({
-        ref: data.id,
-        provider: 'keeper-v2'
+  return this.getClient(config)
+  .then(function(client) {
+    return nodefn.call(Article.get, aid)
+    .then(function(article) {
+      // filter link if exist
+      var link = article.link;
+      if (link && article.meta.link && !/^https?|file|ftps?/i.test(link)) {
+        link = url.resolve(article.meta.link, link);
+      }
+
+      return client.api.document.post({
+        title: article.title,
+        origin: article.link,
+        content: article.description,
+        contentType: 'text/html'
+      }).then(function(data) {
+        return when.resolve({
+          ref: data.id,
+          provider: 'keeper-v2'
+        });
+      }).catch(function(err) {
+        logger.error('Unable to save article %s in Keeper V2: %s', article.id, err);
+        return when.reject(new errors.BadGateway(err));
       });
-    }).catch(function(err) {
-      logger.error('Unable to save article %s in Keeper V2: %s', article.id, err);
-      return when.reject(new errors.BadGateway(err));
     });
   });
 };
