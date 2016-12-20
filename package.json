@@ -37,7 +37,7 @@
     "feedparser": "0.15.x",
     "less-middleware": "0.1.x",
     "newrelic": "*",
-    "node-keeper": "0.1.x",
+    "node-keeper": "0.2.x",
     "opmlparser": "0.5.x",
     "passport": "0.1.x",
     "passport-browserid": "0.1.4",
