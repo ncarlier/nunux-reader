@@ -9,6 +9,9 @@ MAINTAINER Nicolas Carlier <https://github.com/ncarlier>
 # Ports
 EXPOSE 3000
 
+# Build dist directory
+RUN npm run dist
+
 ENTRYPOINT ["/usr/local/bin/npm"]
 
 CMD ["start"]

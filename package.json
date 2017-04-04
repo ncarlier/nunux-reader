@@ -20,7 +20,7 @@
     "start": "node server/app | bunyan",
     "debug": "node-inspector & node --debug server/app",
     "test": "grunt",
-    "postinstall": "grunt install",
+    "dist": "grunt install",
     "feed-updater": "node server/daemon/feed-updater.js -v",
     "timeline-updater": "node server/daemon/timeline-updater.js -v",
     "db-cleaner": "node server/daemon/db-cleaner.js -v"
