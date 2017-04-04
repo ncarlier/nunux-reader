@@ -12,7 +12,7 @@ db.select(9);
 describe('A new user', function() {
   var uid = 'foo@bar.com',
       feed = {
-        xmlurl: 'http://korben.info/feed'
+        xmlurl: 'https://korben.info/feed'
       },
       article = {
         date: new Date(),
