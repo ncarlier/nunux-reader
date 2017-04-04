@@ -40,16 +40,14 @@ module.exports = {
         function(fids, callback) {
           stats.feeds = [];
 
-          var getFeedStats = function(fid, next) {
+          var getFeedDetails = function(fid, next) {
             Feed.get(fid, function(err, feed) {
               if (err) return next(err);
-              var feedStats = {};
-              feedStats[feed.id] = feed.status;
-              stats.feeds.push(feedStats)
+              stats.feeds.push(feed)
               next(null);
             });
           };
-          async.each(fids, getFeedStats, callback);
+          async.each(fids, getFeedDetails, callback);
         },
         function() {
           res.json(stats);
