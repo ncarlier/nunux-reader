@@ -25,6 +25,7 @@ describe('A new user', function() {
       },
       file = path.join(__dirname, 'data', 'subscriptions.xml');
   before(function(done) {
+    this.timeout(5000);
     Feed.create(feed, function(err, f) {
       if (err) return done(err);
       feed = f;
@@ -63,6 +64,7 @@ describe('A new user', function() {
     });
   });
   it('should import OPML file', function(done) {
+    this.timeout(5000);
     User.importSubscriptions(uid, file, function(err) {
       if (err) return done(err);
       User.getSubscriptions(uid, function(err, feeds) {
