@@ -140,6 +140,9 @@ User.registerProvider = function(user, provider, done) {
 User.find = function(uid, done) {
   db.hgetall(User.getKey(uid), function(err, user) {
     if (err) return done(err);
+    if (user === null) {
+      return done('User not found: ' + uid)
+    }
     if (user.providers) {
       user.providers = JSON.parse(user.providers);
     }
