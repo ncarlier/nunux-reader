@@ -1,5 +1,5 @@
 .SILENT :
-.PHONY : help volume mount update build clean cleanup start stop rm shell logs
+.PHONY : help mount update build clean cleanup start stop rm shell logs
 
 # Docker configuartion regarding the system architecture
 DOCKER=docker
@@ -67,15 +67,10 @@ ifeq ($(UNAME_M),armv7l)
 	sed -e 's|$(BASEIMAGE_)|$(BASEIMAGE)|' Dockerfile > Dockerfile.arm
 endif
 
-## Build the volume image
-volume:
-	echo "Building volumes: $(VOLUME_HOST_BASE)/$(APPNAME) -> $(VOLUME_CONTAINER_BASE)/$(APPNAME) ..."
-	$(DOCKER) run -v $(VOLUME_HOST_PATH):$(VOLUME_CONTAINER_PATH) --name $(APPNAME)_volumes $(VOLUME_IMAGE) true
-
 ## Mount volume
 mount:
-	$(eval VOLUME_FLAGS += --volumes-from $(APPNAME)_volumes)
-	echo "Using volumes from $(APPNAME)_volumes"
+	echo "Using volume: $(VOLUME_HOST_PATH) -> $(VOLUME_CONTAINER_PATH) ..."
+	$(eval VOLUME_FLAGS += --volume $(VOLUME_HOST_PATH):$(VOLUME_CONTAINER_PATH))
 
 ## Update base image
 update:
