@@ -149,9 +149,10 @@ Feed.getFeedInfos = function(url, done) {
       new FeedParser()
       .on('error', done)
       .on('meta', function (meta) {
+        var u = meta.xmlurl && isValidUrl(meta.xmlurl) ? meta.xmlurl : url;
         done(null, {
           title: meta.title,
-          xmlurl: meta.xmlurl || url,
+          xmlurl: u,
           htmlurl: meta.link,
           hub: meta.cloud ? meta.cloud.href : undefined
         });
