@@ -31,11 +31,10 @@ if (process.env.NEW_RELIC_LICENSE_KEY) {
 var express    = require('express'),
     http       = require('http'),
     path       = require('path'),
-    passport   = require('passport'),
     logger     = require('./helpers').logger,
     middleware = require('./middlewares'),
-    secMiddleware = require('./security/middlewares'),
-    appInfo = require('../package.json');
+    security   = require('./security'),
+    appInfo    = require('../package.json');
 
 var app = module.exports = express();
 
@@ -54,36 +53,23 @@ app.configure(function() {
   app.set('view engine', 'ejs');
   app.use(logger.requestLogger);
   app.use(express.compress());
-  app.use(express.cookieParser());
-  app.use(express.cookieSession({
-    key: 'reader.sess',
-    secret: process.env.APP_SESSION_SECRET || 'NuNUXReAdR_'
-  }));
+  app.use(security.configure(app));
   app.use(express.bodyParser({ uploadDir: process.env.APP_VAR_DIR ? path.join(process.env.APP_VAR_DIR, 'upload') : '/tmp' }));
   app.use(middleware.rawbodyHandler());
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use('/api', secMiddleware.ensureAuthenticated);
-  app.use('/api/admin', secMiddleware.ensureIsAdmin);
-  app.use(express.methodOverride());
+  if (app.get('env') === 'development') {
+    var clientDir = path.join(__dirname, '..', 'client');
+    app.use(require('less-middleware')({ src: clientDir}));
+    app.use(express.static(clientDir));
+  } else {
+    var oneDay = 86400000;
+    app.use(express.static(path.join(__dirname, '..', 'dist'), {maxAge: oneDay}));
+  }
+  // app.use(middleware.proxyAuth());
+  app.use('/api', security.ensureAuthenticated);
+  app.use('/api/admin', security.ensureIsAdmin);
   app.use(app.router);
-});
-
-app.configure('development', function() {
-  var clientDir = path.join(__dirname, '..', 'client');
-  app.use(require('less-middleware')({ src: clientDir}));
-  app.use(express.static(clientDir));
   app.use(middleware.errorHandler(app));
 });
-
-app.configure('production', function() {
-  var oneDay = 86400000;
-  app.use(express.static(path.join(__dirname, '..', 'dist'), {maxAge: oneDay}));
-  app.use(middleware.errorHandler(app));
-});
-
-// Set up security
-require('./security')(app, passport);
 
 // Register routes...
 require('./routes')(app);

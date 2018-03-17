@@ -32,6 +32,83 @@ Features:
 
     docker run --name redis -d redis
 
+### Configuration
+
+You can configure the server by setting environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_PORT` | `3000` | Server port |
+| `APP_REALM` | `http://localhost` | Public URL used for callbacks (AuthN and PSHB) |
+| `APP_REDIS_URL` | `redis://localhost:6379` | Database URI |
+| `APP_DAYS_TO_KEEP` | `30` | Number of days to keep an article in the database |
+| `APP_PSHB_ENABLED` | `false` | Feature flag to activate PubSubHubBud support |
+| `APP_AUTO_GRANT_ACCESS` | `true` | Feature flag to activate automatic user registration |
+| `APP_SESSION_SECRET` | `NuNUXReAdR_` | Secret key to encode the session cookie |
+| `APP_ADMIN` | empty | Comma-separated list of user id that have the admin role |
+| `APP_EMBEDDED_DAEMONS` | empty | List of daemon embedded with the server (not recommended for production) |
+
+#### Authentication configuration
+
+Configuration needed to login with Google:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_GOOGLE_KEY` | empty | Google OAuth key |
+| `APP_GOOGLE_SECRET` | empty | Google OAuth secret key |
+
+Configuration needed to delegate authentication to an upstream proxy (NGINX,
+Apache, Traefik, ...):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_AUTH_PROXY_HEADER` | empty | Header's name used to extract username (ex: `x-webauth-user`)|
+
+**Example of configuration with NGINX:**
+
+```
+server {
+  listen      80;
+  server_name nunux-reader;
+  access_log  /var/log/nginx/nunux-reader.access.log;
+
+  auth_basic_user_file  /etc/nginx/passwd;
+  auth_basic            "Restricted";
+
+  location / {
+    proxy_set_header X-WEBAUTH-USER $remote_user;
+    proxy_pass http://127.0.0.1:3000;
+    allow 127.0.0.1;
+    deny all;
+    satisfy any;
+  }
+}
+```
+
+#### Archiver configuration
+
+Configuration needed to save articles into Pocket:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_POCKET_KEY` | empty | Pocket key |
+
+Configuration needed to save articles into Dropbox:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_DROPBOX_KEY` | empty | Dropbox key |
+| `APP_DROPBOX_SECRET` | empty | Dropbox secret |
+
+Configuration needed to save articles into
+[Nunux Keeper](http://keeper.nunux.org):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_KEEPER_V2_URL` | empty | Nunux Keeper API URL |
+| `APP_KEEPER_V2_KEY` | empty | Nunux Keeper key |
+| `APP_KEEPER_V2_SECRET` | empty | Nunux Keeper secret |
+
 ### Start the Web Site
 
 Configure the application according your needs by editing "./etc/default/dev.ev" file.

@@ -35,9 +35,4 @@ module.exports = function(app, passport) {
   }));
 
   logger.debug('using Google authentication provider')
-
-  // Return transparent middleware
-  return function (req, res, next) {
-    next();
-  };
 };
