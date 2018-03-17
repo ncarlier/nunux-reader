@@ -1,4 +1,5 @@
 var errors  = require('../helpers').errors,
+    logger  = require('../helpers').logger,
     User    = require('../models/user'),
     http    = require('http'),
     request = http.IncomingMessage.prototype;
@@ -40,8 +41,14 @@ module.exports = function(app, passport) {
   });
 
 
-  // Register Google auth provider.
-  require('./google')(app, passport);
-  // Register BrowserId auth provider.
-  require('./browserid')(app, passport);
+  if (process.env.APP_GOOGLE_KEY && process.env.APP_GOOGLE_SECRET) {
+    // Register Google auth provider.
+    return require('./google')(app, passport);
+  }
+
+  // Return transparent middleware
+  logger.warn('using NO authentication provider!')
+  return function (req, res, next) {
+    next();
+  };
 };

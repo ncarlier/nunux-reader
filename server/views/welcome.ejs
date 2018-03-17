@@ -19,11 +19,6 @@
       <span class="fa fa-google-plus"></span>
     </a>
     </li>
-    <li class="persona">
-    <a href="javascript:loginWithPersona();" title="Sign in with your email.">
-      <span class="fa fa-user"></span>
-    </a>
-    </li>
   </ul>
   <header>
     <div class="wrapper">
@@ -178,20 +173,5 @@
     </feMerge>
     </filter>
   </svg>
-
-  <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
-  <script src="https://login.persona.org/include.js"></script>
-  <script>
-function loginWithPersona(){
-  navigator.id.get(function(assertion) {
-      if (assertion) {
-      $("#personaForm > input").val(assertion);
-      $("#personaForm").submit();
-      } else {
-      location.reload();
-      }
-      });
-};
-  </script>
   </body>
   </html>

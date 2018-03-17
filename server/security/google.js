@@ -1,5 +1,6 @@
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
-    User = require('../models/user');
+    logger = require('../helpers').logger,
+    User   = require('../models/user');
 
 /**
  * Google auth provider configuration.
@@ -32,4 +33,11 @@ module.exports = function(app, passport) {
   app.get('/auth/google/callback', passport.authenticate('google', {
     successRedirect: '/', failureRedirect: '/welcome?error=unauthorized'
   }));
+
+  logger.debug('using Google authentication provider')
+
+  // Return transparent middleware
+  return function (req, res, next) {
+    next();
+  };
 };
