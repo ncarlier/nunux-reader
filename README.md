@@ -1,9 +1,14 @@
-[![Build Status](https://travis-ci.org/ncarlier/nunux-reader.svg)](https://travis-ci.org/ncarlier/nunux-reader)
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ncarlier/nunux-reader)
-
 # NUNUX Reader
 
 The super-fast-minimalist-nosql-opensource Google Reader revival.
+
+---
+
+### :warning::warning::warning:This project is no longer maintained:warning::warning::warning:
+
+**Please consider to use another news reader such as [readflow](https://readflow.app)!**
+
+---
 
 ![Screenshot](screenshot.png)
 
