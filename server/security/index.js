@@ -71,7 +71,7 @@ var withPassport = function(app) {
 var withAuthProxy = function(app) {
   logger.debug('using proxy authentication provider')
   return function (req, res, next) {
-    var authProxyHeader = process.env.APP_AUTH_PROXY_HEADER;
+    var authProxyHeader = process.env.APP_AUTH_PROXY_HEADER.toLowerCase();
     var username = req.headers[authProxyHeader]
     if (username) {
       logger.debug('extracted username: %s', username)
